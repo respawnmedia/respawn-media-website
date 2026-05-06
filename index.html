@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Respawn Media — Creative, Design &amp; Marketing Agency</title>
+<meta name="description" content="Chennai's only creative social media-first agency. We help brands grow through content, strategy, and design."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+:root {
+  --black: #080808;
+  --surface: #111111;
+  --surface-2: #1A1A1A;
+  --teal: #16C4BA;
+  --teal-dim: rgba(22,196,186,0.12);
+  --teal-border: rgba(22,196,186,0.3);
+  --white: #FFFFFF;
+  --gray: #888888;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --font-display: 'Bebas Neue','Barlow Condensed',Impact,sans-serif;
+  --font-condensed: 'Barlow Condensed','Bebas Neue',Impact,sans-serif;
+  --font-body: 'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:#050505;color:var(--white);font-family:var(--font-body);font-size:15px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--teal)}
+::selection{background:var(--teal);color:var(--black)}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── MOBILE RESPONSIVE (real, generous) ─── */
+.is-mobile body, .mobile-frame{--nav-pad:1rem;--sec-pad:1rem;--sec-vpad:3.5rem}
+.mobile-frame nav, .is-mobile nav{padding:0 1rem!important;height:56px!important}
+.mobile-frame .desk-nav, .is-mobile .desk-nav{display:none!important}
+.mobile-frame .ham, .is-mobile .ham{display:flex!important}
+.mobile-frame section, .is-mobile section{padding-left:1.25rem!important;padding-right:1.25rem!important;padding-top:3.5rem!important;padding-bottom:3.5rem!important}
+.mobile-frame #hero, .is-mobile #hero{padding:0 1.25rem 3rem!important}
+.mobile-frame .hero-meta, .is-mobile .hero-meta{flex-direction:column!important;align-items:flex-start!important;gap:1.5rem!important}
+.mobile-frame .hero-meta-grid, .is-mobile .hero-meta-grid{gap:2rem!important}
+.mobile-frame .hero-cta, .is-mobile .hero-cta{flex-wrap:wrap!important}
+.mobile-frame .about-grid, .is-mobile .about-grid, .mobile-frame .contact-grid, .is-mobile .contact-grid{grid-template-columns:1fr!important;gap:2.5rem!important}
+.mobile-frame .founders-grid, .is-mobile .founders-grid{grid-template-columns:1fr!important}
+.mobile-frame .services-grid, .is-mobile .services-grid{grid-template-columns:1fr!important}
+.mobile-frame .sec-head, .is-mobile .sec-head{flex-direction:column!important;gap:0.75rem!important;margin-bottom:2.5rem!important}
+.mobile-frame .sec-head-num, .is-mobile .sec-head-num{font-size:56px!important;margin-top:0!important}
+.mobile-frame .sec-head-title, .is-mobile .sec-head-title{font-size:44px!important}
+.mobile-frame .sec-head-right, .is-mobile .sec-head-right{width:100%;align-items:flex-start!important}
+.mobile-frame .hero-h, .is-mobile .hero-h{font-size:36px!important;line-height:0.92!important}
+.mobile-frame .filter-row, .is-mobile .filter-row{overflow-x:auto;flex-wrap:nowrap!important;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.mobile-frame .filter-row::-webkit-scrollbar, .is-mobile .filter-row::-webkit-scrollbar{display:none}
+.mobile-frame .filter-row button, .is-mobile .filter-row button{flex-shrink:0}
+.mobile-frame .values-row, .is-mobile .values-row{flex-direction:column!important}
+.mobile-frame .contact-logo-wrap, .is-mobile .contact-logo-wrap{padding:2rem 1rem!important}
+.mobile-frame footer, .is-mobile footer{flex-direction:column!important;gap:0.75rem!important;text-align:center!important;padding:1.5rem 1rem!important}
+.mobile-frame .stats-grid, .is-mobile .stats-grid{grid-template-columns:1fr 1fr!important}
+
+/* Case modal: constrain to the mobile phone frame, not the full viewport */
+.mobile-frame .case-modal-panel{max-height:calc(100% - 24px)!important;max-width:100%!important;border-radius:18px!important}
+.mobile-frame .case-modal-hero{aspect-ratio:4/3!important}
+.mobile-frame .case-modal-hero-overlay{padding:1rem 1.1rem!important}
+.mobile-frame .case-modal-hero-title{font-size:26px!important;line-height:0.96!important}
+.mobile-frame .case-modal-body{padding:1.25rem 1.1rem 0.85rem!important}
+.mobile-frame .case-modal-body-row{flex-direction:column!important;gap:0.9rem!important}
+.mobile-frame .case-modal-meta{flex-direction:row!important;min-width:0!important;width:100%}
+.mobile-frame .case-modal-meta > *{flex:1}
+.mobile-frame .case-modal-gallery-wrap{padding:0.25rem 1.1rem 1.25rem!important}
+.mobile-frame .case-modal-gallery{grid-template-columns:repeat(2,1fr)!important}
+.mobile-frame .case-modal-gallery > div{aspect-ratio:1/1!important}
+.mobile-frame .case-modal-close{top:8px!important;right:8px!important;width:32px!important;height:32px!important}
+
+@media(max-width:768px){
+  nav{padding:0 1rem!important;height:56px!important}
+  .desk-nav{display:none!important}
+  .ham{display:flex!important}
+  section{padding:3.5rem 1.25rem!important}
+  #hero{padding:0 1.25rem 3rem!important}
+  .hero-meta{flex-direction:column!important;align-items:flex-start!important;gap:1.5rem!important}
+  .hero-meta-grid{gap:2rem!important}
+  .about-grid,.contact-grid{grid-template-columns:1fr!important;gap:2.5rem!important}
+  .founders-grid,.services-grid{grid-template-columns:1fr!important}
+  .sec-head{flex-direction:column!important;gap:0.75rem!important;margin-bottom:2.5rem!important}
+  .sec-head-num{font-size:56px!important;margin-top:0!important}
+  .sec-head-title{font-size:44px!important}
+  .sec-head-right{width:100%}
+  .hero-h{font-size:36px!important;line-height:0.92!important}
+  .values-row{flex-direction:column!important}
+  footer{flex-direction:column!important;gap:0.75rem!important;text-align:center!important}
+  .stats-grid{grid-template-columns:1fr 1fr!important}
+  /* Case modal — real mobile viewport */
+  .case-modal-backdrop{padding:10px!important}
+  .case-modal-panel{max-height:calc(100vh - 20px)!important;max-width:100%!important;border-radius:14px!important}
+  .case-modal-hero{aspect-ratio:4/3!important}
+  .case-modal-hero-overlay{padding:1rem 1.1rem!important}
+  .case-modal-hero-title{font-size:26px!important;line-height:0.96!important}
+  .case-modal-body{padding:1.25rem 1.1rem 0.85rem!important}
+  .case-modal-body-row{flex-direction:column!important;gap:0.9rem!important}
+  .case-modal-meta{flex-direction:row!important;min-width:0!important;width:100%}
+  .case-modal-meta > *{flex:1}
+  .case-modal-gallery-wrap{padding:0.25rem 1.1rem 1.25rem!important}
+  .case-modal-gallery{grid-template-columns:repeat(2,1fr)!important}
+  .case-modal-gallery > div{aspect-ratio:1/1!important}
+  .case-modal-close{top:8px!important;right:8px!important;width:32px!important;height:32px!important}
+}
+@media(min-width:769px) and (max-width:1100px){
+  .services-grid{grid-template-columns:repeat(2,1fr)!important}
+  .founders-grid{grid-template-columns:repeat(2,1fr)!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+
+
+
+
+const { useState, useEffect, useRef } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "teal": "#16C4BA",
+  "tagline": "Chennai's Only Creative Social Media - First Agency.",
+  "aboutText": "We're a team of 10+ people who have spent years studying what makes content actually work — not as a job, but as a genuine obsession. Every reel, every campaign, every creative decision comes from that obsession. That's not something you can fake. And it's the reason our clients don't just hire us once. They stay.",
+  "email": "respawnmediain@gmail.com",
+  "phone1": "73585 85884",
+  "phone2": "63835 33033",
+  "heroVideo1": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Intoxicated%20drop/There%E2%80%99s%20an%20intoxicating%20charm%20in%20the%20details-from%20the%20intricate%20gold-thread%20embroidery%20on%20the%20co.mp4",
+  "heroVideo2": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Tissera%20Shoot/Nothing%20speaks.Yet%2C%20everything%20is%20understood.Precision%20in%20every%20line.Presence%20in%20every%20step.Tiss.mp4",
+  "heroVideo3": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Tissera%20Shoot/Perfecting%20the%20interplay%20of%20weight%20and%20texture.%20Here%2C%20an%20Irish%20linen%20houndstooth%20bush%20coat%20meets.mp4",
+  "heroVideo4": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Main%20Pagre/AQO_OZdXrQbPkpCqOrnAzSvdYy3tyL-8Gy_XjkCss15oPM7M4MhH-9z9SmWbPzCGSdHz8SF2XRmANlnuCtDJnqiqFhtaxeUQ.mp4"
+} /*EDITMODE-END*/;
+
+const LOGO_WHITE = "assets/logo-white.png";
+const LOGO_BLACK = "assets/logo-black.png";
+
+const R2 = "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev";
+
+const INIT_CLIENTS = [
+{ id: 1, name: "Atha Fragrances", industry: "Premium Wellness & Aromatherapy", logo: R2 + "/clients/atha-fragrances.png", url: "https://www.instagram.com/athafragrances/" },
+{ id: 2, name: "Avias", industry: "Premium Kitchenware Brand", logo: R2 + "/clients/Avias%20.png", url: "https://www.instagram.com/aviasindia/" },
+{ id: 3, name: "Bajoria Hospitality", industry: "Bespoke Catering & Hospitality", logo: R2 + "/clients/bajoria-hospitality.png", url: "https://www.instagram.com/bajoriahospitality/" },
+{ id: 4, name: "Chennai Grocers", industry: "Gourmet & Premium Grocery Retail", logo: R2 + "/clients/chennai-grocers.png", url: "https://www.instagram.com/chennaigrocers/" },
+{ id: 5, name: "Chit Chaat Chai", industry: "Indian Street Food Cafe", logo: R2 + "/clients/chit-chaat-chai.png", url: "https://www.instagram.com/chit.chaatchai/" },
+{ id: 6, name: "Coconut", industry: "South Indian Restaurant", logo: R2 + "/clients/Coconut.JPG", url: "https://www.instagram.com/coconutlife.in/" },
+{ id: 7, name: "Ctrl VR", industry: "Tech · VR", logo: R2 + "/clients/ctrl-vr.png", url: "#" },
+{ id: 8, name: "Kati Roll Shop", industry: "Quick Service Restaurant", logo: R2 + "/clients/kati-roll-shop.png", url: "https://www.instagram.com/thekatirollshop/" },
+{ id: 9, name: "Mantras", industry: "Pure Vegetarian Family Restaurant", logo: R2 + "/clients/mantras.png", url: "https://www.instagram.com/mantraspureveg/" },
+{ id: 10, name: "Pakwan", industry: "Premium Family Restaurant", logo: R2 + "/clients/Pakwan.jpg", url: "https://www.instagram.com/pakwanchennai/" },
+{ id: 11, name: "Saffron by Anu", industry: "Luxury Sweets & Gifting", logo: R2 + "/clients/Saffron%20by%20Anu-Brand%20Guidelines%20%282%29.pdf.png", url: "https://www.instagram.com/saffronbyanu/" },
+{ id: 12, name: "Spica", industry: "Brand", logo: R2 + "/clients/Spica.jpg", url: "#" },
+{ id: 13, name: "Sree Mishti Bhog", industry: "Indian Sweets & Snacks", logo: R2 + "/clients/sree-mishti-bhog.png", url: "https://www.instagram.com/sreemishtibhog/" },
+{ id: 14, name: "Suswani Bullion", industry: "Bullion & Jewelry", logo: R2 + "/clients/Suswani%20Bullion.jpg", url: "#" },
+{ id: 15, name: "Tea Villa Cafe", industry: "Premium Cafe & Tea Lounge", logo: R2 + "/clients/tea-villa-cafe.png", url: "https://www.instagram.com/teavillacafechennai/" },
+{ id: 16, name: "Tharun Kiron", industry: "Personal Brand", logo: R2 + "/clients/Tharun%20Kiron.PNG", url: "https://www.instagram.com/tharunkironofficial/" },
+{ id: 17, name: "Tissera", industry: "Artisanal Atelier for Men", logo: R2 + "/clients/Tissera.jpg", url: "https://www.instagram.com/tissera.in/" }];
+
+
+const INIT_WORK = [
+{ id: 1,
+  img: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/AVIAS_SOMETHING%20SHOPPING%20POST_JAN_1.jpg",
+  headline: "Social Media", client: "Avias", tag: "Product Marketing",
+  description: "For Avias, a premium kitchenware brand, we worked on the launch campaign for their new AVS Electric Chopper. The campaign began with a curiosity-led teaser where the audience had to guess the product, followed by a giveaway for three winners who guessed it right. After building anticipation, we revealed the product and created a mix of feature-led reels, product carousels, and engaging launch content to highlight its use and convenience. The campaign helped Avias create strong buzz around the product and turned the launch into an interactive, high-engagement moment for the brand.",
+  media: [
+  { type: 'image', url: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/Avias%20-%20Knife%20x%20Regular%20x%20Avias.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/Say%20goodbye%20to%20the%20manual%20struggle.%20Upgrade%20your%20kitchen%20with%20the%20Avias%20Chopper-precision%20at%20the.jpg" },
+  { type: 'video', url: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/30%20seconds.%20One%20perfect%20chop.%20%E2%8F%B1%EF%B8%8FQuick%2C%20easy%2C%20and%20effortless.%23aviasindia%20%23kitchenware%20%23kitcheness.mp4" },
+  { type: 'video', url: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/Efficient%20and%20sleek-upgrade%20to%20the%20Avias%20Smart%20Chopper.Now%20available%20on%20Amazon%20and%20our%20website.%23.mp4" },
+  { type: 'video', url: R2 + "/Case%20Studies/Avias%20Electric%20Chopper/Something%20sleek%20and%20powerful%20is%20landing%20soon.%20Can%20you%20guess%20what%20it%20is%F0%9F%8E%81%20GIVEAWAY%20ALERT-%20One%20luc.mp4" }]
+},
+{ id: 2,
+  img: R2 + "/Case%20Studies/SMB%20Store%20Launch/1.jpg",
+  headline: "Social Media", client: "Sree Mishti Bhog", tag: "Store Launch",
+  description: "For Sree Mishti Bhog, we executed a store-launch campaign that built anticipation around their opening and highlighted their launch-day deals. The campaign achieved strong organic reach and helped create meaningful buzz for the brand during its opening phase.",
+  media: [
+  { type: 'image', url: R2 + "/Case%20Studies/SMB%20Store%20Launch/2.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/SMB%20Store%20Launch/3.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/SMB%20Store%20Launch/5.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/SMB%20Store%20Launch/6.jpg" },
+  { type: 'video', url: R2 + "/Case%20Studies/SMB%20Store%20Launch/4.mp4" }]
+},
+{ id: 3,
+  img: R2 + "/Case%20Studies/Tissera%20Shoot/red%20jacket.JPG",
+  headline: "Fashion Shoot", client: "Tissera", tag: "Product Photography",
+  description: "Tissera is an artisanal atelier for men, built around refined craftsmanship, understated style, and timeless detailing. For the brand, we executed a product-focused fashion photoshoot that highlighted the texture, fit, and premium feel of their pieces.\n\nThe shoot was designed to feel clean, elegant, and editorial, keeping the clothes as the hero while bringing out the brand's artisanal identity. The final visuals turned out sharp, tasteful, and highly usable across their digital presence, giving Tissera a strong set of brand images for content, promotions, and portfolio-led storytelling.",
+  media: [
+  { type: 'image', url: R2 + "/Case%20Studies/Tissera%20Shoot/Red%20Tux.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Tissera%20Shoot/green.JPG" },
+  { type: 'image', url: R2 + "/Case%20Studies/Tissera%20Shoot/orange%20jacket.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Tissera%20Shoot/redd.JPG" },
+  { type: 'image', url: R2 + "/Case%20Studies/Tissera%20Shoot/white%20suit.jpg" },
+  { type: 'video', url: R2 + "/Case%20Studies/Tissera%20Shoot/Nothing%20speaks.Yet%2C%20everything%20is%20understood.Precision%20in%20every%20line.Presence%20in%20every%20step.Tiss.mp4" },
+  { type: 'video', url: R2 + "/Case%20Studies/Tissera%20Shoot/Perfecting%20the%20interplay%20of%20weight%20and%20texture.%20Here%2C%20an%20Irish%20linen%20houndstooth%20bush%20coat%20meets.mp4" }]
+},
+{ id: 4,
+  img: R2 + "/Case%20Studies/Intoxicated%20drop/Intoxicated%20is%20made%20for%20evenings%20out%20%E2%80%94%20clean%20fits%2C%20dark%20silhouettes%2C%20and%20effortless%20confidence.S.jpg",
+  headline: "\"Intoxicated\"\nLaunch", client: "Tharun Kiron", tag: "Drop Launch",
+  description: "For Tarun Kiron's Intoxicated drop, we created a visual-led campaign that captured the energy of modern celebrations. Positioned around house parties, wedding nights, and Gen Z occasionwear, the campaign included research, styling direction, a full photoshoot, video content, and social media creatives. The final output gave the collection a bold, youthful identity and helped present the drop as statement fashion for party and wedding-ready moments.",
+  media: [
+  { type: 'image', url: R2 + "/Case%20Studies/Intoxicated%20drop/No%20embellishment%20for%20attention.Only%20detail%20for%20those%20who%20look%20closer.This%20is%20Intoxicated.%23tharun.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Intoxicated%20drop/No%20embellishment%20for%20attention.Only%20detail%20for%20those%20who%20look%20closer.This%20is%20Intoxicated.%23tharun%20(1).jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Intoxicated%20drop/The%20party%20ended%2C%20but%20the%20look%20is%20just%20getting%20started.%20Sinking%20into%20the%20shadows%20with%20these%20intri.jpg" },
+  { type: 'image', url: R2 + "/Case%20Studies/Intoxicated%20drop/The%20party%20ended%2C%20but%20the%20look%20is%20just%20getting%20started.%20Sinking%20into%20the%20shadows%20with%20these%20intri%20(1).jpg" },
+  { type: 'video', url: R2 + "/Case%20Studies/Intoxicated%20drop/There%E2%80%99s%20an%20intoxicating%20charm%20in%20the%20details-from%20the%20intricate%20gold-thread%20embroidery%20on%20the%20co.mp4" }]
+}];
+
+
+const SERVICES = [
+{ num: "01", title: "Social Media\nManagement", desc: "End-to-end management of your social presence — content calendars, shoot scheduling, captions, posting, and growth. You run your business. We make sure the internet knows about it." },
+{ num: "02", title: "Content\nProduction", desc: "In-house and on-location shoots — photos, videos, and reels that look the part. We match the right videographer and photographer to each client's budget and brand, every time." },
+{ num: "03", title: "Campaign Strategy\n& Launch", desc: "Opening a new store? Dropping a new collection? We build the entire campaign around it — from the first teaser to the last post — and make sure people actually show up." },
+{ num: "04", title: "Branding &\nConsultation", desc: "Strategy, visual identity, and positioning — for brands that need a clear direction before they need content. We'll tell you what to say, how to say it, and who to say it to." },
+{ num: "05", title: "Performance\nAds", desc: "Targeted campaigns on Meta — Facebook and Instagram — that drive real outcomes. Walk-ins, enquiries, leads, and sales. Not just reach. Actual results that justify the spend." },
+{ num: "06", title: "AI-Assisted\nMarketing", desc: "We use AI where it makes sense — to move faster, work smarter, and do what wasn't possible before. Not to replace ideas. To make them sharper and more effective." }];
+
+
+const INIT_FOUNDERS = [
+{ id: 'f1', name: "Shlok Jain", role: "Founder · Business & Client Relations", bio: "The voice clients hear most — and the reason they stay. Shlok owns every client relationship end-to-end. Brilliant with people, sharper with strategy. Your first point of contact for everything business.", img: "https://static.wixstatic.com/media/2dcde4_ca6e4bcb71514460a42dff1e91715d78~mv2.jpg/v1/crop/x_526,y_1459,w_1017,h_843/fill/w_600,h_500,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/shlok%20pic_edited.jpg" },
+{ id: 'f2', name: "Tanay Jain", role: "Founder · Content & Production Head", bio: "The person behind every shoot, every edit, every frame that makes clients come back for more. Tanay leads all content production and creative direction — and also heads Knot, our wedding content arm.", img: "https://static.wixstatic.com/media/2dcde4_20f420c6464d44c29658027cd3bc474a~mv2.png/v1/crop/x_1,y_57,w_3023,h_2508/fill/w_600,h_500,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/tanay%20pic_HEIC.png" },
+{ id: 'f3', name: "Arihant Bhandari", role: "Founder · Strategy & Growth", bio: "The vision behind where Respawn goes next. Arihant leads new client strategy, ideation, and pitching. He's been building Instagram pages long before it was a business — and that instinct still drives everything.", img: "https://static.wixstatic.com/media/2dcde4_746603a5922449e78f6420875e67a2d9~mv2.jpg/v1/crop/x_220,y_0,w_1810,h_1500/fill/w_600,h_500,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/ari_edited.jpg" }];
+
+
+function useInView(threshold = 0.1) {
+  const ref = useRef(null);
+  const [v, setV] = useState(false);
+  useEffect(() => {
+    const o = new IntersectionObserver(([e]) => {if (e.isIntersecting) setV(true);}, { threshold });
+    if (ref.current) o.observe(ref.current);
+    return () => o.disconnect();
+  }, []);
+  return [ref, v];
+}
+
+// Logo — PNG image. color='white' or 'black' determines which file to use
+// Logo source is 1796x1091 (~1.647:1). `size` = height in px.
+function Logo({ size = 44, variant = 'white', alt = 'Respawn Media' }) {
+  const src = variant === 'black' ? LOGO_BLACK : LOGO_WHITE;
+  return <img src={src} alt={alt} style={{ height: size, width: 'auto', display: 'block', userSelect: 'none' }} draggable={false} />;
+}
+
+// ─── FILE → DataURL HELPER ─────────────────────────────────────
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// A reusable "Upload Image" button — accepts jpg/png/webp/gif
+function ImageUploader({ value, onChange, label = 'Upload Image', accept = 'image/*' }) {
+  const inputRef = useRef(null);
+  const onPick = async (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const url = await fileToDataURL(f);
+    onChange(url);
+  };
+  const btnS = { background: 'var(--teal)', color: 'var(--black)', border: 'none', padding: '0.5rem 0.75rem', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer', flex: 1 };
+  const clrS = { background: 'transparent', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.12)', padding: '0.5rem 0.75rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer' };
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        {value ?
+        <div style={{ width: 48, height: 48, background: 'var(--black)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, flexShrink: 0 }}>
+            <img src={value} alt="" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+          </div> :
+
+        <div style={{ width: 48, height: 48, background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>↑</div>
+        }
+        <button type="button" style={btnS} onClick={() => inputRef.current?.click()}>{value ? 'Replace' : label}</button>
+        {value && <button type="button" style={clrS} onClick={() => onChange('')}>Clear</button>}
+        <input ref={inputRef} type="file" accept={accept} onChange={onPick} style={{ display: 'none' }} />
+      </div>
+    </div>);
+
+}
+
+function Eyebrow({ children, style = {} }) {
+  return <span style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--teal)', ...style }}>{children}</span>;
+}
+
+function SectionHead({ num, eyebrow, title, inView, accent, right, style = {} }) {
+  return (
+    <div className="sec-head" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: right ? 'space-between' : 'flex-start', gap: '2rem', flexWrap: 'wrap', marginBottom: '3.5rem', ...style }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem' }}>
+        <div className="sec-head-num" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(60px,8vw,96px)', lineHeight: 1, color: 'var(--teal)', opacity: inView ? 0.25 : 0, minWidth: '1.1em', marginTop: '-6px', transition: 'opacity 0.9s ease' }}>{num}</div>
+        <div style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(20px)', transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1) 0.15s' }}>
+          <Eyebrow style={{ display: 'block', marginBottom: '0.35rem' }}>{eyebrow}</Eyebrow>
+          <h2 className="sec-head-title" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px,6vw,64px)', lineHeight: 0.95, letterSpacing: '0.01em' }}>{title}{accent && <><br /><span style={{ color: 'var(--teal)' }}>{accent}</span></>}</h2>
+        </div>
+      </div>
+      {right && <div className="sec-head-right" style={{ opacity: inView ? 1 : 0, transition: 'opacity 0.7s ease 0.35s' }}>{right}</div>}
+    </div>);
+
+}
+
+function Nav({ active }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', h);return () => window.removeEventListener('scroll', h);
+  }, []);
+  const links = ['clients', 'work', 'who', 'services', 'contact'];
+  const labels = { work: 'Work', clients: 'Clients', who: 'Who Are We', services: 'Services', contact: 'Contact' };
+  return (
+    <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 3rem', background: scrolled ? 'rgba(5,5,5,0.96)' : 'transparent', backdropFilter: scrolled ? 'blur(16px)' : 'none', borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent', transition: 'all 0.3s' }}>
+      <a href="#hero" style={{ display: 'flex', alignItems: 'center' }}><Logo size={36} variant="white" /></a>
+      <div className="desk-nav" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+        {links.map((l) =>
+        <a key={l} href={`#${l}`} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', color: active === l ? 'var(--teal)' : 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}
+        onMouseEnter={(e) => e.target.style.color = 'var(--teal)'} onMouseLeave={(e) => e.target.style.color = active === l ? 'var(--teal)' : 'rgba(255,255,255,0.4)'}>{labels[l]}</a>
+        )}
+        <a href="#contact" style={{ background: 'var(--teal)', color: 'var(--black)', padding: '0.45rem 1.2rem', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'} onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>Let's Talk</a>
+      </div>
+      <button className="ham" onClick={() => setOpen((o) => !o)} style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column', gap: 5, padding: 4 }}>
+        {[0, 1, 2].map((i) => <span key={i} style={{ display: 'block', width: 22, height: 2, background: open && i === 1 ? 'transparent' : 'var(--teal)', transition: 'all 0.2s', transform: open ? i === 0 ? 'rotate(45deg) translate(4px,5px)' : i === 2 ? 'rotate(-45deg) translate(4px,-5px)' : 'none' : 'none' }} />)}
+      </button>
+      {open &&
+      <div style={{ position: 'fixed', inset: 0, top: 56, background: 'rgba(5,5,5,0.98)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2rem', zIndex: 190 }}>
+          {links.map((l) => <a key={l} href={`#${l}`} onClick={() => setOpen(false)} style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '0.04em', color: 'var(--white)' }}>{labels[l].toUpperCase()}</a>)}
+          <a href="#contact" onClick={() => setOpen(false)} style={{ marginTop: '1rem', background: 'var(--teal)', color: 'var(--black)', padding: '0.75rem 2.5rem', fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '0.9rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>LET'S TALK</a>
+        </div>
+      }
+    </nav>);
+
+}
+
+function Hero({ tagline, heroVideos }) {
+  const [on, setOn] = useState(false);
+  // Build a shuffled playlist of all provided videos. We start with a fresh
+  // random order on each page load, play each video to the end, advance to
+  // the next, and re-shuffle when we reach the end so the loop is endless.
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  const sources = (heroVideos || []).filter(Boolean);
+  const [playlist, setPlaylist] = useState(() => shuffle(sources));
+  const [idx, setIdx] = useState(0);
+  // Re-seed the playlist if the configured URL list changes (e.g. via Tweaks).
+  useEffect(() => {
+    setPlaylist(shuffle((heroVideos || []).filter(Boolean)));
+    setIdx(0);
+  }, [(heroVideos || []).join('|')]);
+  const heroVideo = playlist[idx] || '';
+  const handleVideoEnd = () => {
+    setIdx((i) => {
+      const next = i + 1;
+      if (next >= playlist.length) {
+        // Reached end — re-shuffle and start over so we never stop playing.
+        // Avoid replaying the same clip back-to-back when possible.
+        let reshuffled = shuffle(playlist);
+        if (playlist.length > 1 && reshuffled[0] === playlist[i]) {
+          reshuffled = [reshuffled[1], reshuffled[0], ...reshuffled.slice(2)];
+        }
+        setPlaylist(reshuffled);
+        return 0;
+      }
+      return next;
+    });
+  };
+  useEffect(() => {setTimeout(() => setOn(true), 120);}, []);
+  const SlideIn = ({ delay, children }) =>
+  <div style={{ overflow: 'hidden' }}>
+      <div style={{ transform: on ? 'translateY(0)' : 'translateY(105%)', transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${delay}ms` }}>{children}</div>
+    </div>;
+  // Strong black drop shadow so text reads cleanly over any video background
+  const shadow = '0 2px 8px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.75), 0 1px 2px rgba(0,0,0,0.95)';
+
+  return (
+    <section id="hero" data-screen-label="01 Hero" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 3rem 4.5rem', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', background: '#000' }}>
+      {/* Hero background video — rotates randomly through the list set in Tweaks → Brand */}
+      {heroVideo &&
+        <video
+          key={heroVideo}
+          src={heroVideo}
+          autoPlay muted playsInline
+          onEnded={handleVideoEnd}
+          aria-hidden="true"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }}
+        />
+      }
+      {/* Subtle vignette to keep text readable on any video */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', background: heroVideo ? 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.7) 100%)' : 'transparent' }} />
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'var(--teal)', opacity: on ? 1 : 0, transition: 'opacity 1.2s ease 1.4s', zIndex: 2 }} />
+      <div style={{ maxWidth: 1280, width: '100%', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem', opacity: on ? 1 : 0, transition: 'opacity 0.5s ease 0.3s', textShadow: shadow }}>
+          <div style={{ width: 8, height: 8, background: 'var(--teal)', borderRadius: '50%', boxShadow: '0 1px 6px rgba(0,0,0,0.9)' }} />
+          <Eyebrow>Respawn Media — Creative Studio</Eyebrow>
+        </div>
+        <div style={{ marginBottom: '2.5rem' }}>
+          <SlideIn delay={180}><h1 className="hero-h" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,8vw,80px)', lineHeight: 0.9, letterSpacing: '0.01em', color: 'var(--white)', textShadow: shadow }}>Hi, We're</h1></SlideIn>
+          <SlideIn delay={320}>
+            <h1 className="hero-h" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,8vw,80px)', lineHeight: 0.9, letterSpacing: '0.01em', textShadow: shadow }}>
+              <span style={{ color: 'var(--white)' }}>Respawn </span>
+              <span style={{ color: 'var(--teal)' }}>Media.</span>
+            </h1>
+          </SlideIn>
+        </div>
+        <div style={{ height: 1, background: 'var(--border)', marginBottom: '1.5rem', opacity: on ? 1 : 0, transition: 'opacity 0.6s ease 0.9s' }} />
+        <div className="hero-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '2rem', opacity: on ? 1 : 0, transition: 'opacity 0.7s ease 1s' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 'clamp(13px,1.4vw,17px)', maxWidth: 480, lineHeight: 1.7, color: "rgb(22, 196, 186)", textShadow: shadow }}>{tagline}</p>
+          <div className="hero-meta-grid" style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+            {[['Agency', 'Respawn Media'], ['Location', 'Chennai, India']].map(([l, v]) =>
+            <div key={l} style={{ textShadow: shadow }}>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '9.5px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gray)', marginBottom: '0.2rem' }}>{l}</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '14px' }}>{v}</div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="hero-cta" style={{ display: 'flex', gap: '0.6rem', marginTop: '2rem', opacity: on ? 1 : 0, transition: 'opacity 0.7s ease 1.15s' }}>
+          <a href="#clients" style={{ background: 'var(--white)', color: 'var(--black)', padding: '0.75rem 1.6rem', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '13px', letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'background 0.2s', boxShadow: '0 6px 20px rgba(0,0,0,0.55)' }} onMouseEnter={(e) => e.currentTarget.style.background = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.background = 'var(--white)'}>See Our Work</a>
+          <a href="#contact" style={{ border: '1px solid var(--border-strong)', color: 'var(--white)', padding: '0.75rem 1.6rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'border-color 0.2s', textShadow: shadow, background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(2px)' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-strong)'}>Start a Project</a>
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ─── GENERIC MARQUEE ROW (CSS animation) ───────────────────────
+function MarqueeRow({ children, direction = 'left', duration = 45, inView, gap = '1.25rem' }) {
+  const [paused, setPaused] = useState(false);
+  return (
+    <div style={{ overflow: 'hidden', position: 'relative', WebkitMaskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)', maskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)' }}
+    onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div style={{ display: 'flex', gap, width: 'max-content', animation: `marquee ${duration}s linear infinite ${direction === 'right' ? 'reverse' : ''}`, animationPlayState: paused ? 'paused' : 'running', opacity: inView ? 1 : 0, transition: 'opacity 0.8s ease' }}>{children}</div>
+    </div>);
+
+}
+
+// ─── DRAG-SCRUB MARQUEE ───────────────────────────────────────
+// Continuously auto-scrolls. User can click-and-drag (or swipe) to scrub;
+// releases back to auto after 1.5s of idle. Children are looped (2x)
+// to create seamless wrap-around.
+function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView, gap = 20, idName }) {
+  const scrollerRef = useRef(null);
+  const trackRef = useRef(null);
+  const stateRef = useRef({ dragging: false, startX: 0, startScroll: 0, lastInteract: 0, halfWidth: 0, raf: null, initialized: false, moved: 0, suppressClick: false });
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const track = trackRef.current;
+    if (!scroller || !track) return;
+
+    // Wait for layout, then measure half-track width (one copy of the items)
+    const measure = () => {
+      const hw = track.scrollWidth / 2;
+      stateRef.current.halfWidth = hw;
+      // For right-scrolling, we need to start from a mid position so we can scroll right (decrease scrollLeft)
+      if (!stateRef.current.initialized && hw > 0) {
+        scroller.scrollLeft = direction === 'right' ? hw : 0;
+        stateRef.current.initialized = true;
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(track);
+
+    let last = performance.now();
+    const tick = (now) => {
+      const s = stateRef.current;
+      const dt = Math.min(64, now - last);
+      last = now;
+      const idle = now - s.lastInteract > 1500;
+      if (!s.dragging && idle && inView && s.halfWidth > 0) {
+        const dx = speed * dt / 1000 * (direction === 'right' ? -1 : 1);
+        scroller.scrollLeft += dx;
+      }
+      // Wrap around for infinite loop
+      if (s.halfWidth > 0) {
+        if (scroller.scrollLeft >= s.halfWidth) scroller.scrollLeft -= s.halfWidth;
+        if (scroller.scrollLeft <= 0) scroller.scrollLeft += s.halfWidth;
+      }
+      s.raf = requestAnimationFrame(tick);
+    };
+    stateRef.current.raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(stateRef.current.raf);
+      ro.disconnect();
+    };
+  }, [inView, direction, speed]);
+
+  const onPointerDown = (e) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    stateRef.current.dragging = true;
+    stateRef.current.startX = e.clientX;
+    stateRef.current.startScroll = scroller.scrollLeft;
+    stateRef.current.lastInteract = performance.now();
+    stateRef.current.moved = 0;
+    setIsDragging(true);
+    try {e.currentTarget.setPointerCapture(e.pointerId);} catch (_) {}
+  };
+  const onPointerMove = (e) => {
+    if (!stateRef.current.dragging) return;
+    const dx = e.clientX - stateRef.current.startX;
+    stateRef.current.moved = Math.max(stateRef.current.moved, Math.abs(dx));
+    scrollerRef.current.scrollLeft = stateRef.current.startScroll - dx;
+    stateRef.current.lastInteract = performance.now();
+  };
+  const endDrag = (e) => {
+    if (!stateRef.current.dragging) return;
+    stateRef.current.dragging = false;
+    stateRef.current.lastInteract = performance.now();
+    // Suppress next click if the user actually dragged (not just tapped)
+    stateRef.current.suppressClick = stateRef.current.moved > 6;
+    setIsDragging(false);
+    try {e && e.currentTarget?.releasePointerCapture?.(e.pointerId);} catch (_) {}
+  };
+  const onClickCapture = (e) => {
+    if (stateRef.current.suppressClick) {
+      e.preventDefault();
+      e.stopPropagation();
+      stateRef.current.suppressClick = false;
+    }
+  };
+  const onWheel = () => {stateRef.current.lastInteract = performance.now();};
+
+  // Duplicate items for seamless loop
+  const loop = [...items, ...items];
+
+  return (
+    <div
+      style={{
+        overflow: 'hidden',
+        position: 'relative',
+        WebkitMaskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)',
+        maskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)',
+        opacity: inView ? 1 : 0,
+        transition: 'opacity 0.8s ease'
+      }}>
+      
+      <div
+        ref={scrollerRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onPointerLeave={(e) => {if (stateRef.current.dragging) endDrag(e);}}
+        onClickCapture={onClickCapture}
+        onWheel={onWheel}
+        onMouseEnter={() => {stateRef.current.lastInteract = performance.now();}}
+        onMouseMove={() => {stateRef.current.lastInteract = performance.now();}}
+        style={{
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          cursor: isDragging ? 'grabbing' : 'grab',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          touchAction: 'pan-y'
+        }}>
+        
+        <style>{`#${idName}::-webkit-scrollbar{display:none}`}</style>
+        <div id={idName} ref={trackRef} style={{ display: 'flex', gap, width: 'max-content', pointerEvents: isDragging ? 'none' : 'auto' }}>
+          {loop.map((it, i) => renderItem(it, i))}
+        </div>
+      </div>
+    </div>);
+
+}
+
+function shuffleSeeded(arr, seed) {
+  // Fisher-Yates with a simple seeded PRNG (mulberry32) so order is stable per visit
+  let a = 0x6d2b79f5 ^ seed;
+  const rand = () => {
+    a |= 0;a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+// ─── CLIENTS SECTION (drag marquee, two shuffled rows) ─────────
+function ClientsSection({ clients }) {
+  const [ref, inView] = useInView();
+  // Randomize on every mount — different seed each visit
+  const seedA = React.useMemo(() => Math.floor(Math.random() * 1e9), []);
+  const seedB = React.useMemo(() => Math.floor(Math.random() * 1e9), []);
+  const rowA = React.useMemo(() => shuffleSeeded(clients, seedA), [clients, seedA]);
+  const rowB = React.useMemo(() => {
+    let s = shuffleSeeded(clients, seedB);
+    // Rotate so first items never line up vertically with rowA
+    const off = Math.floor(s.length / 2) + seedB % 3;
+    return s.slice(off).concat(s.slice(0, off));
+  }, [clients, seedB]);
+  return (
+    <section id="clients" data-screen-label="02 Clients" ref={ref} style={{ padding: '6rem 0', position: 'relative', overflow: 'hidden', background: 'rgba(255,255,255,0.012)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 3rem' }}>
+        <SectionHead num="01" eyebrow="The Brands" title="Brands That Have" accent="Trusted Us." inView={inView} />
+      </div>
+      <DragMarquee idName="cli-a" items={rowA} renderItem={(c, i) => <ClientChip key={`a-${c.id}-${i}`} client={c} />} speed={40} direction="left" inView={inView} gap={20} />
+      <div style={{ height: '1.25rem' }} />
+      <DragMarquee idName="cli-b" items={rowB} renderItem={(c, i) => <ClientChip key={`b-${c.id}-${i}`} client={c} />} speed={32} direction="right" inView={inView} gap={20} />
+      <div style={{ textAlign: 'center', marginTop: '3rem', padding: '0 1rem', opacity: inView ? 1 : 0, transition: 'opacity 0.6s ease 0.8s' }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '13px', fontStyle: 'italic', color: "rgb(22, 196, 186)" }}>drag to browse · and we're grateful for every single one of them.</span>
+      </div>
+    </section>);
+
+}
+
+function ClientChip({ client }) {
+  const [hov, setHov] = useState(false);
+  const eyebrowText = client.industry || 'Client';
+  return (
+    <a href={client.url} target="_blank" rel="noopener noreferrer"
+    onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    onClick={(e) => {if (!client.url || client.url === '#') e.preventDefault();}}
+    draggable={false}
+    style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 14, padding: '1rem 1.5rem 1rem 1rem', background: hov ? 'var(--surface)' : 'rgba(255,255,255,0.025)', border: `1px solid ${hov ? 'var(--teal-border)' : 'var(--border)'}`, transition: 'background 0.25s,border-color 0.25s', position: 'relative', overflow: 'hidden', minWidth: 260 }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--teal)', transform: hov ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s' }} />
+      <div style={{ width: 56, height: 56, flexShrink: 0, background: 'var(--black)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6 }}>
+        <img src={client.logo} alt={client.name} draggable={false} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: hov ? 'brightness(1)' : 'grayscale(1) brightness(0.8)', transition: 'filter 0.25s', pointerEvents: 'none' }} loading="lazy" />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+        <Eyebrow style={{ fontSize: '9px', color: hov ? 'var(--teal)' : 'rgba(22,196,186,0.5)', transition: 'color 0.25s', whiteSpace: 'nowrap' }}>{eyebrowText}</Eyebrow>
+        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '16px', color: hov ? 'var(--white)' : 'rgba(255,255,255,0.75)', letterSpacing: '0.01em', whiteSpace: 'nowrap', transition: 'color 0.25s' }}>{client.name}</div>
+      </div>
+    </a>);
+
+}
+
+// ─── WORK SECTION (drag marquee) ───────────────────────────────
+function WorkSection({ workItems }) {
+  const [ref, inView] = useInView();
+  const [filt, setFilt] = useState('all');
+  const [activeItem, setActiveItem] = useState(null);
+  const tags = ['all', ...Array.from(new Set(workItems.map((w) => w.tag)))];
+  const items = filt === 'all' ? workItems : workItems.filter((w) => w.tag === filt);
+  return (
+    <section id="work" data-screen-label="03 Work" ref={ref} style={{ padding: '6rem 0', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 3rem' }}>
+        <SectionHead num="02" eyebrow="Our Work" title="Brands We've" accent="Brought To Life." inView={inView}
+        right={
+        <div className="filter-row" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+              {tags.map((t) =>
+          <button key={t} onClick={() => setFilt(t)} style={{ background: filt === t ? 'var(--teal)' : 'transparent', color: filt === t ? 'var(--black)' : 'rgba(255,255,255,0.4)', border: `1px solid ${filt === t ? 'var(--teal)' : 'rgba(255,255,255,0.1)'}`, padding: '0.3rem 0.9rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s', borderRadius: 2, whiteSpace: 'nowrap' }}>{t}</button>
+          )}
+            </div>
+        } />
+      </div>
+      <DragMarquee
+        idName={`work-${filt}`}
+        items={items}
+        renderItem={(w, i) => <WorkCard key={`${w.id}-${i}`} item={w} onOpen={() => setActiveItem(w)} />}
+        speed={28} direction="left" inView={inView} gap={16}
+      />
+      <div style={{ textAlign: 'center', marginTop: '2.5rem', padding: '0 1rem', opacity: inView ? 1 : 0, transition: 'opacity 0.6s ease 0.8s' }}>
+        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '13px', fontStyle: 'italic', color: "rgb(22, 196, 186)" }}>drag to scrub · click any case to open</span>
+      </div>
+      <CampaignModal item={activeItem} onClose={() => setActiveItem(null)} />
+    </section>);
+
+}
+
+function WorkCard({ item, onOpen }) {
+  const [hov, setHov] = useState(false);
+  const tapRef = useRef({ x: 0, y: 0, t: 0, valid: false });
+  const cardRef = useRef(null);
+  useEffect(() => {
+    const onUp = (e) => {
+      const t = tapRef.current;
+      if (!t.valid) return;
+      tapRef.current.valid = false;
+      const dx = Math.abs(e.clientX - t.x);
+      const dy = Math.abs(e.clientY - t.y);
+      const dt = performance.now() - t.t;
+      if (dx < 8 && dy < 8 && dt < 600) {
+        e.preventDefault();
+        e.stopPropagation();
+        onOpen();
+      }
+    };
+    const onCancel = () => { tapRef.current.valid = false; };
+    window.addEventListener('pointerup', onUp, true);
+    window.addEventListener('pointercancel', onCancel, true);
+    return () => {
+      window.removeEventListener('pointerup', onUp, true);
+      window.removeEventListener('pointercancel', onCancel, true);
+    };
+  }, [onOpen]);
+  const handlePointerDown = (e) => {
+    tapRef.current = { x: e.clientX, y: e.clientY, t: performance.now(), valid: true };
+    // Don't let the marquee parent capture this pointer; we want our own click.
+    e.stopPropagation();
+  };
+  return (
+    <div
+      ref={cardRef}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      onPointerDown={handlePointerDown}
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpen(); }}
+    style={{ flexShrink: 0, width: 280, aspectRatio: '3/4', position: 'relative', overflow: 'hidden', cursor: 'pointer', background: 'var(--surface)' }}>
+      <img src={item.img} alt={item.headline} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: hov ? 'scale(1.06)' : 'scale(1)', filter: 'grayscale(15%)', transition: 'transform 0.7s cubic-bezier(0.16,1,0.3,1)' }} loading="lazy" />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(8,8,8,0.96) 0%,rgba(8,8,8,0.4) 50%,transparent 100%)', opacity: 0.75 }} />
+      <div style={{ position: 'absolute', left: 0, right: 0, height: 3, background: 'var(--teal)', top: 0, transform: hov ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.4s ease' }} />
+      <div style={{ position: 'absolute', top: 12, right: 12, padding: '4px 8px', background: hov ? 'var(--teal)' : 'rgba(8,8,8,0.7)', color: hov ? 'var(--black)' : 'var(--teal)', border: '1px solid var(--teal-border)', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '9.5px', letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'all 0.2s' }}>View Case →</div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.25rem 1rem' }}>
+        <Eyebrow style={{ display: 'block', marginBottom: 6 }}>{item.tag} · {item.client}</Eyebrow>
+        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '1.75rem', lineHeight: 0.95, letterSpacing: '-0.01em', whiteSpace: 'pre-line' }}>{item.headline}</div>
+      </div>
+    </div>);
+
+}
+
+// ─── CAMPAIGN MODAL ────────────────────────────────────────────
+function CampaignModal({ item, onClose }) {
+  const [mobileOffset, setMobileOffset] = useState(null);
+  useEffect(() => {
+    if (!item) return;
+    const onKey = (e) => {if (e.key === 'Escape') onClose();};
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    // If inside a mobile frame, lock its scroll and compute the visible viewport top
+    const frame = document.querySelector('.mobile-frame');
+    let frameScrollTop = 0;
+    if (frame) {
+      frameScrollTop = frame.scrollTop;
+      setMobileOffset(frameScrollTop);
+      frame.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+      if (frame) {
+        frame.style.overflow = '';
+        frame.scrollTop = frameScrollTop;
+      }
+    };
+  }, [item]);
+  if (!item) return null;
+  const media = Array.isArray(item.media) && item.media.length ? item.media : [];
+  const hero = item.img;
+  const headlineFlat = (item.headline || '').replace(/\n/g, ' ');
+  const isMobile = mobileOffset !== null;
+  return (
+    <div onClick={onClose} className="case-modal-backdrop" style={{ position: isMobile ? 'absolute' : 'fixed', inset: isMobile ? 'auto' : 0, top: isMobile ? mobileOffset : 0, left: 0, right: 0, height: isMobile ? '100%' : undefined, width: isMobile ? '100%' : undefined, zIndex: 800, background: 'rgba(4,4,4,0.82)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '12px' : '2rem', animation: 'fadeIn 0.25s ease' }}>
+      <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}`}</style>
+      <div onClick={(e) => e.stopPropagation()} className="case-modal-panel" style={{ position: 'relative', width: '100%', maxWidth: 960, maxHeight: '88vh', background: 'var(--black)', border: '1px solid var(--teal-border)', borderTop: '3px solid var(--teal)', display: 'flex', flexDirection: 'column', animation: 'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)', boxShadow: '0 30px 80px rgba(0,0,0,0.8)', overflow: 'hidden' }}>
+        <button onClick={onClose} aria-label="Close" className="case-modal-close" style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, width: 36, height: 36, background: 'rgba(8,8,8,0.9)', border: '1px solid var(--border-strong)', color: 'var(--white)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }} onMouseEnter={(e) => {e.currentTarget.style.background = 'var(--teal)';e.currentTarget.style.color = 'var(--black)';}} onMouseLeave={(e) => {e.currentTarget.style.background = 'rgba(8,8,8,0.9)';e.currentTarget.style.color = 'var(--white)';}}>✕</button>
+
+        <div style={{ overflowY: 'auto' }}>
+          {/* HERO */}
+          <div className="case-modal-hero" style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: 'var(--surface)', overflow: 'hidden' }}>
+            {hero && <img src={hero} alt={headlineFlat} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,8,8,0.95) 0%, rgba(8,8,8,0.4) 40%, transparent 100%)' }} />
+            <div className="case-modal-hero-overlay" style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.5rem 2rem' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: 8 }}>{item.tag} · {item.client}</Eyebrow>
+              <div className="case-modal-hero-title" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px,5vw,56px)', lineHeight: 0.95, color: 'var(--white)', textTransform: 'lowercase', whiteSpace: 'pre-line' }}>{item.headline}</div>
+            </div>
+          </div>
+
+          {/* DESCRIPTION */}
+          <div className="case-modal-body" style={{ padding: '2rem 2rem 1.5rem' }}>
+            <div className="case-modal-body-row" style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1 1 320px' }}>
+                <Eyebrow style={{ display: 'block', marginBottom: 8 }}>About The Campaign</Eyebrow>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', lineHeight: 1.75, color: 'rgba(255,255,255,0.7)' }}>{item.description || 'No description added yet. Edit this campaign in Tweaks → Work to add a description, photos and videos.'}</p>
+              </div>
+              <div className="case-modal-meta" style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 160 }}>
+                <div style={{ padding: '0.75rem 1rem', background: 'var(--teal-dim)', border: '1px solid var(--teal-border)' }}>
+                  <Eyebrow>Client</Eyebrow>
+                  <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '16px', marginTop: 4 }}>{item.client}</div>
+                </div>
+                <div style={{ padding: '0.75rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                  <Eyebrow>Type</Eyebrow>
+                  <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '16px', marginTop: 4 }}>{item.tag}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* MEDIA GALLERY */}
+          {media.length > 0 &&
+          <div className="case-modal-gallery-wrap" style={{ padding: '0.5rem 2rem 2rem' }}>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', marginBottom: '1rem' }}>
+                <Eyebrow>Gallery · {media.length} item{media.length !== 1 ? 's' : ''}</Eyebrow>
+              </div>
+              <div className="case-modal-gallery" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem' }}>
+                {media.map((m, i) =>
+              <div key={i} style={{ aspectRatio: '1/1', background: 'var(--surface)', overflow: 'hidden', position: 'relative' }}>
+                    {m.type === 'video' ?
+                <video src={m.url} controls style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#000' }} /> :
+
+                <img src={m.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                }
+                  </div>
+              )}
+              </div>
+            </div>
+          }
+          {media.length === 0 &&
+          <div style={{ padding: '0 2rem 2rem' }}>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', display: 'flex', alignItems: 'center', gap: 12, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-body)', fontSize: '13px' }}>
+                <div style={{ width: 6, height: 6, background: 'var(--teal)', borderRadius: '50%' }} />
+                <span>No photos or videos yet. Open <span style={{ color: 'var(--teal)' }}>Tweaks → Work → Edit</span> to upload campaign media.</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>);
+
+}
+
+// ─── WHO ARE WE ────────────────────────────────────────────────
+function WhoAreWeSection({ aboutText, founders }) {
+  const [ref, inView] = useInView();
+  return (
+    <section id="who" data-screen-label="04 Who Are We" ref={ref} style={{ padding: '6rem 3rem', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <SectionHead num="03" eyebrow="About Us" title="Who Are We?" inView={inView} />
+        <div className="about-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start', marginBottom: '5rem' }}>
+          <div style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(24px)', transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: '1.25rem', opacity: "1" }}>
+              Respawn Media is Chennai's only creative, social media-first agency. We exist at the intersection of
+              <span style={{ padding: '0 4px', background: 'rgba(22,196,186,0.12)', color: 'var(--teal)', borderRadius: 2, opacity: "1" }}> content production</span>,
+              strategic thinking, and cultural fluency — working with restaurants, luxury fashion brands, and lifestyle businesses to build their presence on the internet.
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: '2rem' }}>{aboutText}</p>
+            <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: 'clamp(20px,2.5vw,28px)', lineHeight: 1.25, marginBottom: '2rem' }}>
+              We help businesses <span style={{ color: 'var(--teal)' }}>become brands</span> on the internet — with a perfect mix of <span style={{ color: 'var(--teal)' }}>content + strategy + ads.</span>
+            </div>
+            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              {[['8+', 'Years\nof experience'], ['20+', 'Brands\nserved'], ['Chennai', 'Based, world\nreach'], ['100%', 'Results-\ndriven']].map(([n, l], i) =>
+              <div key={n} style={{ padding: '1.25rem 1.25rem', background: 'var(--surface)', borderTop: '3px solid var(--teal)', opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(16px)', transition: `all 0.6s cubic-bezier(0.16,1,0.3,1) ${0.5 + i * 0.08}s` }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.25rem', color: 'var(--teal)', lineHeight: 1, marginBottom: 4 }}>{n}</div>
+                  <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', whiteSpace: 'pre-line', lineHeight: 1.4 }}>{l}</div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div style={{ opacity: inView ? 1 : 0, transition: 'opacity 0.9s ease 0.5s' }}>
+            <div style={{ border: '1px solid var(--teal-border)', background: 'var(--teal-dim)', padding: '2.5rem 2rem', marginBottom: '1px', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--teal)' }} />
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px,3.6vw,40px)', lineHeight: 1.15, marginBottom: '1rem', color: 'var(--white)' }}>
+                "We understand <span style={{ color: 'var(--teal)' }}>content</span> first. That's been our only real advantage — and it's <span style={{ color: 'var(--teal)' }}>worked</span> every single time."
+              </div>
+              <Eyebrow>— Respawn Media</Eyebrow>
+            </div>
+            <div className="values-row" style={{ display: 'flex', gap: '1px' }}>
+              {[['Creative-First', 'We lead with the idea.'], ['Anti-Corporate', 'No jargon, no fluff.'], ['Results-Driven', 'Looks great. Works harder.']].map(([t, d]) =>
+              <div key={t} style={{ flex: 1, padding: '1.25rem 1rem', background: 'var(--surface)', borderTop: '3px solid var(--teal-border)' }}>
+                  <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>{t}</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.55 }}>{d}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style={{ borderBottom: '1px solid var(--border)', marginBottom: '2rem', paddingBottom: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', opacity: inView ? 1 : 0, transition: 'opacity 0.5s ease 0.7s' }}>
+            <Eyebrow>Meet The Founders</Eyebrow>
+            <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)' }}>The brains behind the work.</span>
+          </div>
+          <div className="founders-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: 'rgba(255,255,255,0.04)' }}>
+            {founders.map((f, i) => <FounderCard key={f.id || f.name} founder={f} inView={inView} delay={i * 120} />)}
+          </div>
+        </div>
+      </div>
+    </section>);
+
+}
+
+function FounderCard({ founder, inView, delay }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    style={{ background: 'var(--black)', overflow: 'hidden', opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(24px)', transition: `all 0.8s cubic-bezier(0.16,1,0.3,1) ${0.75 + delay / 1000}s` }}>
+      <div style={{ height: 260, overflow: 'hidden', position: 'relative' }}>
+        <img src={founder.img} alt={founder.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', filter: `grayscale(${hov ? '0%' : '40%'})`, transform: hov ? 'scale(1.04)' : 'scale(1)', transition: 'transform 0.5s ease,filter 0.4s' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--teal)', transform: hov ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.4s ease' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(8,8,8,0.7) 0%,transparent 50%)' }} />
+      </div>
+      <div style={{ padding: '1.25rem 1.1rem', borderTop: '1px solid var(--border)' }}>
+        <Eyebrow style={{ display: 'block', marginBottom: 6 }}>{founder.role}</Eyebrow>
+        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '1.5rem', lineHeight: 1, letterSpacing: '-0.01em', marginBottom: '0.5rem' }}>{founder.name}</div>
+        <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{founder.bio}</p>
+      </div>
+    </div>);
+
+}
+
+function ServicesSection() {
+  const [ref, inView] = useInView();
+  return (
+    <section id="services" data-screen-label="05 Services" ref={ref} style={{ padding: '6rem 3rem', background: 'rgba(255,255,255,0.012)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <SectionHead num="04" eyebrow="What We Do" title="The Services," accent="We Serve." inView={inView} />
+        <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.04)' }}>
+          {SERVICES.map((s, i) => <ServiceCard key={s.num} service={s} inView={inView} delay={i * 80} />)}
+        </div>
+        <div style={{ marginTop: '3rem', textAlign: 'center', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem,5vw,4rem)', color: 'var(--teal)', opacity: inView ? 1 : 0, transition: 'opacity 0.8s ease 0.9s' }}>& much, much more.</div>
+      </div>
+    </section>);
+
+}
+
+function ServiceCard({ service, inView, delay }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    style={{ padding: '2rem 1.5rem', background: hov ? 'var(--surface)' : 'var(--black)', position: 'relative', overflow: 'hidden', opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(24px)', transition: `background 0.25s,opacity 0.8s cubic-bezier(0.16,1,0.3,1) ${0.25 + delay / 1000}s,transform 0.8s cubic-bezier(0.16,1,0.3,1) ${0.25 + delay / 1000}s` }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--teal)', transform: hov ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.35s ease' }} />
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', color: hov ? 'var(--teal)' : 'rgba(255,255,255,0.07)', lineHeight: 1, marginBottom: '0.75rem', transition: 'color 0.25s' }}>{service.num}</div>
+      <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1.1, marginBottom: '0.75rem', whiteSpace: 'pre-line' }}>{service.title}</div>
+      <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '13px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>{service.desc}</p>
+    </div>);
+
+}
+
+// ─── PRESS F TO RESPAWN (email CTA with F-key trigger) ─────────
+function PressFEmail({ email }) {
+  const [pressed, setPressed] = useState(false);
+  const [hov, setHov] = useState(false);
+  const fireEmail = () => {
+    setPressed(true);
+    window.location.href = `mailto:${email}`;
+    setTimeout(() => setPressed(false), 500);
+  };
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        const tag = (e.target?.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || e.target?.isContentEditable) return;
+        e.preventDefault();
+        fireEmail();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+  const keyStyle = {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    width: '1.15em', height: '1.15em',
+    fontFamily: 'var(--font-condensed)', fontWeight: 900,
+    background: pressed || hov ? 'var(--teal)' : 'var(--surface)',
+    color: pressed || hov ? 'var(--black)' : 'var(--white)',
+    border: '2px solid var(--teal)',
+    borderRadius: 6,
+    boxShadow: pressed ?
+    'inset 0 2px 4px rgba(0,0,0,0.4), 0 0 0 rgba(22,196,186,0)' :
+    `0 ${hov ? 2 : 4}px 0 rgba(22,196,186,0.35), 0 ${hov ? 4 : 8}px 20px rgba(22,196,186,0.25)`,
+    transform: pressed ? 'translateY(3px)' : 'translateY(0)',
+    transition: 'all 0.08s ease',
+    verticalAlign: '-0.18em',
+    margin: '0 0.08em',
+    lineHeight: 1,
+    padding: '0.05em 0'
+  };
+  return (
+    <div>
+      <button
+        onClick={fireEmail}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+        aria-label={`Email us at ${email}`}
+        style={{
+          all: 'unset', cursor: 'pointer', display: 'inline-block',
+          fontFamily: 'var(--font-condensed)', fontWeight: 900,
+          fontSize: 'clamp(1.25rem,3vw,2rem)',
+          color: 'var(--white)', textTransform: 'uppercase',
+          letterSpacing: '0.01em', lineHeight: 1.25,
+          borderBottom: '2px solid var(--teal)',
+          paddingBottom: '0.25rem'
+        }}>
+        Press <span style={keyStyle}>F</span> to Respawn
+      </button>
+      <div style={{ marginTop: 10, fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+        <span style={{ color: 'var(--teal)' }}>↳</span> tap the key or hit <kbd style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', padding: '1px 6px', background: 'var(--surface)', border: '1px solid var(--border-strong)', borderRadius: 3, color: 'rgba(255,255,255,0.7)' }}>F</kbd> on your keyboard — opens <span style={{ color: 'rgba(255,255,255,0.7)' }}>{email}</span>
+      </div>
+    </div>);
+
+}
+
+function ContactSection({ email, phone1, phone2 }) {
+  const [ref, inView] = useInView();
+  return (
+    <section id="contact" data-screen-label="06 Contact" ref={ref} style={{ padding: '6rem 3rem', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'var(--teal)' }} />
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <SectionHead num="05" eyebrow="Get In Touch" title="Let's Build Something." inView={inView} />
+        <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'start' }}>
+          <div style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(24px)', transition: 'all 0.8s cubic-bezier(0.16,1,0.3,1) 0.25s' }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '15px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.75, marginBottom: '2rem' }}>
+              Ready to respawn your brand's digital presence? We'd love to hear about your project. No jargon. No fluff. Just real conversation.
+            </p>
+            <div style={{ marginBottom: '1.75rem' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Drop us an email</Eyebrow>
+              <PressFEmail email={email} />
+            </div>
+            <div style={{ marginBottom: '1.75rem' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Visit our studio</Eyebrow>
+              <a href="https://www.google.com/maps/search/?api=1&query=Respawn+Media+Chennai" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.01em', transition: 'color 0.2s', lineHeight: 1.4, borderBottom: '1px dashed var(--teal-border)', paddingBottom: 4 }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}>
+                <svg width="14" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}><path d="M12 22s-8-7.58-8-13a8 8 0 0116 0c0 5.42-8 13-8 13z" /><circle cx="12" cy="9" r="3" /></svg>
+                <span>Chennai, Tamil Nadu, India<br /><span style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--teal)' }}>View on Google Maps →</span></span>
+              </a>
+            </div>
+            <div style={{ marginBottom: '2rem' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Call or text</Eyebrow>
+              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                {[phone1, phone2].map((p) =>
+                <a key={p} href={`tel:${p.replace(/\s/g, '')}`} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>{p}</a>
+                )}
+              </div>
+            </div>
+            <div>
+              <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Find us here</Eyebrow>
+              <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+                {[['Instagram', 'https://www.instagram.com/respawnmediain'], ['LinkedIn', 'https://www.linkedin.com/company/respawnmediain'], ['Facebook', 'https://www.facebook.com/respawnmediain']].map(([n, u]) =>
+                <a key={n} href={u} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.28)'}>{n}</a>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="contact-logo-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: inView ? 1 : 0, transition: 'opacity 1s ease 0.5s', padding: '3rem' }}>
+            <div style={{ textAlign: 'center' }}>
+              <Logo size={140} variant="white" />
+              <div style={{ marginTop: '1.5rem' }}>
+                <Eyebrow>Chennai, India</Eyebrow>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)', marginTop: 6, letterSpacing: '0.06em' }}>respawnmedia.in</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>);
+
+}
+
+function Footer() {
+  return (
+    <footer style={{ padding: '2rem 3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid var(--border)', background: 'var(--surface)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <Logo size={24} variant="white" />
+        <span style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
+      </div>
+      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.15)', letterSpacing: '0.08em', fontStyle: 'italic' }}>Abhi tak padh rahe ho? Thanks yaar.</span>
+    </footer>);
+
+}
+
+function Site({ tweaks, clients, setClients, workItems, setWorkItems, founders, setFounders, openTweaks, activeSection, setActiveSection }) {
+  useEffect(() => {
+    const sections = document.querySelectorAll('section[id]');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {if (e.isIntersecting) setActiveSection(e.target.id);});
+    }, { threshold: 0.35 });
+    sections.forEach((s) => obs.observe(s));
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <>
+      <Nav active={activeSection} />
+      <Hero tagline={tweaks.tagline} heroVideos={[tweaks.heroVideo1, tweaks.heroVideo2, tweaks.heroVideo3, tweaks.heroVideo4]} />
+      <ClientsSection clients={clients} />
+      <WorkSection workItems={workItems} />
+      <WhoAreWeSection aboutText={tweaks.aboutText} founders={founders} />
+      <ServicesSection />
+      <ContactSection email={tweaks.email} phone1={tweaks.phone1} phone2={tweaks.phone2} />
+      <Footer />
+    </>);
+
+}
+
+// Inline preview-mode switcher used inside the Tweaks panel
+function PreviewModeSwitch({ mode, setMode }) {
+  const btnS = (active) => ({ flex: 1, padding: '0.55rem 0.6rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: active ? 'var(--teal)' : 'rgba(255,255,255,0.04)', color: active ? 'var(--black)' : 'rgba(255,255,255,0.55)', transition: 'all 0.2s' });
+  return (
+    <div style={{ display: 'flex', gap: 4, marginBottom: 14, padding: 3, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <button style={btnS(mode === 'desktop')} onClick={() => setMode('desktop')}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="4" width="20" height="14" rx="1" /><path d="M8 22h8M12 18v4" /></svg>Desktop
+      </button>
+      <button style={btnS(mode === 'mobile')} onClick={() => setMode('mobile')}>
+        <svg width="10" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M11 18h2" /></svg>Mobile
+      </button>
+    </div>);
+
+}
+
+function TweaksPanel({ open, tweaks, setTweaks, clients, setClients, workItems, setWorkItems, founders, setFounders, mode, setMode }) {
+  const [tab, setTab] = useState('brand');
+  const [editingClientId, setEditingClientId] = useState(null);
+  const [nc, setNc] = useState({ name: '', industry: '', logo: '', url: '' });
+  const [nw, setNw] = useState({ img: '', headline: '', client: '', tag: '', description: '', media: [] });
+  const [editingWorkId, setEditingWorkId] = useState(null);
+  const [editingFounderId, setEditingFounderId] = useState(null);
+  const update = (k, v) => {const next = { ...tweaks, [k]: v };setTweaks(next);window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');};
+  if (!open) return null;
+  const panelS = { position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 600, background: 'rgba(17,17,17,0.98)', backdropFilter: 'blur(20px)', border: '1px solid var(--teal-border)', borderTop: '2px solid var(--teal)', width: 360, maxHeight: '82vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.8)' };
+  const tabS = (t) => ({ flex: 1, padding: '0.5rem 0.25rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', background: tab === t ? 'var(--teal)' : 'transparent', color: tab === t ? 'var(--black)' : 'rgba(255,255,255,0.35)', border: 'none', transition: 'all 0.2s' });
+  const lS = { fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--teal)', display: 'block', marginBottom: 4 };
+  const iS = { width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', padding: '0.45rem 0.7rem', color: 'var(--white)', fontFamily: 'var(--font-body)', fontSize: '13px', outline: 'none', marginBottom: 8, boxSizing: 'border-box' };
+  const primBtn = { width: '100%', background: 'var(--teal)', color: 'var(--black)', border: 'none', padding: '0.6rem', fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer' };
+
+  const editingWork = workItems.find((w) => w.id === editingWorkId);
+  const editingFounder = founders.find((f) => f.id === editingFounderId);
+  const editingClient = clients.find((c) => c.id === editingClientId);
+
+  return (
+    <div style={panelS}>
+      <div style={{ padding: '0.8rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', color: 'var(--teal)', letterSpacing: '0.04em' }}>TWEAKS</span>
+        <Eyebrow style={{ fontSize: '9px', color: 'rgba(22,196,186,0.7)' }}>● Preview only</Eyebrow>
+      </div>
+      <div style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        {['brand', 'clients', 'work', 'team'].map((t) => <button key={t} style={tabS(t)} onClick={() => {setTab(t);setEditingWorkId(null);setEditingFounderId(null);setEditingClientId(null);}}>{t}</button>)}
+      </div>
+      <div style={{ overflowY: 'auto', padding: '1.25rem', flex: 1 }}>
+
+        {tab === 'brand' &&
+        <div>
+            <label style={lS}>Preview Mode</label>
+            <PreviewModeSwitch mode={mode} setMode={setMode} />
+            <label style={lS}>Teal Color</label>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+              <input type="color" value={tweaks.teal} onChange={(e) => update('teal', e.target.value)} style={{ width: 36, height: 30, border: 'none', background: 'none', cursor: 'pointer', padding: 0 }} />
+              <input type="text" value={tweaks.teal} onChange={(e) => update('teal', e.target.value)} style={{ ...iS, marginBottom: 0, flex: 1 }} />
+            </div>
+            {[['tagline', 'Hero Tagline'], ['aboutText', 'About Text'], ['email', 'Email'], ['phone1', 'Phone 1'], ['phone2', 'Phone 2']].map(([k, l]) =>
+          <div key={k}><label style={lS}>{l}</label><textarea value={tweaks[k]} onChange={(e) => update(k, e.target.value)} rows={k === 'aboutText' ? 4 : 1} style={{ ...iS, resize: 'vertical' }} /></div>
+          )}
+            <label style={lS}>Hero Background Videos</label>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginBottom: 6, lineHeight: 1.5 }}>
+              Up to 4 looping background videos for the hero. One is picked at random on each page load. Paste mp4 / webm URLs, or upload files. Leave all blank for a plain black background.
+            </div>
+            {[1, 2, 3, 4].map((n) => {
+              const k = 'heroVideo' + n;
+              const v = tweaks[k] || '';
+              return (
+                <div key={k} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <Eyebrow style={{ fontSize: '10px' }}>Video {n}</Eyebrow>
+                    {v && <div style={{ fontFamily: 'var(--font-body)', fontSize: '10px', color: 'var(--teal)' }}>● {v.startsWith('data:') ? 'uploaded' : 'URL set'}</div>}
+                  </div>
+                  <input type="text" value={v} onChange={(e) => update(k, e.target.value)} placeholder="https://...video.mp4" style={iS} />
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm,video/*"
+                      onChange={async (e) => {
+                        const f = e.target.files?.[0];
+                        if (!f) return;
+                        const url = await fileToDataURL(f);
+                        update(k, url);
+                      }}
+                      style={{ ...iS, padding: '0.4rem', cursor: 'pointer', flex: 1, marginBottom: 0 }}
+                    />
+                    {v &&
+                      <button type="button" onClick={() => update(k, '')} style={{ background: 'transparent', color: 'rgba(255,255,255,0.55)', border: '1px solid rgba(255,255,255,0.12)', padding: '0.4rem 0.7rem', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer' }}>Clear</button>
+                    }
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        }
+
+        {tab === 'clients' && !editingClient &&
+        <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '0.25rem' }}>{clients.length} clients · tap edit to replace logo</div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '10.5px', color: 'rgba(22,196,186,0.55)', marginBottom: '1rem', fontStyle: 'italic' }}>Edits here are previews only — to add clients permanently, ask the designer to update the file.</div>
+            {clients.map((c) =>
+          <div key={c.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                  <div style={{ width: 36, height: 36, background: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, flexShrink: 0, border: '1px solid var(--border)' }}>
+                    {c.logo ? <img src={c.logo} alt="" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} onError={(e) => e.target.style.opacity = '0.2'} /> : <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.2)' }}>—</span>}
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', color: 'rgba(255,255,255,0.75)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</div>
+                    <Eyebrow style={{ fontSize: '9px' }}>{c.industry || 'Client'}</Eyebrow>
+                  </div>
+                </div>
+                <button onClick={() => setEditingClientId(c.id)} style={{ background: 'transparent', border: '1px solid var(--teal-border)', color: 'var(--teal)', padding: '3px 8px', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}>Edit</button>
+                <button onClick={() => setClients((cs) => cs.filter((x) => x.id !== c.id))} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '0.9rem', flexShrink: 0 }} onMouseEnter={(e) => e.target.style.color = '#ff4444'} onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.2)'}>✕</button>
+              </div>
+          )}
+            <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: '0.75rem', fontSize: '10px' }}>Add New Client</Eyebrow>
+              <label style={lS}>Brand Name</label>
+              <input type="text" value={nc.name} onChange={(e) => setNc((n) => ({ ...n, name: e.target.value }))} style={iS} />
+              <label style={lS}>Industry <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400 }}>(e.g. Restaurant · Café)</span></label>
+              <input type="text" value={nc.industry} onChange={(e) => setNc((n) => ({ ...n, industry: e.target.value }))} style={iS} placeholder="Industry / category" />
+              <label style={lS}>Brand Logo</label>
+              <ImageUploader value={nc.logo} onChange={(url) => setNc((n) => ({ ...n, logo: url }))} label="Upload Logo (JPG / PNG)" />
+              <label style={lS}>Instagram / Website URL <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400 }}>(optional)</span></label>
+              <input type="text" value={nc.url} onChange={(e) => setNc((n) => ({ ...n, url: e.target.value }))} style={iS} placeholder="https://..." />
+              <button onClick={() => {if (nc.name) {setClients((cs) => [...cs, { ...nc, url: nc.url || '#', id: Date.now() }]);setNc({ name: '', industry: '', logo: '', url: '' });}}} style={primBtn}>Add Client</button>
+            </div>
+          </div>
+        }
+
+        {tab === 'clients' && editingClient &&
+        <ClientEditor client={editingClient} setClients={setClients} onBack={() => setEditingClientId(null)} lS={lS} iS={iS} primBtn={primBtn} />
+        }
+
+        {tab === 'work' && !editingWork &&
+        <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '1rem' }}>{workItems.length} campaigns · tap edit to add photos & videos</div>
+            {workItems.map((w) =>
+          <div key={w.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', gap: 8 }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', textTransform: 'lowercase', color: 'rgba(255,255,255,0.75)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.headline?.replace(/\n/g, ' ')}</div>
+                  <Eyebrow style={{ marginTop: 2 }}>{w.client} · {Array.isArray(w.media) ? w.media.length : 0} media</Eyebrow>
+                </div>
+                <button onClick={() => setEditingWorkId(w.id)} style={{ background: 'transparent', border: '1px solid var(--teal-border)', color: 'var(--teal)', padding: '3px 8px', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}>Edit</button>
+                <button onClick={() => setWorkItems((ws) => ws.filter((x) => x.id !== w.id))} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.2)', cursor: 'pointer', fontSize: '0.9rem' }} onMouseEnter={(e) => e.target.style.color = '#ff4444'} onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.2)'}>✕</button>
+              </div>
+          )}
+            <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <Eyebrow style={{ display: 'block', marginBottom: '0.75rem', fontSize: '10px' }}>Add New Campaign</Eyebrow>
+              <label style={lS}>Title <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400 }}>(use line break for wrap)</span></label>
+              <input type="text" value={nw.headline} onChange={(e) => setNw((n) => ({ ...n, headline: e.target.value }))} style={iS} placeholder="e.g. social content" />
+              <label style={lS}>Client Name</label>
+              <input type="text" value={nw.client} onChange={(e) => setNw((n) => ({ ...n, client: e.target.value }))} style={iS} />
+              <label style={lS}>Service Type / Tag</label>
+              <input type="text" value={nw.tag} onChange={(e) => setNw((n) => ({ ...n, tag: e.target.value }))} style={iS} placeholder="Social Media, Campaign, Content..." />
+              <label style={lS}>Cover Image</label>
+              <ImageUploader value={nw.img} onChange={(url) => setNw((n) => ({ ...n, img: url }))} label="Upload Cover (JPG / PNG)" />
+              <button onClick={() => {if (nw.img && nw.headline) {const id = Date.now();setWorkItems((ws) => [...ws, { ...nw, id }]);setNw({ img: '', headline: '', client: '', tag: '', description: '', media: [] });setEditingWorkId(id);}}} style={primBtn}>Add + Edit Media</button>
+            </div>
+          </div>
+        }
+
+        {tab === 'work' && editingWork &&
+        <WorkEditor work={editingWork} setWorkItems={setWorkItems} onBack={() => setEditingWorkId(null)} lS={lS} iS={iS} primBtn={primBtn} />
+        }
+
+        {tab === 'team' && !editingFounder &&
+        <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '1rem' }}>{founders.length} founders · tap edit to replace photo</div>
+            {founders.map((f) =>
+          <div key={f.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, flex: 1 }}>
+                  <img src={f.img} alt="" style={{ width: 36, height: 36, objectFit: 'cover', background: 'var(--surface)', flexShrink: 0 }} onError={(e) => e.target.style.opacity = '0.2'} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', color: 'rgba(255,255,255,0.75)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.name}</div>
+                    <Eyebrow style={{ fontSize: '9px' }}>{f.role}</Eyebrow>
+                  </div>
+                </div>
+                <button onClick={() => setEditingFounderId(f.id)} style={{ background: 'transparent', border: '1px solid var(--teal-border)', color: 'var(--teal)', padding: '3px 8px', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer' }}>Edit</button>
+              </div>
+          )}
+          </div>
+        }
+
+        {tab === 'team' && editingFounder &&
+        <FounderEditor founder={editingFounder} setFounders={setFounders} onBack={() => setEditingFounderId(null)} lS={lS} iS={iS} primBtn={primBtn} />
+        }
+
+      </div>
+    </div>);
+
+}
+
+// ─── WORK EDITOR (description + media upload) ──────────────────
+function WorkEditor({ work, setWorkItems, onBack, lS, iS, primBtn }) {
+  const inputRef = useRef(null);
+  const patch = (patch) => setWorkItems((ws) => ws.map((x) => x.id === work.id ? { ...x, ...patch } : x));
+  const addMedia = async (files) => {
+    const news = [];
+    for (const f of Array.from(files)) {
+      const url = await fileToDataURL(f);
+      const type = f.type.startsWith('video/') ? 'video' : 'image';
+      news.push({ url, type, name: f.name });
+    }
+    patch({ media: [...(work.media || []), ...news] });
+  };
+  const removeMedia = (i) => patch({ media: (work.media || []).filter((_, idx) => idx !== i) });
+
+  return (
+    <div>
+      <button onClick={onBack} style={{ background: 'transparent', border: 'none', color: 'var(--teal)', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', padding: 0, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>← Back to campaigns</button>
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--white)', textTransform: 'lowercase', marginBottom: 10 }}>{work.headline?.replace(/\n/g, ' ')}</div>
+
+      <label style={lS}>Title</label>
+      <input type="text" value={work.headline || ''} onChange={(e) => patch({ headline: e.target.value })} style={iS} />
+      <label style={lS}>Client</label>
+      <input type="text" value={work.client || ''} onChange={(e) => patch({ client: e.target.value })} style={iS} />
+      <label style={lS}>Tag</label>
+      <input type="text" value={work.tag || ''} onChange={(e) => patch({ tag: e.target.value })} style={iS} />
+
+      <label style={lS}>Cover Image</label>
+      <ImageUploader value={work.img} onChange={(url) => patch({ img: url })} label="Upload Cover" />
+
+      <label style={lS}>Campaign Description</label>
+      <textarea value={work.description || ''} onChange={(e) => patch({ description: e.target.value })} rows={5} style={{ ...iS, resize: 'vertical' }} placeholder="Write a short paragraph about this campaign..." />
+
+      <div style={{ marginTop: 8, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <label style={lS}>Photos & Videos <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 400 }}>({(work.media || []).length})</span></label>
+        <button type="button" onClick={() => inputRef.current?.click()} style={{ width: '100%', background: 'transparent', color: 'var(--teal)', border: '1px dashed var(--teal-border)', padding: '0.7rem', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '11px', letterSpacing: '0.14em', textTransform: 'uppercase', cursor: 'pointer', marginBottom: 10 }}>+ Upload Photos / Videos</button>
+        <input ref={inputRef} type="file" accept="image/*,video/*" multiple onChange={(e) => {addMedia(e.target.files);e.target.value = '';}} style={{ display: 'none' }} />
+
+        {(work.media || []).length > 0 &&
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6, marginBottom: 12 }}>
+            {(work.media || []).map((m, i) =>
+          <div key={i} style={{ position: 'relative', aspectRatio: '1/1', background: 'var(--black)', border: '1px solid var(--border)', overflow: 'hidden' }}>
+                {m.type === 'video' ?
+            <video src={m.url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> :
+
+            <img src={m.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            }
+                {m.type === 'video' && <div style={{ position: 'absolute', bottom: 4, left: 4, padding: '1px 5px', background: 'var(--teal)', color: 'var(--black)', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Video</div>}
+                <button onClick={() => removeMedia(i)} style={{ position: 'absolute', top: 3, right: 3, width: 20, height: 20, background: 'rgba(0,0,0,0.8)', border: 'none', color: 'white', cursor: 'pointer', fontSize: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+              </div>
+          )}
+          </div>
+        }
+      </div>
+
+      <button onClick={onBack} style={primBtn}>Done</button>
+    </div>);
+
+}
+
+// ─── CLIENT EDITOR ─────────────────────────────────────────────
+function ClientEditor({ client, setClients, onBack, lS, iS, primBtn }) {
+  const patch = (p) => setClients((cs) => cs.map((x) => x.id === client.id ? { ...x, ...p } : x));
+  return (
+    <div>
+      <button onClick={onBack} style={{ background: 'transparent', border: 'none', color: 'var(--teal)', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', padding: 0, marginBottom: 10 }}>← Back to clients</button>
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--white)', marginBottom: 10 }}>{client.name}</div>
+      <label style={lS}>Brand Logo</label>
+      <ImageUploader value={client.logo} onChange={(url) => patch({ logo: url })} label="Upload Logo (JPG / PNG)" />
+      <label style={lS}>Brand Name</label>
+      <input type="text" value={client.name || ''} onChange={(e) => patch({ name: e.target.value })} style={iS} />
+      <label style={lS}>Industry</label>
+      <input type="text" value={client.industry || ''} onChange={(e) => patch({ industry: e.target.value })} style={iS} placeholder="Restaurant · Café" />
+      <label style={lS}>Instagram / Website URL</label>
+      <input type="text" value={client.url === '#' ? '' : client.url || ''} onChange={(e) => patch({ url: e.target.value || '#' })} style={iS} placeholder="https://..." />
+      <button onClick={onBack} style={primBtn}>Done</button>
+    </div>);
+
+}
+
+// ─── FOUNDER EDITOR ────────────────────────────────────────────
+function FounderEditor({ founder, setFounders, onBack, lS, iS, primBtn }) {
+  const patch = (p) => setFounders((fs) => fs.map((x) => x.id === founder.id ? { ...x, ...p } : x));
+  return (
+    <div>
+      <button onClick={onBack} style={{ background: 'transparent', border: 'none', color: 'var(--teal)', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', padding: 0, marginBottom: 10 }}>← Back to team</button>
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--white)', marginBottom: 10 }}>{founder.name}</div>
+      <label style={lS}>Photo</label>
+      <ImageUploader value={founder.img} onChange={(url) => patch({ img: url })} label="Upload Photo (JPG / PNG)" />
+      <label style={lS}>Name</label>
+      <input type="text" value={founder.name} onChange={(e) => patch({ name: e.target.value })} style={iS} />
+      <label style={lS}>Role</label>
+      <input type="text" value={founder.role} onChange={(e) => patch({ role: e.target.value })} style={iS} />
+      <label style={lS}>Bio</label>
+      <textarea value={founder.bio} onChange={(e) => patch({ bio: e.target.value })} rows={4} style={{ ...iS, resize: 'vertical' }} />
+      <button onClick={onBack} style={primBtn}>Done</button>
+    </div>);
+
+}
+
+function App() {
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  // Clients & work are baked into the file so every visitor sees the same content.
+  // Edit INIT_CLIENTS / INIT_WORK at the top of this file to add or change entries.
+  const [clients, setClients] = useState(INIT_CLIENTS);
+  const [workItems, setWorkItems] = useState(INIT_WORK);
+  const [founders, setFounders] = useState(INIT_FOUNDERS);
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+  const [mode, setMode] = useState(() => localStorage.getItem('respawn-preview-mode') || 'desktop');
+
+  // No localStorage persistence for clients / work / founders — content is the file itself.
+  useEffect(() => {localStorage.setItem('respawn-preview-mode', mode);}, [mode]);
+  useEffect(() => {
+    const h = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', h);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    // Alt+T opens the Tweaks panel in standalone mode
+    const onKey = (e) => { if (e.altKey && (e.key === 't' || e.key === 'T')) setTweaksOpen((o) => !o); };
+    window.addEventListener('keydown', onKey);
+    return () => { window.removeEventListener('message', h); window.removeEventListener('keydown', onKey); };
+  }, []);
+  useEffect(() => {
+    document.documentElement.style.setProperty('--teal', tweaks.teal);
+    document.documentElement.style.setProperty('--teal-dim', tweaks.teal + '1f');
+    document.documentElement.style.setProperty('--teal-border', tweaks.teal + '4d');
+  }, [tweaks.teal]);
+
+  if (mode === 'mobile') {
+    return (
+      <>
+        <style>{`body{background:#050505}
+          .mobile-shell{display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:60px 20px 80px;background:radial-gradient(ellipse at top,#0a0a0a 0%,#000 70%)}
+          .mobile-frame{width:420px;max-width:100%;height:900px;background:var(--black);overflow-y:auto;overflow-x:hidden;border-radius:44px;border:12px solid #18181a;position:relative;box-shadow:0 40px 80px rgba(0,0,0,0.7),inset 0 0 0 2px rgba(255,255,255,0.04)}
+          .mobile-frame::-webkit-scrollbar{display:none}
+          .mobile-notch{position:sticky;top:0;left:0;right:0;width:100%;height:44px;background:var(--black);z-index:300;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#fff}
+          .mobile-notch::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:26px;background:#0a0a0a;border-radius:0 0 16px 16px}
+          .mobile-frame nav{position:absolute!important;top:44px!important}
+          .mobile-frame #hero{padding-top:56px!important}
+        `}</style>
+        <div className="mobile-shell">
+          <div className="mobile-frame">
+            <div className="mobile-notch">
+              <span style={{ zIndex: 2 }}>9:41</span>
+              <div style={{ display: 'flex', gap: 5, alignItems: 'center', zIndex: 2 }}>
+                <svg width="17" height="11" viewBox="0 0 17 11" fill="white"><path d="M1 8.5h2v2H1zM5 6.5h2v4H5zM9 3.5h2v7H9zM13 .5h2v10h-2z" /></svg>
+                <svg width="15" height="11" viewBox="0 0 15 11" fill="white"><path d="M7.5 2a8 8 0 015.5 2.2l-1.4 1.5A6 6 0 007.5 4a6 6 0 00-4.1 1.7L2 4.2A8 8 0 017.5 2zM7.5 6a4 4 0 012.8 1.2l-1.4 1.4a2 2 0 00-2.8 0L4.7 7.2A4 4 0 017.5 6zM7.5 9.5a1 1 0 110 2 1 1 0 010-2z" /></svg>
+                <div style={{ width: 22, height: 10, border: '1px solid white', borderRadius: 2, padding: 1, position: 'relative' }}>
+                  <div style={{ width: '85%', height: '100%', background: 'white', borderRadius: 1 }} />
+                  <div style={{ position: 'absolute', right: -3, top: 2, bottom: 2, width: 2, background: 'white', borderRadius: 1 }} />
+                </div>
+              </div>
+            </div>
+            <Site tweaks={tweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} openTweaks={() => setTweaksOpen(true)} activeSection={activeSection} setActiveSection={setActiveSection} />
+          </div>
+        </div>
+        <TweaksPanel open={tweaksOpen} tweaks={tweaks} setTweaks={setTweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} mode={mode} setMode={setMode} />
+      </>);
+
+  }
+
+  return (
+    <>
+      <Site tweaks={tweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} openTweaks={() => setTweaksOpen(true)} activeSection={activeSection} setActiveSection={setActiveSection} />
+      <TweaksPanel open={tweaksOpen} tweaks={tweaks} setTweaks={setTweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} mode={mode} setMode={setMode} />
+    </>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+
+</body></html>
