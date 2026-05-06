@@ -1,0 +1,4 @@
+# Design tool exports — not part of the deployable site
+chats/
+project/
+*.zip
