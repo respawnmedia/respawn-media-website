@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body style="margin:0;background:#111">
+<canvas id="c1"></canvas><canvas id="c2"></canvas><canvas id="c3"></canvas><canvas id="c4"></canvas>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+async function go() {
+  const res = await fetch('uploads/Respawn Brand Guidelines claude.pdf');
+  const buf = await res.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  const total = pdf.numPages;
+  document.title = 'Pages: ' + total;
+  for (let i = 1; i <= Math.min(total, 4); i++) {
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({scale: 1.5});
+    const canvas = document.getElementById('c'+i);
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    canvas.style.display = 'block';
+    canvas.style.marginBottom = '8px';
+    await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+  }
+  document.title = 'DONE:' + total;
+}
+go();
+</script>
+</body>
+</html>

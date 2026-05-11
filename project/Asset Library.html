@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Respawn · Asset Library</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #111;
+    --panel-2: #161616;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.18);
+    --text: #fff;
+    --dim: rgba(255,255,255,0.6);
+    --dimmer: rgba(255,255,255,0.32);
+    --accent: #16c4ba;
+    --accent-dim: rgba(22,196,186,0.12);
+    --danger: #e85a4f;
+    --warn: #e8b14f;
+    --font-body: 'Archivo', sans-serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+    --font-serif: 'Instrument Serif', serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  body { min-height: 100vh; }
+  a { color: inherit; }
+
+  /* ─── Top bar ─── */
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(10,10,10,0.92); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+  .topbar .inner { max-width: 1400px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 0.6rem; }
+  .brand .mark { font-family: var(--font-cond); font-weight: 800; font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .brand .mark b { color: var(--accent); }
+  .brand .where { font-family: var(--font-serif); font-style: italic; font-size: 18px; color: var(--dim); }
+  .topbar .spacer { flex: 1; }
+  .topbar .stats { font-family: var(--font-mono); font-size: 11px; color: var(--dim); display: flex; gap: 1rem; }
+  .topbar .stats b { color: var(--text); font-weight: 600; }
+
+  /* ─── Tabs ─── */
+  .tabs { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; display: flex; gap: 2px; border-bottom: 1px solid var(--border); }
+  .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; padding: 0.9rem 1.1rem; font-family: var(--font-cond); font-weight: 700; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; margin-bottom: -1px; }
+  .tab .n { font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; background: rgba(255,255,255,0.06); border-radius: 2px; color: var(--dimmer); }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab.active .n { color: var(--accent); background: var(--accent-dim); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* ─── Layout ─── */
+  .page { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem 8rem; }
+  .panel-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) { .panel-grid { grid-template-columns: 1fr; } }
+
+  /* ─── Sidebar ─── */
+  .side { display: flex; flex-direction: column; gap: 1rem; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.2rem; }
+  .card h3 { font-family: var(--font-cond); font-weight: 800; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 0.75rem; color: var(--text); }
+  .card p { font-size: 13px; color: var(--dim); line-height: 1.55; margin: 0 0 0.75rem; }
+
+  .upload-zone { border: 1.5px dashed var(--border-strong); border-radius: 3px; padding: 1.5rem 1rem; text-align: center; cursor: pointer; transition: all 0.15s; display: block; }
+  .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); background: var(--accent-dim); }
+  .upload-zone .icon { font-family: var(--font-serif); font-size: 32px; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+  .upload-zone .l1 { font-family: var(--font-cond); font-weight: 700; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .upload-zone .l2 { font-size: 11px; color: var(--dimmer); margin-top: 0.3rem; }
+  .upload-zone input { display: none; }
+
+  /* Tag chips in sidebar */
+  .tag-list { display: flex; flex-direction: column; gap: 1px; }
+  .tag-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.7rem; background: transparent; border: 0; color: var(--dim); cursor: pointer; text-align: left; font-family: var(--font-cond); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; border-radius: 2px; width: 100%; }
+  .tag-row:hover { background: var(--panel-2); color: var(--text); }
+  .tag-row.active { background: var(--accent-dim); color: var(--accent); }
+  .tag-row .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+  .tag-row .n { margin-left: auto; font-family: var(--font-mono); font-size: 10px; opacity: 0.7; font-weight: 500; }
+
+  /* ─── Main grid of items ─── */
+  .main h2 { font-family: var(--font-serif); font-weight: 400; font-size: 36px; line-height: 1; margin: 0 0 0.3rem; }
+  .main h2 em { font-style: italic; color: var(--dim); }
+  .main .sub { font-size: 13px; color: var(--dim); margin-bottom: 1.2rem; }
+  .toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+  .search { flex: 1; min-width: 180px; }
+  .search input { width: 100%; background: var(--panel); border: 1px solid var(--border); border-radius: 2px; color: var(--text); font-family: var(--font-body); font-size: 13px; padding: 0.65rem 0.85rem; }
+  .search input:focus { outline: 0; border-color: var(--accent); }
+  select.view { background: var(--panel); border: 1px solid var(--border); color: var(--text); font-family: var(--font-cond); font-weight: 600; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.55rem 0.7rem; border-radius: 2px; cursor: pointer; }
+
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .empty { padding: 4rem 1rem; text-align: center; color: var(--dimmer); border: 1px dashed var(--border); border-radius: 4px; }
+  .empty .h { font-family: var(--font-serif); font-style: italic; font-size: 28px; color: var(--dim); margin-bottom: 0.5rem; }
+
+  .asset { background: var(--panel); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; position: relative; cursor: pointer; transition: border-color 0.12s; }
+  .asset:hover { border-color: var(--border-strong); }
+  .asset .thumb { aspect-ratio: 1; background: #000; position: relative; overflow: hidden; }
+  .asset .thumb img, .asset .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .asset .meta { padding: 0.55rem 0.7rem; }
+  .asset .meta .nm { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .asset .meta .sz { font-family: var(--font-mono); font-size: 10px; color: var(--dimmer); margin-top: 2px; }
+  .asset .badge { position: absolute; top: 6px; left: 6px; font-family: var(--font-cond); font-size: 9px; letter-spacing: 0.12em; padding: 2px 6px; background: rgba(0,0,0,0.85); color: var(--accent); font-weight: 700; text-transform: uppercase; border-radius: 1px; }
+  .asset .tag { position: absolute; top: 6px; right: 6px; font-family: var(--font-cond); font-size: 9px; letter-spacing: 0.1em; padding: 2px 6px; background: rgba(0,0,0,0.85); border: 1px solid rgba(255,255,255,0.15); color: var(--text); font-weight: 600; text-transform: uppercase; border-radius: 1px; max-width: 60%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .asset .actions { position: absolute; bottom: 50px; left: 0; right: 0; padding: 6px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.12s; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding-top: 30px; }
+  .asset:hover .actions { opacity: 1; }
+  .asset .actions button { flex: 1; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-family: var(--font-cond); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 6px; cursor: pointer; border-radius: 1px; }
+  .asset .actions button:hover { background: rgba(0,0,0,0.95); border-color: var(--accent); color: var(--accent); }
+  .asset .actions button.del:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ─── Detail modal ─── */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--panel); border: 1px solid var(--border-strong); border-radius: 4px; max-width: 1100px; width: 100%; max-height: 90vh; display: grid; grid-template-columns: 1.4fr 1fr; overflow: hidden; }
+  @media (max-width: 800px) { .modal { grid-template-columns: 1fr; max-height: 95vh; } }
+  .modal .preview { background: #000; display: flex; align-items: center; justify-content: center; min-height: 300px; max-height: 90vh; }
+  .modal .preview img, .modal .preview video { max-width: 100%; max-height: 90vh; object-fit: contain; }
+  .modal .info { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; }
+  .modal .info h3 { font-family: var(--font-serif); font-style: italic; font-size: 24px; margin: 0; word-break: break-word; }
+  .field { display: flex; flex-direction: column; gap: 0.35rem; }
+  .field label { font-family: var(--font-cond); font-weight: 700; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dimmer); }
+  .field input, .field select, .field textarea { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: 13px; padding: 0.6rem 0.7rem; border-radius: 2px; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: 0; border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 60px; font-family: var(--font-mono); font-size: 11px; }
+  .field .hint { font-size: 11px; color: var(--dimmer); }
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-family: var(--font-mono); font-size: 11px; color: var(--dim); }
+  .meta-grid div { padding: 0.4rem 0.55rem; background: var(--panel-2); border: 1px solid var(--border); border-radius: 2px; }
+  .meta-grid div b { color: var(--text); font-weight: 600; display: block; font-family: var(--font-cond); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.6; margin-bottom: 2px; }
+
+  /* ─── Buttons ─── */
+  button.primary { background: var(--accent); color: #000; border: 0; font-family: var(--font-cond); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.7rem 1.1rem; cursor: pointer; border-radius: 2px; transition: opacity 0.15s; }
+  button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
+  button.ghost { background: transparent; color: var(--dim); border: 1px solid var(--border-strong); font-family: var(--font-cond); font-weight: 600; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.65rem 0.95rem; cursor: pointer; border-radius: 2px; }
+  button.ghost:hover { color: var(--text); border-color: var(--text); }
+  button.danger { color: var(--danger); border-color: rgba(232,90,79,0.4); }
+  button.danger:hover { color: #fff; background: var(--danger); border-color: var(--danger); }
+
+  /* ─── Toast ─── */
+  .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #000; border: 1px solid var(--accent); color: var(--accent); font-family: var(--font-cond); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.7rem 1.1rem; border-radius: 2px; z-index: 200; display: none; }
+  .toast.show { display: block; }
+  .toast.warn { color: var(--warn); border-color: var(--warn); }
+  .toast.err { color: var(--danger); border-color: var(--danger); }
+
+  /* Progress */
+  .progress { font-family: var(--font-mono); font-size: 11px; color: var(--accent); margin-top: 0.5rem; }
+  .progress .bar { height: 3px; background: rgba(22,196,186,0.15); border-radius: 1px; overflow: hidden; margin-top: 4px; }
+  .progress .bar > div { height: 100%; background: var(--accent); transition: width 0.2s; }
+
+  /* Storage tab */
+  .storage-card { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width:700px){ .storage-card{grid-template-columns:1fr;} }
+  .stat-block { background: var(--panel-2); border: 1px solid var(--border); border-radius: 3px; padding: 1.1rem; }
+  .stat-block .label { font-family: var(--font-cond); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dimmer); margin-bottom: 0.4rem; }
+  .stat-block .val { font-family: var(--font-serif); font-size: 36px; line-height: 1; }
+  .stat-block .val .u { font-family: var(--font-cond); font-size: 14px; color: var(--dim); margin-left: 0.3rem; }
+  .quota-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 1px; overflow: hidden; margin-top: 0.7rem; }
+  .quota-bar > div { height: 100%; background: var(--accent); transition: width 0.3s; }
+
+  pre.snip { background: #000; border: 1px solid var(--border); padding: 0.9rem; border-radius: 3px; font-family: var(--font-mono); font-size: 11px; color: var(--accent); overflow-x: auto; white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
+
+  /* ─── Save status pill in topbar ─── */
+  .save-pill { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0.75rem 0.45rem 0.6rem; background: var(--panel); border: 1px solid var(--border); border-radius: 2px; }
+  .save-pill .led { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .save-pill.dirty .led { background: var(--warn); box-shadow: 0 0 8px var(--warn); animation: pulse 1.4s ease-in-out infinite; }
+  .save-pill .label { font-family: var(--font-cond); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); }
+  .save-pill.dirty .label { color: var(--warn); }
+  .save-pill button { background: var(--accent); color: #000; border: 0; font-family: var(--font-cond); font-weight: 800; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.4rem 0.75rem; cursor: pointer; border-radius: 2px; }
+  .save-pill button:disabled { opacity: 0.35; cursor: default; background: var(--dim); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  /* ─── Folder rows in sidebar ─── */
+  .folder-list { display: flex; flex-direction: column; gap: 1px; }
+  .folder-row { display: flex; align-items: center; gap: 0.55rem; padding: 0.55rem 0.7rem; background: transparent; border: 0; color: var(--dim); cursor: pointer; text-align: left; font-family: var(--font-cond); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; border-radius: 2px; width: 100%; }
+  .folder-row:hover { background: var(--panel-2); color: var(--text); }
+  .folder-row.active { background: var(--accent-dim); color: var(--accent); }
+  .folder-row .ic { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.7; }
+  .folder-row .n { margin-left: auto; font-family: var(--font-mono); font-size: 10px; opacity: 0.7; font-weight: 500; }
+  .folder-row .x { opacity: 0; transition: opacity 0.1s; padding: 2px 5px; border-radius: 2px; font-family: var(--font-mono); font-size: 11px; color: var(--dimmer); }
+  .folder-row:hover .x { opacity: 1; }
+  .folder-row .x:hover { color: var(--danger); background: rgba(232,90,79,0.1); }
+
+  .folder-add { display: flex; gap: 4px; margin-top: 0.5rem; }
+  .folder-add input { flex: 1; background: var(--panel-2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-body); font-size: 12px; padding: 0.45rem 0.6rem; border-radius: 2px; }
+  .folder-add input:focus { outline: 0; border-color: var(--accent); }
+  .folder-add button { background: var(--panel-2); border: 1px solid var(--border-strong); color: var(--text); font-family: var(--font-cond); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.45rem 0.7rem; cursor: pointer; border-radius: 2px; }
+  .folder-add button:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Folder pill on asset thumbnails */
+  .asset .folder-pill { position: absolute; bottom: 6px; left: 6px; font-family: var(--font-cond); font-size: 9px; letter-spacing: 0.1em; padding: 2px 6px; background: rgba(0,0,0,0.85); border: 1px solid rgba(255,255,255,0.18); color: var(--text); font-weight: 700; text-transform: uppercase; border-radius: 1px; max-width: 70%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap; z-index: 2; pointer-events: none; }
+  .asset .folder-pill .ic { display: inline-block; width: 8px; height: 8px; background: var(--accent); margin-right: 4px; vertical-align: middle; border-radius: 1px; }
+
+  /* Move-to dropdown in modal */
+  .move-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .move-row select { flex: 1; min-width: 140px; }
+  .move-row .new-folder-inline { display: flex; gap: 4px; flex: 1; min-width: 180px; }
+  .move-row .new-folder-inline input { flex: 1; }
+
+  /* Bulk bar shown when items selected */
+  .bulkbar { position: sticky; top: 110px; z-index: 15; background: var(--panel); border: 1px solid var(--accent); border-radius: 3px; padding: 0.6rem 0.85rem; margin-bottom: 0.85rem; display: none; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+  .bulkbar.show { display: flex; }
+  .bulkbar .count { font-family: var(--font-cond); font-weight: 800; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .bulkbar select { background: var(--panel-2); border: 1px solid var(--border-strong); color: var(--text); font-family: var(--font-cond); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.45rem 0.65rem; border-radius: 2px; }
+  .bulkbar button { background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-family: var(--font-cond); font-weight: 700; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.45rem 0.7rem; cursor: pointer; border-radius: 2px; }
+  .bulkbar button:hover { border-color: var(--accent); color: var(--accent); }
+
+  .asset .sel-check { position: absolute; top: 6px; left: 6px; width: 18px; height: 18px; border-radius: 2px; background: rgba(0,0,0,0.7); border: 1.5px solid rgba(255,255,255,0.4); cursor: pointer; z-index: 3; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.12s; }
+  .asset:hover .sel-check, .asset .sel-check.on { opacity: 1; }
+  .asset .sel-check.on { background: var(--accent); border-color: var(--accent); }
+  .asset .sel-check.on::after { content: '✓'; color: #000; font-size: 12px; font-weight: 900; line-height: 1; }
+  .asset.selected { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  /* Sticky save bar at the very bottom */
+  .savebar { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,10,10,0.98) 60%, rgba(10,10,10,0)); padding: 1.2rem 1.5rem 1.2rem; z-index: 50; pointer-events: none; }
+  .savebar .inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; pointer-events: auto; }
+  .savebar .status { font-family: var(--font-mono); font-size: 11px; color: var(--dim); margin-right: auto; }
+  .savebar .status b { color: var(--text); font-weight: 600; }
+  .savebar button.done { background: var(--accent); color: #000; border: 0; font-family: var(--font-cond); font-weight: 900; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.95rem 1.6rem; cursor: pointer; border-radius: 2px; box-shadow: 0 6px 24px rgba(22,196,186,0.3); transition: transform 0.15s; }
+  .savebar button.done:hover { transform: translateY(-1px); }
+  .savebar button.done:disabled { opacity: 0.4; cursor: default; box-shadow: none; transform: none; background: var(--dim); }
+  .savebar button.ghost { pointer-events: auto; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="inner">
+    <div class="brand">
+      <div class="mark"><b>Respawn</b> · Asset Library</div>
+      <div class="where">stored locally in your browser</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="stats">
+      <span><b id="totalCount">0</b> files</span>
+      <span><b id="totalSize">0</b> MB</span>
+      <span><b id="quotaPct">0%</b> used</span>
+    </div>
+    <div class="save-pill" id="savePill">
+      <span class="led"></span>
+      <span class="label" id="saveLabel">All changes saved</span>
+      <button id="topSaveBtn" disabled>Save</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="library"><span>Library</span> <span class="n" id="tabLibN">0</span></button>
+    <button class="tab" data-tab="upload"><span>Upload</span></button>
+    <button class="tab" data-tab="storage"><span>Storage</span></button>
+    <button class="tab" data-tab="help"><span>Help</span></button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ─────────── LIBRARY TAB ─────────── -->
+  <div data-pane="library" class="pane">
+    <div class="panel-grid">
+      <aside class="side">
+        <div class="card">
+          <h3>Folders</h3>
+          <p style="font-size:12px;margin-bottom:0.7rem;">Group your assets into folders like Work, Clients, Team. Click a folder to filter; click an asset to move it.</p>
+          <div class="folder-list" id="folderList"></div>
+          <div class="folder-add">
+            <input id="newFolderName" placeholder="New folder name…" />
+            <button id="newFolderBtn">Add</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Filter by tag</h3>
+          <div class="tag-list" id="tagList"></div>
+        </div>
+        <div class="card">
+          <h3>Quick upload</h3>
+          <label class="upload-zone" id="quickUpload">
+            <div class="icon">+</div>
+            <div class="l1">Drop or browse</div>
+            <div class="l2">Images & videos</div>
+            <input type="file" multiple accept="image/*,video/*" />
+          </label>
+        </div>
+      </aside>
+
+      <main class="main">
+        <h2>Your <em>asset library</em></h2>
+        <div class="sub">Everything here lives in your browser's IndexedDB — no upload limits, persists across reloads. Click any asset to view, rename, retag, or delete.</div>
+
+        <div class="toolbar">
+          <div class="search"><input id="search" placeholder="Search by name, tag, or note…" /></div>
+          <select class="view" id="sortBy">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="name">Name A→Z</option>
+            <option value="size-desc">Largest first</option>
+            <option value="size-asc">Smallest first</option>
+          </select>
+          <select class="view" id="kindFilter">
+            <option value="all">All types</option>
+            <option value="image">Images only</option>
+            <option value="video">Videos only</option>
+          </select>
+        </div>
+
+        <div class="bulkbar" id="bulkbar">
+          <span class="count" id="bulkCount">0 selected</span>
+          <span style="font-family:var(--font-cond);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);">Move to →</span>
+          <select id="bulkMoveSel"></select>
+          <button id="bulkMoveBtn">Move</button>
+          <button id="bulkClearSel">Clear</button>
+        </div>
+
+        <div class="gallery" id="gallery"></div>
+        <div class="empty" id="emptyState" style="display:none">
+          <div class="h">Nothing here yet</div>
+          <div>Drop files into the upload zone or click "Quick upload" on the left.</div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ─────────── UPLOAD TAB ─────────── -->
+  <div data-pane="upload" class="pane" style="display:none">
+    <div style="max-width:780px">
+      <h2 style="font-family:var(--font-serif);font-weight:400;font-size:42px;margin:0 0 0.4rem;">Upload <em style="color:var(--dim);font-style:italic;">photos & videos</em></h2>
+      <p style="color:var(--dim);font-size:14px;line-height:1.6;max-width:60ch;margin:0 0 1.5rem;">Drop files below — they're saved straight to your browser's local IndexedDB. No size cap from chat uploads. Tag and rename them after they land in the Library tab.</p>
+
+      <label class="upload-zone" id="bigUpload" style="padding:4rem 2rem;">
+        <div class="icon" style="font-size:56px;">+</div>
+        <div class="l1" style="font-size:18px;">Drop files here</div>
+        <div class="l2" style="font-size:13px;margin-top:0.6rem;">or click to browse · images & videos · any size</div>
+        <input type="file" multiple accept="image/*,video/*" />
+      </label>
+
+      <div id="uploadProgress" style="display:none;margin-top:1rem;" class="card">
+        <h3 style="margin-bottom:0.4rem;">Saving…</h3>
+        <div class="progress"><span id="upText">0 / 0</span><div class="bar"><div id="upBar" style="width:0%"></div></div></div>
+      </div>
+
+      <div style="margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div class="card">
+          <h3 style="color:var(--accent);">Why this works</h3>
+          <p>Chat attachments hit a per-file size limit and silently fail on large videos. IndexedDB inside the browser usually allows several gigabytes — enough for hundreds of photos and many videos.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--accent);">Where it's saved</h3>
+          <p>Files live in this browser, on this device, in a database called <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">respawn-assets</code>. Use the <b>Storage</b> tab to see usage and export everything as a zip if you ever need to move it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── STORAGE TAB ─────────── -->
+  <div data-pane="storage" class="pane" style="display:none">
+    <h2 style="font-family:var(--font-serif);font-weight:400;font-size:42px;margin:0 0 0.4rem;">Storage <em style="color:var(--dim);font-style:italic;">overview</em></h2>
+    <p style="color:var(--dim);font-size:14px;max-width:60ch;margin:0 0 1.5rem;">Everything is stored locally in IndexedDB. You can clear, export, or check quotas here.</p>
+
+    <div class="storage-card" style="margin-bottom:1.5rem;">
+      <div class="stat-block">
+        <div class="label">Files in library</div>
+        <div class="val" id="sCount">0</div>
+      </div>
+      <div class="stat-block">
+        <div class="label">Library size</div>
+        <div class="val" id="sSize">0<span class="u">MB</span></div>
+      </div>
+      <div class="stat-block">
+        <div class="label">Browser quota</div>
+        <div class="val" id="sQuota">—<span class="u"></span></div>
+        <div class="quota-bar"><div id="sQuotaBar" style="width:0%"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="label">Last upload</div>
+        <div class="val" id="sLast" style="font-size:18px;font-family:var(--font-cond);text-transform:uppercase;letter-spacing:0.1em;">—</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <h3>Export everything</h3>
+      <p>Download a single zip containing all files plus a <code style="font-family:var(--font-mono);color:var(--accent)">manifest.json</code> describing each one. Useful for backup or moving to another browser.</p>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <button class="primary" id="exportBtn">Download all as zip</button>
+        <button class="ghost" id="refreshBtn">Refresh stats</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--danger);">Danger zone</h3>
+      <p>Permanently delete every asset from this browser. This cannot be undone.</p>
+      <button class="ghost danger" id="wipeBtn">Wipe entire library</button>
+    </div>
+  </div>
+
+  <!-- ─────────── HELP TAB ─────────── -->
+  <div data-pane="help" class="pane" style="display:none">
+    <div style="max-width:780px">
+      <h2 style="font-family:var(--font-serif);font-weight:400;font-size:42px;margin:0 0 0.4rem;">How <em style="color:var(--dim);font-style:italic;">it works</em></h2>
+      <p style="color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:1.5rem;">A quick guide to the asset library and how it bypasses the chat-upload zip issue.</p>
+
+      <div class="card" style="margin-bottom:1rem;">
+        <h3>1 · Why this exists</h3>
+        <p>Chat attachments rejecting your zip is a payload-size problem on the upload pipeline, not something I can fix from inside the chat. Instead, this page gives you a place to <b>store assets locally in the browser itself</b>, which has a much higher capacity (typically 1–10 GB depending on your browser).</p>
+      </div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h3>2 · Drop files</h3>
+        <p>Open the <b>Upload</b> tab, drop your photos and videos. Each file is saved as a Blob in IndexedDB under the database <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">respawn-assets</code>, with metadata (name, tag, note, dimensions, etc.) stored alongside.</p>
+      </div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h3>3 · Tag for the website</h3>
+        <p>Click any asset and assign a <b>tag</b> like <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">case/sree/hero</code>, <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">case/avias/gallery</code>, or <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">logos/matiks</code>. The main website can then read assets by tag.</p>
+      </div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h3>4 · Use from the site</h3>
+        <p>Your site reads assets via <code style="color:var(--accent);font-family:var(--font-mono);font-size:11px;">window.RespawnAssets.get(tag)</code> which returns an object URL from the locally stored Blob. A snippet you can paste into the site:</p>
+        <pre class="snip">// All by tag prefix:
+const heroes = await RespawnAssets.byPrefix('case/sree/');
+// One specific:
+const url = await RespawnAssets.firstUrl('case/sree/hero');
+img.src = url;</pre>
+      </div>
+      <div class="card">
+        <h3>5 · Persistence</h3>
+        <p>Files survive page reloads and computer restarts. They live only in <em>this browser, on this device</em>. Use <b>Storage → Export</b> to back up. Clearing browser data will delete them, so export periodically if these are originals.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="preview" id="mPreview"></div>
+    <div class="info">
+      <h3 id="mName">—</h3>
+      <div class="meta-grid" id="mMeta"></div>
+      <div class="field">
+        <label>File name</label>
+        <input id="mNameEdit" />
+      </div>
+      <div class="field">
+        <label>Folder</label>
+        <div class="move-row">
+          <select id="mFolder"></select>
+          <div class="new-folder-inline">
+            <input id="mFolderNew" placeholder="…or type new folder" />
+          </div>
+        </div>
+        <div class="hint">Move this asset into a folder. Type a new name to create one on the fly.</div>
+      </div>
+      <div class="field">
+        <label>Tag</label>
+        <input id="mTag" placeholder="e.g. case/sree/hero or logos/matiks" list="tagOptions" />
+        <datalist id="tagOptions"></datalist>
+        <div class="hint">Tags group files. Use slash paths to nest. Common tags appear in the sidebar.</div>
+      </div>
+      <div class="field">
+        <label>Note (optional)</label>
+        <textarea id="mNote" placeholder="Any context — credit, version, intended use…"></textarea>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:auto;">
+        <button class="primary" id="mSave">Save</button>
+        <button class="ghost" id="mDownload">Download</button>
+        <button class="ghost danger" id="mDelete">Delete</button>
+        <button class="ghost" id="mClose" style="margin-left:auto;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky bottom save bar -->
+<div class="savebar">
+  <div class="inner">
+    <div class="status">
+      <b id="bottomStatus">All changes saved</b>
+      <span id="bottomDetail" style="color:var(--dimmer);"> · synced to local library</span>
+    </div>
+    <button class="ghost" id="seedBtn">Re-import website assets</button>
+    <button class="done" id="doneBtn">Done · Confirm changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+/* ─────────────────────────────────────────────
+   IndexedDB layer — small idb-style wrapper
+   ──────────────────────────────────────────── */
+const DB_NAME = 'respawn-assets';
+const DB_VERSION = 3;
+const STORE = 'assets';
+const META_STORE = 'meta';
+const FOLDERS_KEY = 'folders';
+const DEFAULT_FOLDERS = ['Work', 'Clients', 'Team', 'Logos', 'Brand'];
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const db = req.result;
+      const upgradeTx = req.transaction;
+      if (!db.objectStoreNames.contains(STORE)) {
+        const s = db.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+        s.createIndex('tag', 'tag', { unique: false });
+        s.createIndex('addedAt', 'addedAt', { unique: false });
+        s.createIndex('kind', 'kind', { unique: false });
+        s.createIndex('folder', 'folder', { unique: false });
+      } else {
+        try {
+          const s = upgradeTx.objectStore(STORE);
+          if (!s.indexNames.contains('folder')) s.createIndex('folder', 'folder', { unique: false });
+        } catch (_) {}
+      }
+      if (!db.objectStoreNames.contains(META_STORE)) {
+        db.createObjectStore(META_STORE, { keyPath: 'k' });
+      }
+    };
+    req.onblocked = () => console.warn('IDB upgrade blocked — close other tabs of this page.');
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+async function tx(storeName, mode, fn) {
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const t = db.transaction(storeName, mode);
+    const s = t.objectStore(storeName);
+    let result;
+    Promise.resolve(fn(s)).then(r => { result = r; });
+    t.oncomplete = () => res(result);
+    t.onerror = () => rej(t.error);
+    t.onabort = () => rej(t.error);
+  });
+}
+
+const DB = {
+  async add(record) {
+    return tx(STORE, 'readwrite', s => new Promise((res, rej) => {
+      const r = s.add(record);
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async put(record) {
+    return tx(STORE, 'readwrite', s => new Promise((res, rej) => {
+      const r = s.put(record);
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async get(id) {
+    return tx(STORE, 'readonly', s => new Promise((res, rej) => {
+      const r = s.get(id);
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async all() {
+    return tx(STORE, 'readonly', s => new Promise((res, rej) => {
+      const r = s.getAll();
+      r.onsuccess = () => res(r.result || []);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async delete(id) {
+    return tx(STORE, 'readwrite', s => new Promise((res, rej) => {
+      const r = s.delete(id);
+      r.onsuccess = () => res();
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async clear() {
+    return tx(STORE, 'readwrite', s => new Promise((res, rej) => {
+      const r = s.clear();
+      r.onsuccess = () => res();
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async getMeta(k) {
+    return tx(META_STORE, 'readonly', s => new Promise((res, rej) => {
+      const r = s.get(k);
+      r.onsuccess = () => res(r.result?.v);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async setMeta(k, v) {
+    return tx(META_STORE, 'readwrite', s => new Promise((res, rej) => {
+      const r = s.put({ k, v });
+      r.onsuccess = () => res();
+      r.onerror = () => rej(r.error);
+    }));
+  },
+};
+
+/* ─────────────────────────────────────────────
+   Public API for the main website
+   ──────────────────────────────────────────── */
+const objectUrlCache = new Map(); // id -> url
+
+function urlFor(record) {
+  if (objectUrlCache.has(record.id)) return objectUrlCache.get(record.id);
+  const u = URL.createObjectURL(record.blob);
+  objectUrlCache.set(record.id, u);
+  return u;
+}
+
+window.RespawnAssets = {
+  async all() { return DB.all(); },
+  async byTag(tag) {
+    const rows = await DB.all();
+    return rows.filter(r => r.tag === tag).map(r => ({ ...r, url: urlFor(r) }));
+  },
+  async byPrefix(prefix) {
+    const rows = await DB.all();
+    return rows.filter(r => (r.tag || '').startsWith(prefix)).map(r => ({ ...r, url: urlFor(r) }));
+  },
+  async byFolder(folder) {
+    const rows = await DB.all();
+    return rows.filter(r => (r.folder || '') === folder).map(r => ({ ...r, url: urlFor(r) }));
+  },
+  async firstUrl(tag) {
+    const list = await this.byTag(tag);
+    return list[0]?.url || null;
+  },
+};
+
+/* Cross-tab sync — when this tab saves, ping other tabs (the website) */
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('respawn-assets') : null;
+function broadcastChange() {
+  try { localStorage.setItem('respawn-assets-rev', String(Date.now())); } catch (_) {}
+  if (bc) bc.postMessage({ type: 'changed', t: Date.now() });
+}
+
+/* ─────────────────────────────────────────────
+   App state + UI
+   ──────────────────────────────────────────── */
+const state = {
+  items: [],
+  folders: DEFAULT_FOLDERS.slice(),
+  filterTag: '__all',
+  filterFolder: '__all',
+  filterKind: 'all',
+  search: '',
+  sort: 'newest',
+  selected: new Set(),
+  dirty: false,
+};
+
+function setDirty(on) {
+  state.dirty = on;
+  const pill = document.getElementById('savePill');
+  const label = document.getElementById('saveLabel');
+  const btn = document.getElementById('topSaveBtn');
+  const bot = document.getElementById('bottomStatus');
+  const detail = document.getElementById('bottomDetail');
+  const done = document.getElementById('doneBtn');
+  if (on) {
+    pill.classList.add('dirty');
+    label.textContent = 'Unsaved changes';
+    btn.disabled = false;
+    bot.textContent = 'Unsaved changes';
+    detail.textContent = ' · click Done to confirm';
+    done.disabled = false;
+  } else {
+    pill.classList.remove('dirty');
+    label.textContent = 'All changes saved';
+    btn.disabled = true;
+    bot.textContent = 'All changes saved';
+    detail.textContent = ' · synced to local library';
+    done.disabled = true;
+  }
+}
+
+function fmtSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(0) + ' KB';
+  if (b < 1024*1024*1024) return (b/1024/1024).toFixed(1) + ' MB';
+  return (b/1024/1024/1024).toFixed(2) + ' GB';
+}
+function fmtDate(t) { return new Date(t).toLocaleString(); }
+function fmtRelative(t) {
+  const s = (Date.now()-t)/1000;
+  if (s<60) return 'just now';
+  if (s<3600) return Math.floor(s/60)+'m ago';
+  if (s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+
+function showToast(msg, kind='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind==='warn'?' warn':kind==='err'?' err':'');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=> t.classList.remove('show'), 2400);
+}
+
+/* ─── Tabs ─── */
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b===btn));
+    const which = btn.dataset.tab;
+    document.querySelectorAll('.pane').forEach(p => p.style.display = p.dataset.pane===which ? '' : 'none');
+    if (which === 'storage') refreshStorageTab();
+  };
+});
+
+/* ─── Upload handling ─── */
+async function ingestFiles(files, opts = {}) {
+  if (!files.length) return;
+  const folder = opts.folder || '';
+  const tag = opts.tag || '';
+  const progressBox = document.getElementById('uploadProgress');
+  const progressBar = document.getElementById('upBar');
+  const progressText = document.getElementById('upText');
+  if (progressBox) progressBox.style.display = '';
+  let done = 0;
+
+  for (const f of files) {
+    if (progressText) progressText.textContent = `${done+1} / ${files.length} · ${f.name}`;
+    if (progressBar) progressBar.style.width = ((done/files.length)*100) + '%';
+    try {
+      const dims = await readDims(f).catch(() => null);
+      const rec = {
+        name: f.name,
+        size: f.size,
+        type: f.type || 'application/octet-stream',
+        kind: f.type.startsWith('video/') ? 'video' : f.type.startsWith('image/') ? 'image' : 'other',
+        folder: folder,
+        tag: tag,
+        note: opts.note || '',
+        addedAt: Date.now(),
+        width: dims?.w || null,
+        height: dims?.h || null,
+        duration: dims?.d || null,
+        blob: f,
+      };
+      await DB.add(rec);
+    } catch (e) {
+      console.error(e);
+      showToast(`Failed: ${f.name}`, 'err');
+    }
+    done++;
+  }
+  if (progressBar) progressBar.style.width = '100%';
+  if (progressText) progressText.textContent = `Done — ${done} files added.`;
+  if (progressBox) setTimeout(()=> progressBox.style.display = 'none', 1800);
+  await refresh();
+  setDirty(true);
+  showToast(`${done} file${done===1?'':'s'} saved locally.`);
+}
+
+function readDims(f) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(f);
+    if (f.type.startsWith('image/')) {
+      const img = new Image();
+      img.onload = () => { res({ w: img.naturalWidth, h: img.naturalHeight }); URL.revokeObjectURL(url); };
+      img.onerror = (e) => { rej(e); URL.revokeObjectURL(url); };
+      img.src = url;
+    } else if (f.type.startsWith('video/')) {
+      const v = document.createElement('video');
+      v.preload = 'metadata';
+      v.onloadedmetadata = () => { res({ w: v.videoWidth, h: v.videoHeight, d: v.duration }); URL.revokeObjectURL(url); };
+      v.onerror = (e) => { rej(e); URL.revokeObjectURL(url); };
+      v.src = url;
+    } else {
+      URL.revokeObjectURL(url);
+      res(null);
+    }
+  });
+}
+
+/* Wire upload inputs + drop zones */
+function wireDrop(zoneEl) {
+  const input = zoneEl.querySelector('input[type=file]');
+  zoneEl.addEventListener('dragover', e => { e.preventDefault(); zoneEl.classList.add('drag'); });
+  zoneEl.addEventListener('dragleave', e => { e.preventDefault(); zoneEl.classList.remove('drag'); });
+  zoneEl.addEventListener('drop', e => {
+    e.preventDefault(); zoneEl.classList.remove('drag');
+    ingestFiles([...e.dataTransfer.files]);
+  });
+  input.addEventListener('change', e => { ingestFiles([...e.target.files]); e.target.value=''; });
+}
+wireDrop(document.getElementById('quickUpload'));
+wireDrop(document.getElementById('bigUpload'));
+
+/* ─── Render library ─── */
+async function refresh() {
+  state.items = await DB.all();
+  const savedFolders = await DB.getMeta(FOLDERS_KEY);
+  if (Array.isArray(savedFolders)) state.folders = savedFolders;
+  // Auto-add any folder names found on items
+  state.items.forEach(it => {
+    if (it.folder && !state.folders.includes(it.folder)) state.folders.push(it.folder);
+  });
+  renderFolderSidebar();
+  renderTagSidebar();
+  renderGallery();
+  renderTopStats();
+  renderTagDatalist();
+  renderBulkbar();
+  renderBulkMoveOptions();
+  renderModalFolderOptions();
+}
+
+function uniqueTags() {
+  const counts = new Map();
+  state.items.forEach(it => {
+    const t = it.tag || '__untagged';
+    counts.set(t, (counts.get(t)||0)+1);
+  });
+  return [...counts.entries()].sort((a,b) => a[0].localeCompare(b[0]));
+}
+
+function folderCounts() {
+  const map = new Map();
+  state.folders.forEach(f => map.set(f, 0));
+  state.items.forEach(it => {
+    const f = it.folder || '';
+    if (f) map.set(f, (map.get(f)||0)+1);
+  });
+  return map;
+}
+
+function renderFolderSidebar() {
+  const list = document.getElementById('folderList');
+  if (!list) return;
+  const counts = folderCounts();
+  const unfiled = state.items.filter(it => !it.folder).length;
+  list.innerHTML = '';
+
+  const all = document.createElement('button');
+  all.className = 'folder-row' + (state.filterFolder==='__all' ? ' active' : '');
+  all.innerHTML = `<svg class="ic" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="3" width="14" height="2"/><rect x="1" y="7" width="14" height="2"/><rect x="1" y="11" width="14" height="2"/></svg> All assets <span class="n">${state.items.length}</span>`;
+  all.onclick = () => { state.filterFolder='__all'; refresh(); };
+  list.appendChild(all);
+
+  state.folders.forEach(f => {
+    const b = document.createElement('button');
+    b.className = 'folder-row' + (state.filterFolder===f ? ' active' : '');
+    b.innerHTML = `<svg class="ic" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3h5l1.5 1.5H15v9H1z"/></svg> <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${f}</span> <span class="n">${counts.get(f)||0}</span> <span class="x" title="Delete folder">✕</span>`;
+    b.onclick = (e) => {
+      if (e.target.classList.contains('x')) {
+        e.stopPropagation();
+        deleteFolder(f);
+        return;
+      }
+      state.filterFolder = f;
+      refresh();
+    };
+    list.appendChild(b);
+  });
+
+  if (unfiled > 0) {
+    const u = document.createElement('button');
+    u.className = 'folder-row' + (state.filterFolder==='__unfiled' ? ' active' : '');
+    u.innerHTML = `<svg class="ic" viewBox="0 0 16 16" fill="currentColor" opacity="0.5"><path d="M1 3h5l1.5 1.5H15v9H1z"/></svg> <span style="flex:1;font-style:italic;opacity:0.7;">Unfiled</span> <span class="n">${unfiled}</span>`;
+    u.onclick = () => { state.filterFolder='__unfiled'; refresh(); };
+    list.appendChild(u);
+  }
+}
+
+async function deleteFolder(name) {
+  if (!confirm(`Delete folder "${name}"? Assets in it become unfiled (the files themselves stay).`)) return;
+  state.folders = state.folders.filter(f => f !== name);
+  await DB.setMeta(FOLDERS_KEY, state.folders);
+  // Move items in this folder to unfiled
+  for (const it of state.items.filter(i => i.folder === name)) {
+    it.folder = '';
+    await DB.put(it);
+  }
+  if (state.filterFolder === name) state.filterFolder = '__all';
+  setDirty(true);
+  await refresh();
+  showToast(`Folder "${name}" deleted.`);
+}
+
+async function addFolder(name) {
+  name = (name || '').trim();
+  if (!name) return;
+  if (state.folders.includes(name)) { showToast('Folder exists.', 'warn'); return; }
+  state.folders.push(name);
+  await DB.setMeta(FOLDERS_KEY, state.folders);
+  setDirty(true);
+  await refresh();
+  showToast(`Folder "${name}" added.`);
+}
+
+function renderBulkMoveOptions() {
+  const sel = document.getElementById('bulkMoveSel');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Unfiled —</option>' + state.folders.map(f => `<option value="${f}">${f}</option>`).join('') + '<option value="__new__">+ New folder…</option>';
+}
+
+function renderModalFolderOptions() {
+  const sel = document.getElementById('mFolder');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Unfiled —</option>' + state.folders.map(f => `<option value="${f}">${f}</option>`).join('');
+}
+
+function renderBulkbar() {
+  const bar = document.getElementById('bulkbar');
+  const cnt = document.getElementById('bulkCount');
+  if (!bar) return;
+  if (state.selected.size === 0) {
+    bar.classList.remove('show');
+  } else {
+    bar.classList.add('show');
+    cnt.textContent = `${state.selected.size} selected`;
+  }
+}
+
+function renderTagSidebar() {
+  const list = document.getElementById('tagList');
+  const tags = uniqueTags();
+  list.innerHTML = '';
+  const all = document.createElement('button');
+  all.className = 'tag-row' + (state.filterTag==='__all' ? ' active' : '');
+  all.innerHTML = `<span class="dot"></span> All assets <span class="n">${state.items.length}</span>`;
+  all.onclick = () => { state.filterTag='__all'; renderTagSidebar(); renderGallery(); };
+  list.appendChild(all);
+
+  tags.forEach(([t, n]) => {
+    const b = document.createElement('button');
+    b.className = 'tag-row' + (state.filterTag===t ? ' active' : '');
+    const display = t==='__untagged' ? '— Untagged —' : t;
+    b.innerHTML = `<span class="dot"></span> ${display} <span class="n">${n}</span>`;
+    b.onclick = () => { state.filterTag=t; renderTagSidebar(); renderGallery(); };
+    list.appendChild(b);
+  });
+}
+
+function renderTagDatalist() {
+  const dl = document.getElementById('tagOptions');
+  const tags = [...new Set(state.items.map(i=>i.tag).filter(Boolean))].sort();
+  // Add some defaults if empty so the user has a head start
+  const suggestions = ['logos/', 'case/sree/hero', 'case/sree/gallery', 'case/avias/hero', 'case/avias/gallery', 'case/tissera/hero', 'case/tissera/gallery', 'about/team', 'home/hero'];
+  const all = [...new Set([...tags, ...suggestions])].sort();
+  dl.innerHTML = all.map(t => `<option value="${t}">`).join('');
+}
+
+function applyFilter() {
+  let rows = state.items.slice();
+  if (state.filterFolder !== '__all') {
+    if (state.filterFolder === '__unfiled') rows = rows.filter(r => !r.folder);
+    else rows = rows.filter(r => r.folder === state.filterFolder);
+  }
+  if (state.filterTag !== '__all') {
+    if (state.filterTag === '__untagged') rows = rows.filter(r => !r.tag);
+    else rows = rows.filter(r => r.tag === state.filterTag);
+  }
+  if (state.filterKind !== 'all') rows = rows.filter(r => r.kind === state.filterKind);
+  if (state.search) {
+    const s = state.search.toLowerCase();
+    rows = rows.filter(r => (r.name||'').toLowerCase().includes(s) || (r.tag||'').toLowerCase().includes(s) || (r.note||'').toLowerCase().includes(s) || (r.folder||'').toLowerCase().includes(s));
+  }
+  rows.sort((a,b)=>{
+    switch(state.sort){
+      case 'oldest': return a.addedAt - b.addedAt;
+      case 'name': return (a.name||'').localeCompare(b.name||'');
+      case 'size-desc': return b.size - a.size;
+      case 'size-asc': return a.size - b.size;
+      default: return b.addedAt - a.addedAt;
+    }
+  });
+  return rows;
+}
+
+function renderGallery() {
+  const g = document.getElementById('gallery');
+  const empty = document.getElementById('emptyState');
+  const rows = applyFilter();
+  g.innerHTML = '';
+  empty.style.display = rows.length ? 'none' : '';
+  rows.forEach(r => g.appendChild(makeAssetCard(r)));
+}
+
+function makeAssetCard(r) {
+  const el = document.createElement('div');
+  el.className = 'asset' + (state.selected.has(r.id) ? ' selected' : '');
+  const url = urlFor(r);
+
+  const thumb = document.createElement('div'); thumb.className='thumb';
+
+  // Selection checkbox
+  const sel = document.createElement('div');
+  sel.className = 'sel-check' + (state.selected.has(r.id) ? ' on' : '');
+  sel.onclick = (e) => {
+    e.stopPropagation();
+    if (state.selected.has(r.id)) state.selected.delete(r.id);
+    else state.selected.add(r.id);
+    renderGallery();
+    renderBulkbar();
+  };
+  thumb.appendChild(sel);
+
+  if (r.kind === 'video') {
+    const v = document.createElement('video');
+    v.src = url; v.muted = true; v.playsInline = true;
+    v.addEventListener('mouseenter', () => v.play().catch(()=>{}));
+    v.addEventListener('mouseleave', () => { v.pause(); v.currentTime = 0; });
+    thumb.appendChild(v);
+    const b = document.createElement('span'); b.className='badge'; b.textContent='VIDEO'; thumb.appendChild(b);
+  } else if (r.kind === 'image') {
+    const img = document.createElement('img'); img.src = url; img.loading='lazy'; thumb.appendChild(img);
+  } else {
+    thumb.style.display='flex'; thumb.style.alignItems='center'; thumb.style.justifyContent='center';
+    thumb.innerHTML = '<div style="font-family:var(--font-mono);font-size:10px;color:var(--dimmer);text-align:center;padding:1rem;">'+(r.name.split('.').pop()||'?').toUpperCase()+'</div>';
+  }
+  if (r.tag) {
+    const t = document.createElement('span'); t.className='tag'; t.textContent = r.tag; thumb.appendChild(t);
+  }
+  if (r.folder) {
+    const fp = document.createElement('span'); fp.className='folder-pill';
+    fp.innerHTML = `<span class="ic"></span>${r.folder}`;
+    thumb.appendChild(fp);
+  }
+
+  const actions = document.createElement('div'); actions.className='actions';
+  const editB = document.createElement('button'); editB.textContent='Edit'; editB.onclick=(e)=>{e.stopPropagation(); openModal(r.id);};
+  const dlB = document.createElement('button'); dlB.textContent='Download'; dlB.onclick=(e)=>{e.stopPropagation(); download(r);};
+  const delB = document.createElement('button'); delB.textContent='Delete'; delB.className='del'; delB.onclick=(e)=>{e.stopPropagation(); remove(r.id);};
+  actions.appendChild(editB); actions.appendChild(dlB); actions.appendChild(delB);
+  thumb.appendChild(actions);
+
+  const meta = document.createElement('div'); meta.className='meta';
+  const nm = document.createElement('div'); nm.className='nm'; nm.textContent = r.name; meta.appendChild(nm);
+  const sz = document.createElement('div'); sz.className='sz';
+  const dimStr = r.width ? ` · ${r.width}×${r.height}` : '';
+  sz.textContent = `${fmtSize(r.size)}${dimStr} · ${fmtRelative(r.addedAt)}`;
+  meta.appendChild(sz);
+
+  el.appendChild(thumb); el.appendChild(meta);
+  el.onclick = () => openModal(r.id);
+  return el;
+}
+
+function renderTopStats() {
+  document.getElementById('totalCount').textContent = state.items.length;
+  document.getElementById('tabLibN').textContent = state.items.length;
+  const bytes = state.items.reduce((s,r)=>s+r.size, 0);
+  document.getElementById('totalSize').textContent = (bytes/1024/1024).toFixed(1);
+  if (navigator.storage && navigator.storage.estimate) {
+    navigator.storage.estimate().then(e => {
+      const pct = e.quota ? Math.round((e.usage/e.quota)*100) : 0;
+      document.getElementById('quotaPct').textContent = pct + '%';
+    });
+  }
+}
+
+/* ─── Modal ─── */
+let modalId = null;
+function openModal(id) {
+  const r = state.items.find(x => x.id === id);
+  if (!r) return;
+  modalId = id;
+  const url = urlFor(r);
+  const prev = document.getElementById('mPreview');
+  prev.innerHTML = '';
+  if (r.kind === 'video') {
+    const v = document.createElement('video'); v.src = url; v.controls = true; v.style.maxWidth='100%'; v.style.maxHeight='90vh';
+    prev.appendChild(v);
+  } else if (r.kind === 'image') {
+    const img = document.createElement('img'); img.src = url; prev.appendChild(img);
+  } else {
+    prev.innerHTML = '<div style="color:var(--dimmer);font-family:var(--font-mono);font-size:12px;padding:2rem;">No preview · '+r.type+'</div>';
+  }
+  document.getElementById('mName').textContent = r.name;
+  document.getElementById('mNameEdit').value = r.name;
+  document.getElementById('mTag').value = r.tag || '';
+  document.getElementById('mNote').value = r.note || '';
+  renderModalFolderOptions();
+  document.getElementById('mFolder').value = r.folder || '';
+  document.getElementById('mFolderNew').value = '';
+  const meta = document.getElementById('mMeta');
+  meta.innerHTML = '';
+  const fields = [
+    ['Size', fmtSize(r.size)],
+    ['Type', r.type || '—'],
+    ['Added', fmtDate(r.addedAt)],
+    ['Dimensions', r.width ? `${r.width}×${r.height}` : '—'],
+  ];
+  if (r.duration) fields.push(['Duration', r.duration.toFixed(1)+'s']);
+  fields.push(['ID', '#'+r.id]);
+  fields.forEach(([k,v]) => {
+    const d = document.createElement('div');
+    d.innerHTML = `<b>${k}</b>${v}`;
+    meta.appendChild(d);
+  });
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); modalId = null; }
+document.getElementById('modalBg').onclick = (e) => { if (e.target.id==='modalBg') closeModal(); };
+document.getElementById('mClose').onclick = closeModal;
+
+document.getElementById('mSave').onclick = async () => {
+  if (modalId == null) return;
+  const r = state.items.find(x => x.id === modalId);
+  if (!r) return;
+  r.name = document.getElementById('mNameEdit').value.trim() || r.name;
+  r.tag = document.getElementById('mTag').value.trim();
+  r.note = document.getElementById('mNote').value;
+  // Folder: dropdown OR new-folder input
+  const newF = document.getElementById('mFolderNew').value.trim();
+  if (newF) {
+    if (!state.folders.includes(newF)) {
+      state.folders.push(newF);
+      await DB.setMeta(FOLDERS_KEY, state.folders);
+    }
+    r.folder = newF;
+  } else {
+    r.folder = document.getElementById('mFolder').value;
+  }
+  await DB.put(r);
+  await refresh();
+  closeModal();
+  setDirty(true);
+  showToast('Saved.');
+};
+
+document.getElementById('mDownload').onclick = () => {
+  const r = state.items.find(x => x.id === modalId);
+  if (r) download(r);
+};
+document.getElementById('mDelete').onclick = async () => {
+  if (modalId == null) return;
+  const r = state.items.find(x => x.id === modalId);
+  if (!confirm(`Delete "${r.name}"? This cannot be undone.`)) return;
+  await remove(modalId, true);
+  closeModal();
+};
+
+function download(r) {
+  const url = urlFor(r);
+  const a = document.createElement('a');
+  a.href = url; a.download = r.name; document.body.appendChild(a); a.click(); a.remove();
+}
+
+async function remove(id, silent) {
+  await DB.delete(id);
+  if (objectUrlCache.has(id)) { URL.revokeObjectURL(objectUrlCache.get(id)); objectUrlCache.delete(id); }
+  state.selected.delete(id);
+  await refresh();
+  setDirty(true);
+  if (!silent) showToast('Deleted.');
+}
+
+/* ─── Search/sort/kind ─── */
+document.getElementById('search').oninput = (e) => { state.search = e.target.value; renderGallery(); };
+document.getElementById('sortBy').onchange = (e) => { state.sort = e.target.value; renderGallery(); };
+document.getElementById('kindFilter').onchange = (e) => { state.filterKind = e.target.value; renderGallery(); };
+
+/* ─── Storage tab ─── */
+async function refreshStorageTab() {
+  const items = state.items;
+  document.getElementById('sCount').textContent = items.length;
+  const bytes = items.reduce((s,r)=>s+r.size,0);
+  const mb = bytes/1024/1024;
+  document.getElementById('sSize').innerHTML = mb < 1024 ? mb.toFixed(1)+'<span class="u">MB</span>' : (mb/1024).toFixed(2)+'<span class="u">GB</span>';
+  if (navigator.storage && navigator.storage.estimate) {
+    const e = await navigator.storage.estimate();
+    const usedMB = (e.usage||0)/1024/1024;
+    const quotaMB = (e.quota||0)/1024/1024;
+    const pct = e.quota ? (e.usage/e.quota)*100 : 0;
+    document.getElementById('sQuota').innerHTML = `${pct.toFixed(1)}<span class="u">% of ${(quotaMB/1024).toFixed(1)} GB</span>`;
+    document.getElementById('sQuotaBar').style.width = pct + '%';
+  } else {
+    document.getElementById('sQuota').textContent = 'unsupported';
+  }
+  if (items.length) {
+    const last = items.reduce((m,r)=> r.addedAt>m.addedAt?r:m, items[0]);
+    document.getElementById('sLast').textContent = fmtRelative(last.addedAt);
+  } else {
+    document.getElementById('sLast').textContent = '—';
+  }
+}
+
+document.getElementById('refreshBtn').onclick = refreshStorageTab;
+document.getElementById('wipeBtn').onclick = async () => {
+  if (!confirm('This deletes EVERY asset stored in this browser. Are you sure?')) return;
+  if (!confirm('Last chance — this cannot be undone.')) return;
+  // revoke all urls
+  objectUrlCache.forEach(u => URL.revokeObjectURL(u));
+  objectUrlCache.clear();
+  await DB.clear();
+  await refresh();
+  await refreshStorageTab();
+  showToast('Library wiped.', 'warn');
+};
+
+document.getElementById('exportBtn').onclick = async () => {
+  if (!state.items.length) { showToast('Nothing to export.', 'warn'); return; }
+  showToast('Building zip…');
+  const zip = new JSZip();
+  const manifest = { generatedAt: new Date().toISOString(), count: state.items.length, files: [] };
+  for (const r of state.items) {
+    const safe = r.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = (r.tag ? r.tag.replace(/\/$/,'') + '/' : '_untagged/') + safe;
+    zip.file(path, r.blob);
+    manifest.files.push({ id: r.id, name: r.name, tag: r.tag, note: r.note, type: r.type, size: r.size, width: r.width, height: r.height, duration: r.duration, addedAt: r.addedAt, path });
+  }
+  zip.file('manifest.json', JSON.stringify(manifest, null, 2));
+  const blob = await zip.generateAsync({ type:'blob', compression:'DEFLATE', compressionOptions:{level:6} });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='respawn-library.zip'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  showToast(`Exported ${state.items.length} files.`);
+};
+
+/* ─── Boot ─── */
+
+/* Save / Done buttons */
+document.getElementById('topSaveBtn').onclick = confirmSave;
+document.getElementById('doneBtn').onclick = confirmSave;
+function confirmSave() {
+  // All edits are already persisted to IndexedDB on each action; this is the explicit confirm.
+  broadcastChange();
+  setDirty(false);
+  showToast('All changes saved · website will pick them up.');
+}
+
+/* New-folder button in sidebar */
+document.getElementById('newFolderBtn').onclick = () => {
+  const inp = document.getElementById('newFolderName');
+  addFolder(inp.value);
+  inp.value = '';
+};
+document.getElementById('newFolderName').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { addFolder(e.target.value); e.target.value=''; }
+});
+
+/* Bulk move bar */
+document.getElementById('bulkMoveBtn').onclick = async () => {
+  const sel = document.getElementById('bulkMoveSel');
+  let target = sel.value;
+  if (target === '__new__') {
+    target = prompt('New folder name:');
+    if (!target) return;
+    target = target.trim();
+    if (target && !state.folders.includes(target)) {
+      state.folders.push(target);
+      await DB.setMeta(FOLDERS_KEY, state.folders);
+    }
+  }
+  let n = 0;
+  for (const id of state.selected) {
+    const r = state.items.find(x => x.id === id);
+    if (r) { r.folder = target; await DB.put(r); n++; }
+  }
+  state.selected.clear();
+  await refresh();
+  setDirty(true);
+  showToast(`Moved ${n} to ${target || 'Unfiled'}.`);
+};
+document.getElementById('bulkClearSel').onclick = () => {
+  state.selected.clear();
+  renderGallery();
+  renderBulkbar();
+};
+
+/* Seed website assets — fetch known files from /assets and add as records */
+const SEED_ASSETS = [
+  { path: 'assets/logo-white.png', folder: 'Brand', tag: 'logo/white', note: 'Site logo (white)' },
+  { path: 'assets/logo-black.png', folder: 'Brand', tag: 'logo/black', note: 'Site logo (black)' },
+  { path: 'assets/clients/avias.png', folder: 'Clients', tag: 'clients/avias' },
+  { path: 'assets/clients/coconut.jpg', folder: 'Clients', tag: 'clients/coconut' },
+  { path: 'assets/clients/pakwan.jpg', folder: 'Clients', tag: 'clients/pakwan' },
+  { path: 'assets/clients/spica.jpg', folder: 'Clients', tag: 'clients/spica' },
+  { path: 'assets/clients/suswani.jpg', folder: 'Clients', tag: 'clients/suswani' },
+  { path: 'assets/clients/tharun-kiron.png', folder: 'Clients', tag: 'clients/tharun-kiron' },
+  { path: 'assets/clients/tissera.jpg', folder: 'Clients', tag: 'clients/tissera' },
+];
+
+const REMOTE_SEEDS = [
+  // 10 wix-hosted client logos
+  { url: 'https://static.wixstatic.com/media/2dcde4_1291fa640cac4e50927e3f3cc6975b21~mv2.png', name: 'chennai-grocers.png', folder: 'Clients', tag: 'clients/chennai-grocers' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_2bb7ebda62b245e5bbcffd101e65faa0~mv2.png', name: 'mantras.png', folder: 'Clients', tag: 'clients/mantras' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_a2ceec3e96b048e8990fb9ffc92b1e9d~mv2.png', name: 'kati-roll-shop.png', folder: 'Clients', tag: 'clients/kati-roll-shop' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_2deb229138fb4bcbbb956ae18b6f41bb~mv2.png', name: 'atha-fragrances.png', folder: 'Clients', tag: 'clients/atha-fragrances' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_7a493e3794b744b5ab40902d2172102e~mv2.png', name: 'chit-chaat-chai.png', folder: 'Clients', tag: 'clients/chit-chaat-chai' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_fff11dc832cc48cd90b4d3a9bbc49aae~mv2.png', name: 'bajoria-hospitality.png', folder: 'Clients', tag: 'clients/bajoria-hospitality' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_b08136c9f9e04c109bc3f93bcf62fd68~mv2.png', name: 'sree-mishti-bhog.png', folder: 'Clients', tag: 'clients/sree-mishti-bhog' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_f5eccc29dd5f44b49935562fdd0f5f04~mv2.png', name: 'tea-villa-cafe.png', folder: 'Clients', tag: 'clients/tea-villa-cafe' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_bae9aec2aa3544758ca4a398258b45b5~mv2.png', name: 'ctrl-vr.png', folder: 'Clients', tag: 'clients/ctrl-vr' },
+  // Work files
+  { url: 'https://static.wixstatic.com/media/2dcde4_aa236ba4fbfa4c1498c9609c524e0075f003.jpg/v1/fit/w_800,h_1200,q_85,enc_avif,quality_auto/file.jpg', name: 'work-mantras-social.jpg', folder: 'Work', tag: 'work/mantras/social', note: 'Mantras — social content' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_1255394bc5be4241938e4c55cd508c07f003.jpg/v1/fit/w_800,h_1200,q_85,enc_avif,quality_auto/file.jpg', name: 'work-sree-launch.jpg', folder: 'Work', tag: 'work/sree/launch', note: 'Sree Mishti Bhog — launch campaign' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_25f11e24658f42e18ce3bc1e8c9c9e73~mv2.png/v1/fit/w_800,h_800,q_85,enc_avif,quality_auto/file.png', name: 'work-mantras-product.png', folder: 'Work', tag: 'work/mantras/product', note: 'Mantras — product photography' },
+  // Team / founders
+  { url: 'https://static.wixstatic.com/media/2dcde4_ca6e4bcb71514460a42dff1e91715d78~mv2.jpg/v1/crop/x_526,y_1459,w_1017,h_843/fill/w_600,h_500,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/shlok%20pic_edited.jpg', name: 'shlok.jpg', folder: 'Team', tag: 'team/shlok', note: 'Shlok Jain — Founder · Biz Head & Content' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_20f420c6464d44c29658027cd3bc474a~mv2.png/v1/crop/x_1,y_57,w_3023,h_2508/fill/w_600,h_500,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/tanay%20pic_HEIC.png', name: 'tanay.png', folder: 'Team', tag: 'team/tanay', note: 'Tanay Jain — Founder · Design & Editing' },
+  { url: 'https://static.wixstatic.com/media/2dcde4_746603a5922449e78f6420875e67a2d9~mv2.jpg/v1/crop/x_220,y_0,w_1810,h_1500/fill/w_600,h_500,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/ari_edited.jpg', name: 'arihant.jpg', folder: 'Team', tag: 'team/arihant', note: 'Arihant Bhandari — Founder · Ads & Content' },
+];
+
+async function fetchAsBlob(url) {
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.blob();
+}
+
+async function seedWebsiteAssets(force) {
+  const seeded = await DB.getMeta('seeded');
+  if (seeded && !force) return;
+  showToast('Importing website assets…');
+  let added = 0, skipped = 0;
+  // Local files
+  for (const item of SEED_ASSETS) {
+    try {
+      // Skip if already present (match by tag)
+      if (state.items.some(x => x.tag === item.tag)) { skipped++; continue; }
+      const blob = await fetchAsBlob(item.path);
+      const name = item.path.split('/').pop();
+      const f = new File([blob], name, { type: blob.type });
+      const dims = await readDims(f).catch(()=>null);
+      await DB.add({
+        name, size: f.size, type: f.type || 'image/png',
+        kind: f.type.startsWith('video/') ? 'video' : 'image',
+        folder: item.folder, tag: item.tag, note: item.note || '',
+        addedAt: Date.now(), width: dims?.w||null, height: dims?.h||null, duration: dims?.d||null,
+        blob: f,
+      });
+      added++;
+    } catch (e) { console.warn('seed local failed', item.path, e); }
+  }
+  // Remote files
+  for (const item of REMOTE_SEEDS) {
+    try {
+      if (state.items.some(x => x.tag === item.tag)) { skipped++; continue; }
+      const blob = await fetchAsBlob(item.url);
+      const f = new File([blob], item.name, { type: blob.type });
+      const dims = await readDims(f).catch(()=>null);
+      await DB.add({
+        name: item.name, size: f.size, type: f.type || 'image/jpeg',
+        kind: f.type.startsWith('video/') ? 'video' : 'image',
+        folder: item.folder, tag: item.tag, note: item.note || '',
+        addedAt: Date.now(), width: dims?.w||null, height: dims?.h||null, duration: dims?.d||null,
+        blob: f,
+      });
+      added++;
+      await refresh(); // progressive
+    } catch (e) { console.warn('seed remote failed', item.url, e); }
+  }
+  await DB.setMeta('seeded', true);
+  await refresh();
+  setDirty(true);
+  showToast(`Imported ${added} website asset${added===1?'':'s'} (${skipped} already present).`);
+}
+
+document.getElementById('seedBtn').onclick = () => seedWebsiteAssets(true);
+
+/* Boot */
+refresh().then(async () => {
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persisted().then(p => { if (!p) navigator.storage.persist(); });
+  }
+  // Auto-seed on first run
+  await seedWebsiteAssets(false);
+  setDirty(false);
+});
+</script>
+</body>
+</html>

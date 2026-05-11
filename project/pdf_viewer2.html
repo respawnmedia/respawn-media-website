@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="pdf_data.js"></script>
+</head>
+<body style="margin:0;background:#222;display:flex;flex-direction:column;gap:4px" id="pages"></body>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+async function go() {
+  const bin = atob(window.PDF_B64);
+  const buf = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i);
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  document.title = 'PAGES:' + pdf.numPages;
+  for (let i = 1; i <= Math.min(pdf.numPages, 8); i++) {
+    const page = await pdf.getPage(i);
+    const vp = page.getViewport({scale: 1.2});
+    const canvas = document.createElement('canvas');
+    canvas.width = vp.width; canvas.height = vp.height;
+    canvas.style.display = 'block';
+    document.getElementById('pages').appendChild(canvas);
+    await page.render({canvasContext: canvas.getContext('2d'), viewport: vp}).promise;
+  }
+  document.title = 'DONE';
+}
+go().catch(e => { document.title = 'ERR:'+e.message; document.body.textContent = e.message; });
+</script>
+</html>

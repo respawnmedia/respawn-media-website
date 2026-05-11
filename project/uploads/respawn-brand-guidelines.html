@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respawn Media — Brand Guidelines 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --surface: #111111;
+  --surface-2: #1A1A1A;
+  --teal: #16C4BA;
+  --teal-bright: #08F7CA;
+  --teal-dim: rgba(22,196,186,0.12);
+  --teal-border: rgba(22,196,186,0.35);
+  --white: #FFFFFF;
+  --off-white: #F5F4F0;
+  --gray: #888888;
+  --gray-light: rgba(255,255,255,0.5);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.15);
+  --red: #E8503E;
+  --font-display: 'Bebas Neue', 'Barlow Condensed', Impact, sans-serif;
+  --font-condensed: 'Barlow Condensed', 'Bebas Neue', Impact, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --sidebar: 240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ========= SIDEBAR ========= */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0;
+  height: 100vh;
+  width: var(--sidebar);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sb-brand {
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sb-logo {
+  display: inline-block;
+  position: relative;
+  padding: 6px 12px 7px;
+  border: 2.5px solid var(--white);
+  margin-bottom: 0.6rem;
+}
+.sb-logo::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid var(--white);
+  pointer-events: none;
+}
+.sb-re {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  display: block;
+  letter-spacing: 0.02em;
+}
+.sb-spawn {
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  border-top: 1.5px solid var(--white);
+  padding-top: 4px;
+  margin-top: 3px;
+  display: block;
+}
+
+.sb-tagline {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 0.5rem;
+}
+
+.nav { flex: 1; padding: 1rem 0; }
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.5rem;
+  text-decoration: none;
+  color: var(--gray);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: all 0.18s;
+  border-left: 2px solid transparent;
+  position: relative;
+}
+
+.nav a:hover {
+  color: var(--white);
+  background: rgba(255,255,255,0.04);
+}
+
+.nav a.active {
+  color: var(--teal);
+  border-left-color: var(--teal);
+  background: var(--teal-dim);
+}
+
+.nav-num {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: var(--teal);
+  opacity: 0.55;
+  min-width: 22px;
+  line-height: 1;
+}
+
+.nav a.active .nav-num { opacity: 1; }
+
+.sb-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.06em;
+}
+
+/* ========= MAIN ========= */
+.main {
+  margin-left: var(--sidebar);
+}
+
+/* ========= COVER ========= */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 4rem 4.5rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.cover-ghost {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-46%, -50%);
+  font-family: var(--font-display);
+  font-size: 320px;
+  color: rgba(255,255,255,0.022);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.cover-teal-dot {
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  margin-bottom: 1.25rem;
+}
+
+.cover-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.75rem;
+}
+
+.cover-h1 {
+  font-family: var(--font-display);
+  font-size: 100px;
+  line-height: 0.92;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.01em;
+}
+
+.cover-h1 span { color: var(--teal); }
+
+.cover-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 2rem;
+}
+
+.cover-meta {
+  display: flex;
+  gap: 3.5rem;
+  flex-wrap: wrap;
+}
+
+.cover-meta-item {}
+.cover-meta-label {
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 0.2rem;
+}
+.cover-meta-val {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cover-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--teal);
+}
+
+/* ========= SECTIONS ========= */
+.section {
+  padding: 5.5rem 4.5rem;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 0;
+}
+
+.section:nth-child(even) {
+  background: rgba(255,255,255,0.012);
+}
+
+.s-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.s-num {
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 1;
+  color: var(--teal);
+  opacity: 0.28;
+  min-width: 90px;
+  margin-top: -8px;
+}
+
+.s-title-group {}
+
+.s-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 0.4rem;
+}
+
+.s-title {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+/* ========= CARDS ========= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem;
+}
+
+.card-sm {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.5rem;
+}
+
+.card-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-condensed);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; }
+.grid-2-gap { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.grid-3-gap { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+
+/* ========= IDENTITY SECTION ========= */
+.brand-statement {
+  font-family: var(--font-condensed);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+}
+
+.brand-statement em {
+  color: var(--teal);
+  font-style: normal;
+}
+
+.value-row {
+  display: flex;
+  gap: 1px;
+  margin-top: 3rem;
+}
+
+.value-item {
+  flex: 1;
+  padding: 1.75rem 1.5rem;
+  background: var(--surface);
+  border-top: 3px solid var(--teal);
+}
+
+.value-num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  color: var(--teal);
+  opacity: 0.3;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.value-title {
+  font-family: var(--font-condensed);
+  font-size: 17px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.value-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.55;
+}
+
+/* ========= LOGO SECTION ========= */
+.logo-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  margin-bottom: 2rem;
+}
+
+.logo-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  position: relative;
+}
+
+.logo-demo-label {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.5rem;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+.logo-dark { background: #080808; }
+.logo-light { background: #F5F4F0; color: #080808; }
+
+.logo-css {
+  display: inline-block;
+  position: relative;
+  padding: 10px 18px 12px;
+  border: 3.5px solid currentColor;
+}
+
+.logo-css::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1.5px solid currentColor;
+  pointer-events: none;
+}
+
+.logo-css-re {
+  font-family: var(--font-display);
+  font-size: 86px;
+  line-height: 0.95;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-css-spawn {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  border-top: 2.5px solid currentColor;
+  padding-top: 5px;
+  margin-top: 5px;
+  display: block;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-rule-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+}
+
+.logo-rule-card {
+  padding: 1.75rem;
+  background: var(--surface);
+}
+
+.logo-rule-title {
+  font-family: var(--font-condensed);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1rem;
+}
+
+.logo-rule-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.logo-rule-list li {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  padding-left: 1.1rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.logo-rule-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--teal);
+  font-size: 10px;
+  top: 3px;
+}
+
+/* ========= COLOR SECTION ========= */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+}
+
+.color-card {
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.color-swatch {
+  height: 140px;
+  position: relative;
+}
+
+.color-swatch-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image: repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 0, transparent 50%);
+  background-size: 8px 8px;
+}
+
+.color-meta {
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+}
+
+.color-name {
+  font-family: var(--font-condensed);
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2rem;
+}
+
+.color-hex {
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  color: var(--gray);
+  margin-bottom: 0.5rem;
+}
+
+.color-role {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.color-usage-note {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  border-left: 3px solid var(--teal-border);
+  background: var(--teal-dim);
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+
+.color-usage-note strong { color: var(--teal); }
+
+/* ========= TYPOGRAPHY ========= */
+.type-block {
+  padding: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-bottom: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.type-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.type-category {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.type-specs {
+  font-size: 11px;
+  color: var(--gray);
+  text-align: right;
+  line-height: 1.5;
+}
+
+.type-sample-display {
+  font-family: var(--font-display);
+  font-size: 80px;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+}
+
+.type-sample-condensed {
+  font-family: var(--font-condensed);
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.type-sample-subhead {
+  font-family: var(--font-condensed);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.type-sample-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+}
+
+.type-sample-caption {
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.type-note {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px dashed rgba(22,196,186,0.3);
+  border-radius: 2px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.type-note strong { color: var(--teal); }
+
+/* ========= VISUAL LANGUAGE ========= */
+.visual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+}
+
+.visual-card {
+  background: var(--surface);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-card-dark {
+  background: #080808;
+}
+
+.visual-card-light {
+  background: #F5F4F0;
+  color: #080808;
+}
+
+.v-card-tag {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1rem;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+}
+
+.v-card-tag.dark-bg { color: #F5F4F0; opacity: 0.4; }
+
+.v-demo-text {
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 0.95;
+  margin-bottom: 0.5rem;
+}
+
+.v-teal-stripe {
+  height: 8px;
+  background: var(--teal);
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.v-teal-stripe-sm {
+  height: 4px;
+  background: var(--teal);
+  margin: 0.75rem 0;
+  width: 60%;
+}
+
+.v-desc {
+  font-size: 13px;
+  opacity: 0.5;
+  line-height: 1.5;
+}
+
+.motif-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  margin-top: 2rem;
+}
+
+.motif-card {
+  padding: 2rem 1.75rem;
+  background: var(--surface);
+}
+
+.motif-icon {
+  font-family: var(--font-display);
+  font-size: 40px;
+  color: var(--teal);
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.motif-name {
+  font-family: var(--font-condensed);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.motif-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.55;
+}
+
+/* ========= VOICE SECTION ========= */
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+}
+
+.voice-card {
+  padding: 2rem;
+  background: var(--surface);
+  border-left: 3px solid var(--teal);
+}
+
+.voice-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  margin-bottom: 0.4rem;
+}
+
+.voice-subtitle {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-condensed);
+}
+
+.voice-desc {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+}
+
+.voice-examples {
+  margin-top: 2.5rem;
+}
+
+.voice-ex-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 1rem;
+}
+
+.voice-ex-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+}
+
+.voice-ex {
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+}
+
+.voice-ex-type {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.type-yes { color: #2DD4BF; }
+.type-no { color: var(--red); }
+
+.voice-ex-text {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ========= PILLARS ========= */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+}
+
+.pillar-card {
+  padding: 2rem 1.75rem;
+  background: var(--surface);
+  border-top: 3px solid var(--teal);
+  position: relative;
+}
+
+.p-num {
+  font-family: var(--font-display);
+  font-size: 64px;
+  color: var(--teal);
+  opacity: 0.18;
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+.p-title {
+  font-family: var(--font-condensed);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.65rem;
+  margin-top: -0.25rem;
+}
+
+.p-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.p-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.p-tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border: 1px solid rgba(22,196,186,0.3);
+  color: rgba(22,196,186,0.7);
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+}
+
+/* ========= DOS AND DONTS ========= */
+.dd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.do-section, .dont-section {}
+
+.dd-header {
+  padding: 1rem 1.5rem;
+  font-family: var(--font-condensed);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.do-header {
+  background: rgba(22,196,186,0.12);
+  color: var(--teal);
+  border-top: 2px solid var(--teal);
+}
+
+.dont-header {
+  background: rgba(232,80,62,0.1);
+  color: var(--red);
+  border-top: 2px solid var(--red);
+}
+
+.dd-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dd-list li {
+  padding: 1rem 1.5rem;
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.65);
+  background: var(--surface);
+  padding-left: 3rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.dd-list li::before {
+  position: absolute;
+  left: 1.5rem;
+  font-weight: 700;
+}
+
+.do-section .dd-list li::before { content: '✓'; color: var(--teal); }
+.dont-section .dd-list li::before { content: '✕'; color: var(--red); }
+
+/* ========= UTILITIES ========= */
+.teal { color: var(--teal); }
+.gray { color: var(--gray); }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+
+.rule { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+p + p { margin-top: 0.75rem; }
+
+.body-text {
+  font-size: 15px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+.highlight {
+  padding: 0 4px;
+  background: var(--teal-dim);
+  color: var(--teal);
+  border-radius: 2px;
+}
+
+/* ========= FOOTER ========= */
+.footer {
+  padding: 2.5rem 4.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0.3;
+}
+
+.footer p { font-size: 11px; letter-spacing: 0.08em; }
+
+/* ========= SCROLLBAR ========= */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--teal); }
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 1100px) {
+  :root { --sidebar: 60px; }
+  .sb-brand, .nav a span, .nav-label, .sb-tagline, .sb-footer { display: none; }
+  .nav a { justify-content: center; padding: 0.9rem 0; }
+  .nav-num { font-size: 20px; opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">
+      <span class="sb-re">RE</span>
+      <span class="sb-spawn">SPAWN</span>
+    </div>
+    <div class="sb-tagline">Brand Guidelines 2025</div>
+  </div>
+
+  <div class="nav">
+    <a href="#cover" class="active">
+      <span class="nav-num">00</span>
+      <span class="nav-label">Cover</span>
+    </a>
+    <a href="#identity">
+      <span class="nav-num">01</span>
+      <span class="nav-label">Identity</span>
+    </a>
+    <a href="#logo">
+      <span class="nav-num">02</span>
+      <span class="nav-label">Logo</span>
+    </a>
+    <a href="#colors">
+      <span class="nav-num">03</span>
+      <span class="nav-label">Colors</span>
+    </a>
+    <a href="#typography">
+      <span class="nav-num">04</span>
+      <span class="nav-label">Typography</span>
+    </a>
+    <a href="#visual">
+      <span class="nav-num">05</span>
+      <span class="nav-label">Visual Language</span>
+    </a>
+    <a href="#voice">
+      <span class="nav-num">06</span>
+      <span class="nav-label">Voice & Tone</span>
+    </a>
+    <a href="#pillars">
+      <span class="nav-num">07</span>
+      <span class="nav-label">Content Pillars</span>
+    </a>
+    <a href="#rules">
+      <span class="nav-num">08</span>
+      <span class="nav-label">Do's & Don'ts</span>
+    </a>
+  </div>
+
+  <div class="sb-footer">
+    <p>respawnmediain</p>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- COVER -->
+  <section id="cover" class="cover">
+    <div class="cover-ghost">RESPAWN</div>
+    <div class="cover-teal-dot"></div>
+    <div class="cover-eyebrow">Respawn Media — Creative Identity System</div>
+    <h1 class="cover-h1">Brand<br><span>Guide</span><br>lines</h1>
+    <div class="cover-divider"></div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Agency</div>
+        <div class="cover-meta-val">Respawn Media</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Handle</div>
+        <div class="cover-meta-val">@respawnmediain</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Location</div>
+        <div class="cover-meta-val">Chennai, India</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Version</div>
+        <div class="cover-meta-val">1.0 — 2025</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Status</div>
+        <div class="cover-meta-val teal">Live</div>
+      </div>
+    </div>
+    <div class="cover-bar"></div>
+  </section>
+
+  <!-- 01 IDENTITY -->
+  <section id="identity" class="section">
+    <div class="s-header">
+      <div class="s-num">01</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Who We Are</div>
+        <h2 class="s-title">Brand Identity</h2>
+      </div>
+    </div>
+
+    <p class="body-text">
+      Respawn Media is Chennai's only creative, social media-first agency. We exist at the intersection of
+      <span class="highlight">content production</span>, strategic thinking, and cultural fluency — helping businesses
+      stop blending in and start being brands people actually follow, share, and buy from.
+    </p>
+
+    <div class="brand-statement mt-3">
+      We help businesses <em>become brands</em> on the internet — with a perfect mix of <em>content + strategy + ads.</em>
+    </div>
+
+    <p class="body-text">
+      Our work spans social media management, content production, videography, photography, campaign strategy,
+      and paid media. We're not a generic agency — we're a creative studio that thinks in memes, speaks in Hinglish,
+      and measures everything in actual results.
+    </p>
+
+    <div class="value-row mt-3">
+      <div class="value-item">
+        <div class="value-num">01</div>
+        <div class="value-title">Creative-First</div>
+        <div class="value-desc">We lead with the idea. Strategy and execution follow — not the other way around.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-num">02</div>
+        <div class="value-title">Culturally Fluent</div>
+        <div class="value-desc">We live on the internet. We know what's trending, why it's trending, and how to use it.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-num">03</div>
+        <div class="value-title">Results-Driven</div>
+        <div class="value-desc">Aesthetics matter. But so do numbers. We make things that look great and actually work.</div>
+      </div>
+      <div class="value-item">
+        <div class="value-num">04</div>
+        <div class="value-title">Anti-Corporate</div>
+        <div class="value-desc">No jargon, no fluff, no decks full of buzzwords. We're real people building real brands.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 LOGO -->
+  <section id="logo" class="section">
+    <div class="s-header">
+      <div class="s-num">02</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Visual Identity</div>
+        <h2 class="s-title">The Logo</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      The Respawn logo is a bold, condensed wordmark inside a double-border rectangular frame.
+      The "RE" sits large above "SPAWN" — split by a ruled line. The double-border creates a stamp-like,
+      editorial authority. Think record label. Think streetwear. Think agency.
+    </p>
+
+    <div class="logo-showcase">
+      <div class="logo-demo logo-dark">
+        <div class="logo-css" style="color: #FFFFFF;">
+          <span class="logo-css-re">RE</span>
+          <span class="logo-css-spawn">SPAWN</span>
+        </div>
+        <span class="logo-demo-label" style="color: rgba(255,255,255,0.3);">White version — on dark</span>
+      </div>
+      <div class="logo-demo logo-light">
+        <div class="logo-css" style="color: #080808;">
+          <span class="logo-css-re">RE</span>
+          <span class="logo-css-spawn">SPAWN</span>
+        </div>
+        <span class="logo-demo-label" style="color: rgba(8,8,8,0.3);">Black version — on light</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 1px;">
+      <div class="logo-rule-grid">
+        <div class="logo-rule-card">
+          <div class="logo-rule-title">✓ Correct Usage</div>
+          <ul class="logo-rule-list">
+            <li>White logo on black or very dark backgrounds</li>
+            <li>Black logo on white or off-white backgrounds</li>
+            <li>Maintain the double-border rectangle — never use wordmark alone</li>
+            <li>Use as watermark in the corner of all content (top-right preferred)</li>
+            <li>Keep the logo monochrome — only black or white, never teal or colored</li>
+            <li>Preserve all proportions — scale uniformly only</li>
+          </ul>
+        </div>
+        <div class="logo-rule-card">
+          <div class="logo-rule-title" style="color: var(--red);">✕ Never Do This</div>
+          <ul class="logo-rule-list" style="--teal: var(--red);">
+            <li>Don't stretch, squish, or distort the logo</li>
+            <li>Don't rotate or flip the logo</li>
+            <li>Don't place the logo on a busy, low-contrast background</li>
+            <li>Don't use the logo in teal, gray, or any off-brand color</li>
+            <li>Don't add drop shadows, glows, or effects to the logo</li>
+            <li>Don't recreate or modify the logo from scratch — always use the master file</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1px; padding: 2rem; background: var(--surface); border: 1px solid var(--border);">
+      <div class="card-label">Clear Space Rule</div>
+      <p class="body-text">
+        Always maintain a clear space around the logo equal to at least the height of the "RE" letterforms.
+        Nothing — text, images, graphics — should enter this protected zone. Minimum usable size is
+        <strong>48px height</strong> for digital, and <strong>15mm height</strong> for print.
+      </p>
+    </div>
+  </section>
+
+  <!-- 03 COLORS -->
+  <section id="colors" class="section">
+    <div class="s-header">
+      <div class="s-num">03</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Visual Identity</div>
+        <h2 class="s-title">Color Palette</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      The palette is intentionally minimal. Black dominates, white gives it breath, and teal is the single
+      accent that makes everything pop. When in doubt — go darker.
+    </p>
+
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background: #080808;">
+          <div class="color-swatch-pattern" style="color: #FFFFFF;"></div>
+        </div>
+        <div class="color-meta">
+          <div class="color-name">Pitch Black</div>
+          <div class="color-hex">#080808</div>
+          <div class="color-role">Primary Background</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08);">
+        </div>
+        <div class="color-meta">
+          <div class="color-name">Pure White</div>
+          <div class="color-hex">#FFFFFF</div>
+          <div class="color-role">Primary Text · Logo (White)</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #16C4BA;">
+        </div>
+        <div class="color-meta">
+          <div class="color-name" style="color: var(--teal);">Respawn Teal</div>
+          <div class="color-hex">#16C4BA</div>
+          <div class="color-role">Signature Accent</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #F5F4F0; border: 1px solid rgba(0,0,0,0.08);">
+        </div>
+        <div class="color-meta">
+          <div class="color-name">Off-White</div>
+          <div class="color-hex">#F5F4F0</div>
+          <div class="color-role">Light Mode BG</div>
+        </div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background: #141414;">
+          <div class="color-swatch-pattern" style="color: #FFFFFF;"></div>
+        </div>
+        <div class="color-meta">
+          <div class="color-name">Dark Surface</div>
+          <div class="color-hex">#141414</div>
+          <div class="color-role">Cards · Overlays</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-usage-note">
+      <strong>Color Usage Rule:</strong> The teal accent should never dominate. Use it for one element per design
+      — a stripe, a date, a highlighted word, a border. The more restraint you show with the teal,
+      the more impact it has. When everything is teal, nothing is.<br><br>
+      <strong>Note:</strong> Hex values for teal are extracted from existing content. Confirm the exact value
+      with your design files before producing new brand assets.
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <div class="card-label" style="margin-bottom: 1rem;">Color Hierarchy on Posts</div>
+      <div class="grid-3-gap">
+        <div class="card-sm">
+          <div class="card-label">Dark Mode Posts</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;">
+            Black background (#080808) + White headline text + Teal as single accent element.
+            Use for editorial, tribute, and news-style posts.
+          </p>
+        </div>
+        <div class="card-sm">
+          <div class="card-label">Light Mode Posts</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;">
+            Off-white (#F5F4F0) or pure white background + Black headline text + Teal stripe or accent.
+            Use for educational, carousel, and campaign posts.
+          </p>
+        </div>
+        <div class="card-sm">
+          <div class="card-label">Client Work</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;">
+            Client's brand colors take center stage. Apply Respawn's logo watermark in the corner.
+            Never override a client's palette with Respawn's teal.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 TYPOGRAPHY -->
+  <section id="typography" class="section">
+    <div class="s-header">
+      <div class="s-num">04</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Visual Identity</div>
+        <h2 class="s-title">Typography</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      Typography is the loudest thing in a Respawn post. The headline IS the design. Big, condensed,
+      heavy — always lowercase, always commanding. Body text stays clean and restrained to let the headline breathe.
+    </p>
+
+    <div class="type-block">
+      <div class="type-label-row">
+        <div class="type-category">Display / Headline</div>
+        <div class="type-specs">Heavy Condensed Sans<br>Lowercase · Tight Leading</div>
+      </div>
+      <div class="type-sample-condensed">moment<br>marketing</div>
+      <div class="rule"></div>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">
+        Used for post headlines, section titles, and any oversized display text. Set in the heaviest/black
+        weight of a condensed grotesque. Leading should be tight (0.9–1.0). Always lowercase.
+        Text should feel like it's about to run out of space — that's the aesthetic.
+      </p>
+    </div>
+
+    <div class="type-block" style="margin-top: 1px;">
+      <div class="type-label-row">
+        <div class="type-category">Display / Logo Style</div>
+        <div class="type-specs">All Caps Display<br>Used for Logo & Headers</div>
+      </div>
+      <div class="type-sample-display" style="color: var(--white);">RESPAWN</div>
+      <div class="rule"></div>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">
+        The all-caps display style mirrors the logo letterforms. Used sparingly for section
+        identifiers, brand callouts, and cases where the logo DNA needs to carry into headlines.
+      </p>
+    </div>
+
+    <div class="type-block" style="margin-top: 1px;">
+      <div class="type-label-row">
+        <div class="type-category">Accent / Label</div>
+        <div class="type-specs">Condensed Bold · All Caps<br>Used with Teal Color</div>
+      </div>
+      <div class="type-sample-subhead">Moment Marketing · Social Media Agency</div>
+      <div class="rule"></div>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">
+        For tags, labels, category headers, and caption identifiers. Always in teal.
+        All-caps with generous letter-spacing (8–12%). Condensed bold weight.
+      </p>
+    </div>
+
+    <div class="type-block" style="margin-top: 1px;">
+      <div class="type-label-row">
+        <div class="type-category">Body / Captions</div>
+        <div class="type-specs">Clean Sans-Serif<br>Regular & Medium weights</div>
+      </div>
+      <div class="type-sample-body">
+        We help businesses become brands on the internet — with a perfect mix of content, strategy, and ads.
+        No fluff. No corporate speak. Just work that actually moves the needle.
+      </div>
+      <div class="rule"></div>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6;">
+        Body copy for captions, descriptions, slide text, and anywhere extended reading is required.
+        Clean, modern, high readability. Regular (400) for body, Medium (500) for emphasis.
+      </p>
+    </div>
+
+    <div class="type-note">
+      <strong>Font Identification Note:</strong> The exact font families used in Respawn's posts are unconfirmed.
+      Based on visual analysis — the display font appears to be a heavy condensed grotesque (closest matches:
+      <strong>Barlow Condensed Black</strong> or <strong>Alternate Gothic No. 3</strong>).
+      The body font matches <strong>DM Sans</strong> or similar. Please confirm with your design team and
+      update this section with the exact licensed font names.
+    </div>
+  </section>
+
+  <!-- 05 VISUAL LANGUAGE -->
+  <section id="visual" class="section">
+    <div class="s-header">
+      <div class="s-num">05</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Design System</div>
+        <h2 class="s-title">Visual Language</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      Respawn's visual identity has two modes — <span class="highlight">Dark Editorial</span> and <span class="highlight">Light Clean</span>.
+      Both are valid. Both carry the brand. The switching keeps the feed dynamic and prevents monotony.
+    </p>
+
+    <div class="visual-grid">
+      <div class="visual-card visual-card-dark">
+        <div class="v-card-tag">Dark Editorial Mode</div>
+        <div class="v-demo-text" style="color: white;">scientists<br>discover</div>
+        <div class="v-teal-stripe"></div>
+        <div class="v-demo-text" style="font-size: 24px; color: white; font-family: var(--font-condensed); font-weight: 900; letter-spacing: -0.01em;">a new colour called "Olo"</div>
+        <div class="v-desc" style="color: rgba(255,255,255,0.4); margin-top: 1rem;">
+          Black background. White oversized type. Single teal accent. High contrast. Immediate impact.
+        </div>
+      </div>
+      <div class="visual-card" style="background: #F0EFEB;">
+        <div class="v-card-tag" style="color: rgba(8,8,8,0.45);">Light Clean Mode</div>
+        <div class="v-demo-text" style="color: #0D0D0D; font-size: 56px;">moment<br>marketing</div>
+        <div class="v-teal-stripe-sm"></div>
+        <div style="font-size: 18px; color: #0D0D0D; font-family: var(--font-condensed); font-weight: 700; letter-spacing: -0.01em;">it all matters in that one moment.</div>
+        <div style="font-size: 13px; color: rgba(8,8,8,0.4); margin-top: 1rem; line-height: 1.5;">
+          Off-white background. Dark type. Teal stripe as scene divider. Clean, editorial, airy.
+        </div>
+      </div>
+    </div>
+
+    <div class="motif-grid">
+      <div class="motif-card">
+        <div class="motif-icon">—</div>
+        <div class="motif-name">The Teal Stripe</div>
+        <div class="motif-desc">
+          A horizontal teal bar used as a design divider, section separator, or mid-post accent.
+          Always full-width. Never decorative — it always separates something meaningful.
+        </div>
+      </div>
+      <div class="motif-card">
+        <div class="motif-icon">RE</div>
+        <div class="motif-name">Logo Watermark</div>
+        <div class="motif-desc">
+          The logo appears in the top-right corner of all Respawn-produced content.
+          White version on dark posts, black version on light posts. Small but consistent.
+        </div>
+      </div>
+      <div class="motif-card">
+        <div class="motif-icon">Aa</div>
+        <div class="motif-name">Oversized Type</div>
+        <div class="motif-desc">
+          The headline often breaks the grid, runs off edges, or dominates 70–80% of the frame.
+          Text-as-design is core to the Respawn aesthetic. Let the type be loud.
+        </div>
+      </div>
+      <div class="motif-card">
+        <div class="motif-icon">◼◻</div>
+        <div class="motif-name">Texture Backgrounds</div>
+        <div class="motif-desc">
+          For dark posts, a subtle stone or concrete texture overlays the black background.
+          It adds depth without competing with the content. Never use colored textures.
+        </div>
+      </div>
+      <div class="motif-card">
+        <div class="motif-icon">⬛</div>
+        <div class="motif-name">Black & White Photography</div>
+        <div class="motif-desc">
+          Portrait and tribute photography is always desaturated to black and white.
+          This creates gravitas and visual consistency across editorial-style posts.
+        </div>
+      </div>
+      <div class="motif-card">
+        <div class="motif-icon">↓</div>
+        <div class="motif-name">Directional Arrows</div>
+        <div class="motif-desc">
+          Thin, curved arrows used to point at details, highlight an element, or create
+          a sense of "look here." Used sparingly — one per post maximum.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 VOICE & TONE -->
+  <section id="voice" class="section">
+    <div class="s-header">
+      <div class="s-num">06</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Communication</div>
+        <h2 class="s-title">Voice & Tone</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      Respawn sounds like the smartest person in the room who doesn't need to prove it.
+      Confident, witty, culturally aware, and always a little bit irreverent. We know our stuff — and we make
+      it interesting. No jargon. No padding. No corporate-speak.
+    </p>
+
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="voice-title">Bold</div>
+        <div class="voice-subtitle">& Confident</div>
+        <div class="voice-desc">
+          We don't hedge. We don't say "perhaps" or "it seems like." We state things clearly and back them up.
+          Opinions are welcome. Fence-sitting is not.
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-title">Culturally</div>
+        <div class="voice-subtitle">Fluent</div>
+        <div class="voice-desc">
+          We're fluent in internet. We use Hinglish naturally, reference memes and moments without forcing it,
+          and know the difference between cringe and clever.
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-title">Educational</div>
+        <div class="voice-subtitle">but Entertaining</div>
+        <div class="voice-desc">
+          We teach things — marketing, branding, strategy — but we never lecture. The goal is for someone
+          to learn something and immediately want to share it.
+        </div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-title">Self-Aware</div>
+        <div class="voice-subtitle">& Witty</div>
+        <div class="voice-desc">
+          We can make fun of ourselves. We don't take ourselves too seriously. A good joke lands better
+          than a long explanation — and we know the difference.
+        </div>
+      </div>
+    </div>
+
+    <div class="voice-examples mt-3">
+      <div class="voice-ex-label">Voice In Practice — Example Captions</div>
+      <div class="voice-ex-grid">
+        <div class="voice-ex">
+          <div class="voice-ex-type type-yes">✓ Sounds Like Respawn</div>
+          <div class="voice-ex-text">"The 5 people who can see the colour are not Team Respawn — can confirm."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-no">✕ Doesn't Sound Like Respawn</div>
+          <div class="voice-ex-text">"Scientists have recently discovered a new colour called Olo that very few individuals can perceive."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-yes">✓ Sounds Like Respawn</div>
+          <div class="voice-ex-text">"When Sree Mishti Bhog asked us to craft a killer pre-launch campaign — here's what happened."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-no">✕ Doesn't Sound Like Respawn</div>
+          <div class="voice-ex-text">"We are pleased to present our social media campaign services for Sree Mishti Bhog's store launch initiative."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-yes">✓ Sounds Like Respawn</div>
+          <div class="voice-ex-text">"Gone, but never forgotten. Piyush Pandey — the AdMan of India."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-no">✕ Doesn't Sound Like Respawn</div>
+          <div class="voice-ex-text">"We regret to inform you of the passing of a distinguished figure in the advertising industry."</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-yes">✓ Sounds Like Respawn</div>
+          <div class="voice-ex-text">"moment hai bhai, moment!"</div>
+        </div>
+        <div class="voice-ex">
+          <div class="voice-ex-type type-no">✕ Doesn't Sound Like Respawn</div>
+          <div class="voice-ex-text">"Real-time marketing presents valuable opportunities for brand engagement."</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 CONTENT PILLARS -->
+  <section id="pillars" class="section">
+    <div class="s-header">
+      <div class="s-num">07</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Content Strategy</div>
+        <h2 class="s-title">Content Pillars</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      All Respawn content falls under one of these five pillars. Every post should have a clear pillar.
+      A healthy feed balances across all five — no single pillar should dominate for more than two consecutive posts.
+    </p>
+
+    <div class="pillar-grid">
+      <div class="pillar-card">
+        <div class="p-num">01</div>
+        <div class="p-title">Industry Knowledge</div>
+        <div class="p-desc">
+          Marketing trends, advertising insights, moment marketing breakdowns. We educate our audience
+          about the industry we live in — and make it interesting enough to share.
+        </div>
+        <div class="p-tags">
+          <span class="p-tag">Educational</span>
+          <span class="p-tag">Shareable</span>
+          <span class="p-tag">Authority</span>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="p-num">02</div>
+        <div class="p-title">Client Work</div>
+        <div class="p-desc">
+          Campaign showcases, behind-the-scenes peeks, client results. This is our portfolio in public.
+          Show the process, the thinking, and the output — not just the final frame.
+        </div>
+        <div class="p-tags">
+          <span class="p-tag">Portfolio</span>
+          <span class="p-tag">Proof</span>
+          <span class="p-tag">Social Proof</span>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="p-num">03</div>
+        <div class="p-title">Culture & Viral</div>
+        <div class="p-desc">
+          Meme-integrated content, trending news with a marketing angle, relatable agency life moments.
+          This is what makes the feed fun and keeps followers coming back.
+        </div>
+        <div class="p-tags">
+          <span class="p-tag">Engagement</span>
+          <span class="p-tag">Reach</span>
+          <span class="p-tag">Relatable</span>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="p-num">04</div>
+        <div class="p-title">BTS & Team</div>
+        <div class="p-desc">
+          The humans behind the brand. Team moments, behind-the-scenes shoots, agency culture.
+          This is what makes Respawn a brand people trust, not just a handle they follow.
+        </div>
+        <div class="p-tags">
+          <span class="p-tag">Humanising</span>
+          <span class="p-tag">Trust</span>
+          <span class="p-tag">Culture</span>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="p-num">05</div>
+        <div class="p-title">Tribute & Inspiration</div>
+        <div class="p-desc">
+          Recognising icons in advertising, marketing, and culture. Industry legends, milestone moments.
+          Shows Respawn's depth of knowledge and respect for the craft.
+        </div>
+        <div class="p-tags">
+          <span class="p-tag">Depth</span>
+          <span class="p-tag">Heritage</span>
+          <span class="p-tag">Credibility</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 DOS AND DONTS -->
+  <section id="rules" class="section">
+    <div class="s-header">
+      <div class="s-num">08</div>
+      <div class="s-title-group">
+        <div class="s-eyebrow">Brand Rules</div>
+        <h2 class="s-title">Do's & Don'ts</h2>
+      </div>
+    </div>
+
+    <p class="body-text mb-2">
+      These rules protect the brand from inconsistency, dilution, and off-brand output.
+      Anyone producing content for or about Respawn should follow these.
+    </p>
+
+    <div style="margin-bottom: 2rem;">
+      <div class="card-label mb-1">Logo & Identity</div>
+      <div class="dd-grid">
+        <div class="do-section">
+          <div class="dd-header do-header">Do</div>
+          <ul class="dd-list">
+            <li>Use the official logo files — white version and black version only</li>
+            <li>Place the logo watermark in the corner of every piece of content we produce</li>
+            <li>Maintain minimum clear space around the logo at all times</li>
+            <li>Scale the logo proportionally — always uniform scaling</li>
+          </ul>
+        </div>
+        <div class="dont-section">
+          <div class="dd-header dont-header">Don't</div>
+          <ul class="dd-list">
+            <li>Don't use the logo in teal, any gradient, or any color other than black or white</li>
+            <li>Don't add effects — shadows, glows, outlines — to the logo</li>
+            <li>Don't use the wordmark without the rectangular border frame</li>
+            <li>Don't place the logo on low-contrast or visually cluttered backgrounds</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+      <div class="card-label mb-1">Color & Visual</div>
+      <div class="dd-grid">
+        <div class="do-section">
+          <div class="dd-header do-header">Do</div>
+          <ul class="dd-list">
+            <li>Lead with black or white as the dominant background color</li>
+            <li>Use teal for one accent element per design — not more</li>
+            <li>Switch between dark and light mode to keep the feed dynamic</li>
+            <li>Keep photography B&W for editorial, tribute, and portrait posts</li>
+          </ul>
+        </div>
+        <div class="dont-section">
+          <div class="dd-header dont-header">Don't</div>
+          <ul class="dd-list">
+            <li>Don't use multiple accent colors — teal is the only accent</li>
+            <li>Don't use gradients in Respawn's own brand posts</li>
+            <li>Don't make the background any color other than black, white, or off-white</li>
+            <li>Don't use low-contrast color combinations that reduce legibility</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+      <div class="card-label mb-1">Typography</div>
+      <div class="dd-grid">
+        <div class="do-section">
+          <div class="dd-header do-header">Do</div>
+          <ul class="dd-list">
+            <li>Use the condensed heavy font for all post headlines — big and bold</li>
+            <li>Set headlines in lowercase for a modern, approachable feel</li>
+            <li>Keep leading tight on display text (0.9–1.05 line height)</li>
+            <li>Use the teal label style for category tags and eyebrow text</li>
+          </ul>
+        </div>
+        <div class="dont-section">
+          <div class="dd-header dont-header">Don't</div>
+          <ul class="dd-list">
+            <li>Don't use casual script or display fonts outside of client work</li>
+            <li>Don't use more than 2 font families in a single post</li>
+            <li>Don't set body text in the condensed display font — it's for headlines only</li>
+            <li>Don't use text effects — 3D, shadows, outlines — on post headlines</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card-label mb-1">Voice & Communication</div>
+      <div class="dd-grid">
+        <div class="do-section">
+          <div class="dd-header do-header">Do</div>
+          <ul class="dd-list">
+            <li>Write like a human who knows their stuff — confident, natural, direct</li>
+            <li>Use Hinglish where it feels natural — don't force English formality</li>
+            <li>Keep captions punchy — one hook, one idea, one CTA maximum</li>
+            <li>Reference culture, memes, and current moments when they're genuinely relevant</li>
+          </ul>
+        </div>
+        <div class="dont-section">
+          <div class="dd-header dont-header">Don't</div>
+          <ul class="dd-list">
+            <li>Don't write in corporate or formal language — ever</li>
+            <li>Don't use forced meme references that feel out of place</li>
+            <li>Don't pad captions with filler words or unnecessary hashtag spam</li>
+            <li>Don't make promises or claims we can't back up — credibility over hype</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Respawn Media · Brand Guidelines v1.0 · 2025</p>
+    <p>@respawnmediain · Chennai, India</p>
+  </footer>
+
+</main>
+
+<script>
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.nav a');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.nav a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.25 });
+
+document.querySelectorAll('section[id]').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

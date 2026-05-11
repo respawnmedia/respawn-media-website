@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Respawn · Import Assets</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --panel: #111;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.18);
+    --text: #fff;
+    --dim: rgba(255,255,255,0.55);
+    --dimmer: rgba(255,255,255,0.3);
+    --accent: #16c4ba;
+    --accent-dim: rgba(22,196,186,0.15);
+    --danger: #e85a4f;
+    --font-body: 'Archivo', sans-serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+    --font-serif: 'Instrument Serif', serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  body { min-height: 100vh; padding: 3rem 2rem 6rem; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  header { border-bottom: 1px solid var(--border); padding-bottom: 2rem; margin-bottom: 2.5rem; }
+  .kicker { font-family: var(--font-cond); font-weight: 700; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+  h1 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(36px, 5vw, 64px); line-height: 0.95; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
+  h1 em { font-style: italic; color: var(--dim); }
+  .lede { font-size: 15px; color: var(--dim); max-width: 620px; line-height: 1.55; }
+  .lede strong { color: var(--text); font-weight: 600; }
+  .steps { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .step { font-family: var(--font-cond); font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 0.85rem; border: 1px solid var(--border); border-radius: 2px; color: var(--dim); display: flex; align-items: center; gap: 0.5rem; }
+  .step b { color: var(--accent); font-weight: 700; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem; }
+  .bucket {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 4px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .bucket.drag { border-color: var(--accent); background: rgba(22,196,186,0.04); }
+  .bucket header { border: 0; padding: 0; margin: 0 0 0.9rem; display: flex; align-items: baseline; justify-content: space-between; }
+  .bucket h2 { font-family: var(--font-cond); font-weight: 800; font-size: 18px; letter-spacing: 0.05em; text-transform: uppercase; margin: 0; }
+  .bucket .count { font-family: var(--font-cond); font-size: 12px; color: var(--dimmer); font-weight: 500; }
+  .bucket .hint { font-size: 12px; color: var(--dimmer); line-height: 1.5; margin-bottom: 0.9rem; }
+  .drop {
+    flex: 1;
+    border: 1px dashed var(--border-strong);
+    border-radius: 3px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    cursor: pointer;
+    position: relative;
+    min-height: 120px;
+  }
+  .drop .placeholder {
+    margin: auto;
+    text-align: center;
+    color: var(--dimmer);
+    font-size: 13px;
+    font-family: var(--font-cond);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .drop input[type=file] { display: none; }
+  .items { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 6px; width: 100%; }
+  .item { position: relative; aspect-ratio: 1; background: #000; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+  .item img, .item video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item .badge { position: absolute; top: 3px; left: 3px; font-family: var(--font-cond); font-size: 9px; letter-spacing: 0.1em; padding: 1px 4px; background: rgba(0,0,0,0.7); color: var(--accent); font-weight: 700; text-transform: uppercase; }
+  .item .x { position: absolute; top: 3px; right: 3px; width: 16px; height: 16px; border-radius: 50%; background: rgba(0,0,0,0.7); color: #fff; border: 0; font-size: 10px; line-height: 16px; padding: 0; cursor: pointer; display: none; }
+  .item:hover .x { display: block; }
+  .item .name { position: absolute; bottom: 0; left: 0; right: 0; font-size: 8px; font-family: var(--font-cond); font-weight: 500; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 10px 3px 2px; letter-spacing: 0.03em; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+  /* Tagging row for case-study items */
+  .item select.tagsel {
+    position: absolute; bottom: 3px; left: 3px; right: 3px;
+    font-family: var(--font-cond); font-size: 9px; font-weight: 600;
+    background: rgba(0,0,0,0.85); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    padding: 2px; letter-spacing: 0.05em; text-transform: uppercase;
+    border-radius: 2px;
+  }
+
+  /* Footer action bar */
+  .actions {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,10,0.96); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 1rem 2rem; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .actions .tally { font-family: var(--font-cond); font-size: 13px; color: var(--dim); letter-spacing: 0.05em; }
+  .actions .tally b { color: var(--text); font-weight: 700; }
+  button.primary {
+    background: var(--accent); color: #000; border: 0;
+    font-family: var(--font-cond); font-weight: 800; font-size: 14px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.85rem 1.5rem; cursor: pointer; border-radius: 2px;
+    transition: opacity 0.15s;
+  }
+  button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
+  button.ghost {
+    background: transparent; color: var(--dim);
+    border: 1px solid var(--border-strong);
+    font-family: var(--font-cond); font-weight: 600; font-size: 13px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.75rem 1.2rem; cursor: pointer; border-radius: 2px;
+  }
+  button.ghost:hover { color: var(--text); border-color: var(--text); }
+
+  /* Case study picker row */
+  .cs-tabs { display: flex; gap: 4px; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .cs-tab { font-family: var(--font-cond); font-weight: 600; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.4rem 0.75rem; background: transparent; color: var(--dim); border: 1px solid var(--border); cursor: pointer; border-radius: 2px; }
+  .cs-tab.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+  .cs-tab .n { margin-left: 5px; color: var(--dimmer); font-weight: 500; }
+  .cs-tab.active .n { color: var(--accent); }
+
+  .hero-slot { margin-bottom: 0.75rem; }
+  .hero-slot .label { font-family: var(--font-cond); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--dimmer); font-weight: 600; margin-bottom: 0.3rem; }
+  .hero-slot .pad { border: 1px dashed var(--border-strong); border-radius: 3px; aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer; }
+  .hero-slot .pad.has { border-style: solid; }
+  .hero-slot .pad img, .hero-slot .pad video { width: 100%; height: 100%; object-fit: cover; }
+  .hero-slot .pad .placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--dimmer); font-family: var(--font-cond); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .log { position: fixed; bottom: 80px; right: 2rem; background: #000; border: 1px solid var(--border); padding: 0.75rem 1rem; border-radius: 2px; font-family: var(--font-cond); font-size: 12px; color: var(--accent); display: none; max-width: 340px; }
+  .log.show { display: block; }
+
+  @media (max-width: 700px) {
+    body { padding: 2rem 1rem 8rem; }
+    .grid { grid-template-columns: 1fr; }
+    .actions { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="kicker">Respawn Media · One-time Import</div>
+      <h1>Drop your assets, <em>get a zip, send it back.</em></h1>
+      <p class="lede">This page categorizes your files, bundles them into a single <strong>respawn-assets.zip</strong>, and downloads it. Attach that zip to the next chat message and I'll unpack everything into the site as permanent files — no more localStorage limits.</p>
+      <div class="steps">
+        <span class="step"><b>1</b> Drag files into the right bucket</span>
+        <span class="step"><b>2</b> Click <b>Download Zip</b></span>
+        <span class="step"><b>3</b> Attach zip in the next chat message</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- CLIENT LOGOS -->
+      <section class="bucket" data-bucket="logos">
+        <header>
+          <h2>Client Logos</h2>
+          <span class="count" data-count>0</span>
+        </header>
+        <p class="hint">Square logos for the Clients marquee. Filename becomes the client name (rename files first for best results, e.g. <em>matiks.png</em>).</p>
+        <label class="drop" data-drop>
+          <input type="file" multiple accept="image/*" />
+          <div class="placeholder">Drop logo images here<br/><span style="text-transform:none;letter-spacing:0.04em;">or click to pick</span></div>
+          <div class="items" data-items></div>
+        </label>
+      </section>
+
+      <!-- CASE STUDY MEDIA -->
+      <section class="bucket" data-bucket="case" style="grid-column: 1 / -1;">
+        <header>
+          <h2>Case Study Media</h2>
+          <span class="count" data-count>0</span>
+        </header>
+        <p class="hint">Pick which case study you're uploading for, then drop the hero image + gallery files. Each case study gets its own hero (16:9) and media gallery.</p>
+
+        <div class="cs-tabs" id="cstabs"></div>
+
+        <div class="hero-slot">
+          <div class="label">Hero image (16:9 — used at top of case study)</div>
+          <label class="pad" id="herodrop">
+            <input type="file" accept="image/*,video/*" style="display:none" id="heroinput" />
+            <div class="placeholder" id="heroplace">Drop hero image</div>
+          </label>
+        </div>
+
+        <label class="drop" data-drop>
+          <input type="file" multiple accept="image/*,video/*" />
+          <div class="placeholder">Drop gallery photos & videos<br/><span style="text-transform:none;letter-spacing:0.04em;">— tag each as photo or video below —</span></div>
+          <div class="items" data-items></div>
+        </label>
+      </section>
+    </div>
+
+    <div class="log" id="log"></div>
+  </div>
+
+  <div class="actions">
+    <div class="tally">
+      <b id="totalCount">0</b> files · <b id="totalSize">0</b> MB
+    </div>
+    <div style="display:flex; gap:0.75rem;">
+      <button class="ghost" id="clearBtn">Clear all</button>
+      <button class="primary" id="dlBtn" disabled>Download Zip</button>
+    </div>
+  </div>
+
+<script>
+const CASE_STUDIES = [
+  { id: 'sree', name: 'Sree Mishti Bhog' },
+  { id: 'avias', name: 'Avias' },
+  { id: 'tissera', name: 'Tissera' },
+  { id: 'other', name: 'Other / New' },
+];
+
+const state = {
+  logos: [], // { file, name, url }
+  case: { sree: { hero: null, media: [] }, avias: { hero: null, media: [] }, tissera: { hero: null, media: [] }, other: { hero: null, media: [] } },
+  activeCase: 'sree',
+};
+
+// ─── Case study tabs ───
+const csTabs = document.getElementById('cstabs');
+CASE_STUDIES.forEach(cs => {
+  const b = document.createElement('button');
+  b.className = 'cs-tab' + (cs.id === state.activeCase ? ' active' : '');
+  b.dataset.cs = cs.id;
+  b.innerHTML = cs.name + ' <span class="n" data-n>0</span>';
+  b.onclick = () => { state.activeCase = cs.id; renderAll(); };
+  csTabs.appendChild(b);
+});
+
+// ─── Helpers ───
+function slugify(s) {
+  return s.toLowerCase().replace(/\.[^.]+$/, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'file';
+}
+function fileKind(f) { return f.type.startsWith('video/') ? 'video' : 'image'; }
+function extOf(f) {
+  const m = f.name.match(/\.([a-z0-9]+)$/i);
+  if (m) return m[1].toLowerCase().replace('jpeg','jpg');
+  return f.type.split('/')[1] || 'bin';
+}
+function previewURL(f) { return URL.createObjectURL(f); }
+function readableSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(0) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+
+// ─── Drag/drop wiring ───
+function wireBucket(bucketEl) {
+  const drop = bucketEl.querySelector('[data-drop]');
+  const input = drop.querySelector('input[type=file]');
+  const bucket = bucketEl.dataset.bucket;
+
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); bucketEl.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('drag'); bucketEl.classList.remove('drag'); }));
+  drop.addEventListener('drop', e => { handleFiles(bucket, [...e.dataTransfer.files]); });
+  input.addEventListener('change', e => { handleFiles(bucket, [...e.target.files]); e.target.value = ''; });
+}
+
+function handleFiles(bucket, files) {
+  if (!files.length) return;
+  if (bucket === 'logos') {
+    files.filter(f => f.type.startsWith('image/')).forEach(f => {
+      state.logos.push({ file: f, name: slugify(f.name), url: previewURL(f), kind: 'image' });
+    });
+  } else if (bucket === 'case') {
+    const cs = state.activeCase;
+    files.forEach(f => {
+      state.case[cs].media.push({ file: f, name: slugify(f.name), url: previewURL(f), kind: fileKind(f) });
+    });
+  }
+  renderAll();
+}
+
+document.querySelectorAll('.bucket').forEach(wireBucket);
+
+// ─── Hero drop ───
+const heroDrop = document.getElementById('herodrop');
+const heroInput = document.getElementById('heroinput');
+['dragenter','dragover'].forEach(ev => heroDrop.addEventListener(ev, e => { e.preventDefault(); heroDrop.style.borderColor='var(--accent)'; }));
+['dragleave','drop'].forEach(ev => heroDrop.addEventListener(ev, e => { e.preventDefault(); heroDrop.style.borderColor=''; }));
+heroDrop.addEventListener('drop', e => {
+  const f = [...e.dataTransfer.files].find(x => x.type.startsWith('image/') || x.type.startsWith('video/'));
+  if (f) setHero(f);
+});
+heroInput.addEventListener('change', e => {
+  const f = e.target.files[0]; if (f) setHero(f);
+  e.target.value = '';
+});
+function setHero(f) {
+  const cs = state.activeCase;
+  if (state.case[cs].hero) URL.revokeObjectURL(state.case[cs].hero.url);
+  state.case[cs].hero = { file: f, name: slugify(f.name), url: previewURL(f), kind: fileKind(f) };
+  renderAll();
+}
+
+// ─── Render ───
+function renderAll() {
+  // logos bucket
+  const logoBucket = document.querySelector('[data-bucket=logos]');
+  const logosItems = logoBucket.querySelector('[data-items]');
+  const logosPlace = logoBucket.querySelector('.placeholder');
+  logosItems.innerHTML = '';
+  logosPlace.style.display = state.logos.length ? 'none' : '';
+  state.logos.forEach((item, i) => {
+    logosItems.appendChild(makeItemNode(item, () => { URL.revokeObjectURL(item.url); state.logos.splice(i,1); renderAll(); }, true));
+  });
+  logoBucket.querySelector('[data-count]').textContent = state.logos.length;
+
+  // case study tabs — update counts & active
+  CASE_STUDIES.forEach(cs => {
+    const btn = csTabs.querySelector(`[data-cs="${cs.id}"]`);
+    btn.classList.toggle('active', cs.id === state.activeCase);
+    const n = state.case[cs.id].media.length + (state.case[cs.id].hero ? 1 : 0);
+    btn.querySelector('[data-n]').textContent = n;
+  });
+
+  // hero slot for active case
+  const cs = state.activeCase;
+  const heroPlace = document.getElementById('heroplace');
+  heroDrop.innerHTML = '';
+  heroDrop.appendChild(heroInput);
+  if (state.case[cs].hero) {
+    heroDrop.classList.add('has');
+    const h = state.case[cs].hero;
+    if (h.kind === 'video') {
+      const v = document.createElement('video'); v.src = h.url; v.muted = true; v.playsInline = true; v.autoplay = true; v.loop = true;
+      heroDrop.appendChild(v);
+    } else {
+      const img = document.createElement('img'); img.src = h.url; heroDrop.appendChild(img);
+    }
+    const x = document.createElement('button'); x.className='x'; x.textContent='×'; x.style.display='block'; x.style.position='absolute'; x.style.top='6px'; x.style.right='6px'; x.style.width='22px'; x.style.height='22px'; x.style.borderRadius='50%'; x.style.border='0'; x.style.background='rgba(0,0,0,0.8)'; x.style.color='#fff'; x.style.cursor='pointer'; x.style.fontSize='14px';
+    x.onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); URL.revokeObjectURL(h.url); state.case[cs].hero = null; renderAll(); };
+    heroDrop.appendChild(x);
+  } else {
+    heroDrop.classList.remove('has');
+    const p = document.createElement('div'); p.className='placeholder'; p.id='heroplace'; p.textContent='Drop hero image (16:9)';
+    heroDrop.appendChild(p);
+  }
+
+  // media grid for active case
+  const caseBucket = document.querySelector('[data-bucket=case]');
+  const caseItems = caseBucket.querySelector('[data-items]');
+  const casePlace = caseBucket.querySelector('.drop > .placeholder');
+  caseItems.innerHTML = '';
+  const media = state.case[cs].media;
+  casePlace.style.display = media.length ? 'none' : '';
+  media.forEach((item, i) => {
+    caseItems.appendChild(makeItemNode(item, () => { URL.revokeObjectURL(item.url); state.case[cs].media.splice(i,1); renderAll(); }, false));
+  });
+  caseBucket.querySelector('[data-count]').textContent = state.case[cs].media.length + (state.case[cs].hero ? 1 : 0);
+
+  // totals
+  const all = allFiles();
+  document.getElementById('totalCount').textContent = all.length;
+  const totalBytes = all.reduce((s,f)=>s+f.file.size, 0);
+  document.getElementById('totalSize').textContent = (totalBytes/1024/1024).toFixed(1);
+  document.getElementById('dlBtn').disabled = all.length === 0;
+}
+
+function makeItemNode(item, onRemove, logoMode) {
+  const el = document.createElement('div');
+  el.className = 'item';
+  el.title = item.file.name + ' · ' + readableSize(item.file.size);
+  if (item.kind === 'video') {
+    const v = document.createElement('video'); v.src = item.url; v.muted = true; v.playsInline = true; el.appendChild(v);
+    const b = document.createElement('span'); b.className='badge'; b.textContent='VIDEO'; el.appendChild(b);
+  } else {
+    const img = document.createElement('img'); img.src = item.url; el.appendChild(img);
+  }
+  const nm = document.createElement('div'); nm.className='name'; nm.textContent = item.file.name; el.appendChild(nm);
+  const x = document.createElement('button'); x.className='x'; x.textContent='×'; x.onclick = (ev)=>{ ev.preventDefault(); ev.stopPropagation(); onRemove(); };
+  el.appendChild(x);
+  el.addEventListener('click', (ev)=>{ ev.preventDefault(); });
+  return el;
+}
+
+function allFiles() {
+  const list = [];
+  state.logos.forEach((l, i) => list.push({ file: l.file, path: `logos/${l.name}.${extOf(l.file)}` }));
+  Object.entries(state.case).forEach(([csId, cs]) => {
+    if (cs.hero) {
+      const ext = extOf(cs.hero.file);
+      list.push({ file: cs.hero.file, path: `case/${csId}/hero.${ext}` });
+    }
+    cs.media.forEach((m, i) => {
+      const ext = extOf(m.file);
+      const n = String(i+1).padStart(2,'0');
+      list.push({ file: m.file, path: `case/${csId}/${m.kind}-${n}.${ext}` });
+    });
+  });
+  return list;
+}
+
+// ─── Clear ───
+document.getElementById('clearBtn').onclick = () => {
+  if (!confirm('Clear all uploaded files?')) return;
+  state.logos.forEach(l => URL.revokeObjectURL(l.url));
+  Object.values(state.case).forEach(cs => {
+    if (cs.hero) URL.revokeObjectURL(cs.hero.url);
+    cs.media.forEach(m => URL.revokeObjectURL(m.url));
+  });
+  state.logos = [];
+  Object.keys(state.case).forEach(k => { state.case[k] = { hero: null, media: [] }; });
+  renderAll();
+};
+
+// ─── Build zip and download ───
+const logEl = document.getElementById('log');
+function log(msg) { logEl.textContent = msg; logEl.classList.add('show'); }
+function unlog() { setTimeout(() => logEl.classList.remove('show'), 2000); }
+
+document.getElementById('dlBtn').onclick = async () => {
+  const files = allFiles();
+  if (!files.length) return;
+  log(`Zipping ${files.length} files…`);
+  const zip = new JSZip();
+
+  // Manifest describes structure so the unpacker knows case-study names, etc.
+  const manifest = {
+    version: 2,
+    generatedAt: new Date().toISOString(),
+    caseStudyNames: Object.fromEntries(CASE_STUDIES.map(c => [c.id, c.name])),
+    logos: state.logos.map(l => ({ name: l.name, ext: extOf(l.file), size: l.file.size })),
+    caseStudies: Object.fromEntries(Object.entries(state.case).map(([id, cs]) => [id, {
+      hero: cs.hero ? { ext: extOf(cs.hero.file), kind: cs.hero.kind, size: cs.hero.file.size } : null,
+      media: cs.media.map((m, i) => ({ idx: i+1, kind: m.kind, ext: extOf(m.file), size: m.file.size, originalName: m.file.name })),
+    }])),
+  };
+  zip.file('manifest.json', JSON.stringify(manifest, null, 2));
+
+  for (const {file, path} of files) {
+    zip.file(path, file);
+  }
+
+  const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } }, (meta) => {
+    log(`Zipping… ${Math.round(meta.percent)}%`);
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'respawn-assets.zip';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  log(`Done — ${(blob.size/1024/1024).toFixed(1)} MB. Attach the downloaded zip in chat.`);
+  unlog();
+};
+
+// initial render
+renderAll();
+</script>
+</body>
+</html>
