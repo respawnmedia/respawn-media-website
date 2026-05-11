@@ -11,6 +11,41 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Respawn Media — Creative, Design & Marketing Agency">
+<meta property="og:description" content="Chennai's only creative social-media-first agency. Strategy, content, ads, branding, AI design.">
+<meta property="og:url" content="https://respawnmedia.in/">
+<meta property="og:image" content="/assets/logo-white.png">
+<meta property="og:site_name" content="Respawn Media">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Respawn Media — Creative, Design & Marketing Agency">
+<meta name="twitter:description" content="Chennai's only creative social-media-first agency.">
+<meta name="twitter:image" content="/assets/logo-white.png">
+
+<!-- JSON-LD: Organization -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Respawn Media",
+  "url": "https://respawnmedia.in/",
+  "logo": "/assets/logo-white.png",
+  "email": "respawnmediain@gmail.com",
+  "telephone": ["+91 73585 85884", "+91 63835 33033"],
+  "address": { "@type": "PostalAddress", "addressLocality": "Chennai", "addressCountry": "IN" }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Barlow+Condensed:wght@300;400;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <style>
 :root {
   --black: #080808;
@@ -133,10 +168,10 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "email": "respawnmediain@gmail.com",
   "phone1": "73585 85884",
   "phone2": "63835 33033",
-  "heroVideo1": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Intoxicated%20drop/There%E2%80%99s%20an%20intoxicating%20charm%20in%20the%20details-from%20the%20intricate%20gold-thread%20embroidery%20on%20the%20co.mp4",
-  "heroVideo2": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Tissera%20Shoot/Nothing%20speaks.Yet%2C%20everything%20is%20understood.Precision%20in%20every%20line.Presence%20in%20every%20step.Tiss.mp4",
-  "heroVideo3": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Case%20Studies/Tissera%20Shoot/Perfecting%20the%20interplay%20of%20weight%20and%20texture.%20Here%2C%20an%20Irish%20linen%20houndstooth%20bush%20coat%20meets.mp4",
-  "heroVideo4": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Main%20Pagre/AQO_OZdXrQbPkpCqOrnAzSvdYy3tyL-8Gy_XjkCss15oPM7M4MhH-9z9SmWbPzCGSdHz8SF2XRmANlnuCtDJnqiqFhtaxeUQ.mp4"
+  "heroVideo1": "https://pub-58e6df9ef1b44a279f82fb9d7948b69e.r2.dev/Main%20Pagre/AQO_OZdXrQbPkpCqOrnAzSvdYy3tyL-8Gy_XjkCss15oPM7M4MhH-9z9SmWbPzCGSdHz8SF2XRmANlnuCtDJnqiqFhtaxeUQ.mp4",
+  "heroVideo2": "",
+  "heroVideo3": "",
+  "heroVideo4": ""
 } /*EDITMODE-END*/;
 
 const LOGO_WHITE = "assets/logo-white.png";
@@ -150,13 +185,13 @@ const INIT_CLIENTS = [
 { id: 3, name: "Bajoria Hospitality", industry: "Bespoke Catering & Hospitality", logo: R2 + "/clients/bajoria-hospitality.png", url: "https://www.instagram.com/bajoriahospitality/" },
 { id: 4, name: "Chennai Grocers", industry: "Gourmet & Premium Grocery Retail", logo: R2 + "/clients/chennai-grocers.png", url: "https://www.instagram.com/chennaigrocers/" },
 { id: 5, name: "Chit Chaat Chai", industry: "Indian Street Food Cafe", logo: R2 + "/clients/chit-chaat-chai.png", url: "https://www.instagram.com/chit.chaatchai/" },
-{ id: 6, name: "Coconut", industry: "South Indian Restaurant", logo: R2 + "/clients/Coconut.JPG", url: "https://www.instagram.com/coconutlife.in/" },
+{ id: 6, name: "Coconut", industry: "IT Peripherals & Electronics", logo: R2 + "/clients/Coconut.JPG", url: "https://www.instagram.com/coconutlife.in/" },
 { id: 7, name: "Ctrl VR", industry: "Tech · VR", logo: R2 + "/clients/ctrl-vr.png", url: "#" },
 { id: 8, name: "Kati Roll Shop", industry: "Quick Service Restaurant", logo: R2 + "/clients/kati-roll-shop.png", url: "https://www.instagram.com/thekatirollshop/" },
 { id: 9, name: "Mantras", industry: "Pure Vegetarian Family Restaurant", logo: R2 + "/clients/mantras.png", url: "https://www.instagram.com/mantraspureveg/" },
 { id: 10, name: "Pakwan", industry: "Premium Family Restaurant", logo: R2 + "/clients/Pakwan.jpg", url: "https://www.instagram.com/pakwanchennai/" },
 { id: 11, name: "Saffron by Anu", industry: "Luxury Sweets & Gifting", logo: R2 + "/clients/Saffron%20by%20Anu-Brand%20Guidelines%20%282%29.pdf.png", url: "https://www.instagram.com/saffronbyanu/" },
-{ id: 12, name: "Spica", industry: "Brand", logo: R2 + "/clients/Spica.jpg", url: "#" },
+{ id: 12, name: "Spica", industry: "Modular Furniture", logo: R2 + "/clients/Spica.jpg", url: "#" },
 { id: 13, name: "Sree Mishti Bhog", industry: "Indian Sweets & Snacks", logo: R2 + "/clients/sree-mishti-bhog.png", url: "https://www.instagram.com/sreemishtibhog/" },
 { id: 14, name: "Suswani Bullion", industry: "Bullion & Jewelry", logo: R2 + "/clients/Suswani%20Bullion.jpg", url: "#" },
 { id: 15, name: "Tea Villa Cafe", industry: "Premium Cafe & Tea Lounge", logo: R2 + "/clients/tea-villa-cafe.png", url: "https://www.instagram.com/teavillacafechennai/" },
@@ -500,6 +535,12 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
   const onPointerDown = (e) => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
+    // On touch devices, let native horizontal scroll (overflow-x:auto + touch-action:pan-x) handle the gesture
+    // and let taps pass straight through to <a>/buttons. JS drag is desktop-only.
+    if (e.pointerType === 'touch') {
+      stateRef.current.lastInteract = performance.now();
+      return;
+    }
     stateRef.current.dragging = true;
     stateRef.current.startX = e.clientX;
     stateRef.current.startScroll = scroller.scrollLeft;
@@ -566,7 +607,8 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
           msOverflowStyle: 'none',
           userSelect: 'none',
           WebkitUserSelect: 'none',
-          touchAction: 'pan-y'
+          touchAction: 'pan-x pan-y',
+          WebkitOverflowScrolling: 'touch'
         }}>
         
         <style>{`#${idName}::-webkit-scrollbar{display:none}`}</style>
@@ -843,7 +885,7 @@ function WhoAreWeSection({ aboutText, founders }) {
               strategic thinking, and cultural fluency — working with restaurants, luxury fashion brands, and lifestyle businesses to build their presence on the internet.
             </p>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '15px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: '2rem' }}>{aboutText}</p>
-            <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: 'clamp(20px,2.5vw,28px)', lineHeight: 1.25, marginBottom: '2rem' }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(22px,2.7vw,32px)', lineHeight: 1.15, letterSpacing: '0.01em', marginBottom: '2rem' }}>
               We help businesses <span style={{ color: 'var(--teal)' }}>become brands</span> on the internet — with a perfect mix of <span style={{ color: 'var(--teal)' }}>content + strategy + ads.</span>
             </div>
             <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
@@ -899,7 +941,7 @@ function FounderCard({ founder, inView, delay }) {
       </div>
       <div style={{ padding: '1.25rem 1.1rem', borderTop: '1px solid var(--border)' }}>
         <Eyebrow style={{ display: 'block', marginBottom: 6 }}>{founder.role}</Eyebrow>
-        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '1.5rem', lineHeight: 1, letterSpacing: '-0.01em', marginBottom: '0.5rem' }}>{founder.name}</div>
+        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: '1.75rem', lineHeight: 1, letterSpacing: '0.02em', marginBottom: '0.5rem' }}>{founder.name}</div>
         <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.65 }}>{founder.bio}</p>
       </div>
     </div>);
@@ -956,42 +998,46 @@ function PressFEmail({ email }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
   const keyStyle = {
-    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    width: '1.15em', height: '1.15em',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    width: '4.25rem', height: '4.25rem',
     fontFamily: 'var(--font-condensed)', fontWeight: 900,
+    fontSize: '2.5rem',
     background: pressed || hov ? 'var(--teal)' : 'var(--surface)',
     color: pressed || hov ? 'var(--black)' : 'var(--white)',
     border: '2px solid var(--teal)',
-    borderRadius: 6,
+    borderRadius: 10,
     boxShadow: pressed ?
-    'inset 0 2px 4px rgba(0,0,0,0.4), 0 0 0 rgba(22,196,186,0)' :
-    `0 ${hov ? 2 : 4}px 0 rgba(22,196,186,0.35), 0 ${hov ? 4 : 8}px 20px rgba(22,196,186,0.25)`,
-    transform: pressed ? 'translateY(3px)' : 'translateY(0)',
-    transition: 'all 0.08s ease',
-    verticalAlign: '-0.18em',
-    margin: '0 0.08em',
+    'inset 0 2px 6px rgba(0,0,0,0.45), 0 0 0 rgba(22,196,186,0)' :
+    `0 ${hov ? 3 : 6}px 0 rgba(22,196,186,0.45), 0 ${hov ? 6 : 12}px 28px rgba(22,196,186,0.28)`,
+    transform: pressed ? 'translateY(4px)' : 'translateY(0)',
+    transition: 'all 0.1s ease',
     lineHeight: 1,
-    padding: '0.05em 0'
+    cursor: 'pointer',
+    padding: 0,
+    userSelect: 'none'
   };
   return (
     <div>
-      <button
-        onClick={fireEmail}
-        onMouseEnter={() => setHov(true)}
-        onMouseLeave={() => setHov(false)}
-        aria-label={`Email us at ${email}`}
-        style={{
-          all: 'unset', cursor: 'pointer', display: 'inline-block',
+      <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+        <button
+          onClick={fireEmail}
+          onMouseEnter={() => setHov(true)}
+          onMouseLeave={() => setHov(false)}
+          aria-label={`Email us at ${email}`}
+          style={keyStyle}>
+          F
+        </button>
+        <div style={{
           fontFamily: 'var(--font-condensed)', fontWeight: 900,
-          fontSize: 'clamp(1.25rem,3vw,2rem)',
+          fontSize: 'clamp(1.1rem,2.4vw,1.6rem)',
           color: 'var(--white)', textTransform: 'uppercase',
-          letterSpacing: '0.01em', lineHeight: 1.25,
-          borderBottom: '2px solid var(--teal)',
-          paddingBottom: '0.25rem'
+          letterSpacing: '0.06em', lineHeight: 1.1,
+          textAlign: 'center'
         }}>
-        Press <span style={keyStyle}>F</span> to Respawn
-      </button>
-      <div style={{ marginTop: 10, fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
+          Press F to Respawn
+        </div>
+      </div>
+      <div style={{ marginTop: 14, fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.04em' }}>
         <span style={{ color: 'var(--teal)' }}>↳</span> tap the key or hit <kbd style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', padding: '1px 6px', background: 'var(--surface)', border: '1px solid var(--border-strong)', borderRadius: 3, color: 'rgba(255,255,255,0.7)' }}>F</kbd> on your keyboard — opens <span style={{ color: 'rgba(255,255,255,0.7)' }}>{email}</span>
       </div>
     </div>);
@@ -1040,12 +1086,18 @@ function ContactSection({ email, phone1, phone2 }) {
           </div>
           <div className="contact-logo-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: inView ? 1 : 0, transition: 'opacity 1s ease 0.5s', padding: '3rem' }}>
             <div style={{ textAlign: 'center' }}>
-              <Logo size={140} variant="white" />
+              <Logo size={70} variant="white" />
               <div style={{ marginTop: '1.5rem' }}>
                 <Eyebrow>Chennai, India</Eyebrow>
                 <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'rgba(255,255,255,0.25)', marginTop: 6, letterSpacing: '0.06em' }}>respawnmedia.in</div>
               </div>
             </div>
+          </div>
+        </div>
+        <div style={{ marginTop: '4rem', textAlign: 'center', opacity: inView ? 1 : 0, transition: 'opacity 0.9s ease 0.8s' }}>
+          <div style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 'clamp(13px,1.4vw,16px)', lineHeight: 1.5, color: 'var(--teal)', letterSpacing: '0.01em', fontStyle: 'italic' }}>
+            Abhi tak padh rahe ho? Thanks yaar.<br />
+            Diet Coke for you when we meet.
           </div>
         </div>
       </div>
@@ -1060,7 +1112,6 @@ function Footer() {
         <Logo size={24} variant="white" />
         <span style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.08em', color: 'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
       </div>
-      <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'rgba(255,255,255,0.15)', letterSpacing: '0.08em', fontStyle: 'italic' }}>Abhi tak padh rahe ho? Thanks yaar.</span>
     </footer>);
 
 }
@@ -1398,10 +1449,7 @@ function App() {
     };
     window.addEventListener('message', h);
     window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    // Alt+T opens the Tweaks panel in standalone mode
-    const onKey = (e) => { if (e.altKey && (e.key === 't' || e.key === 'T')) setTweaksOpen((o) => !o); };
-    window.addEventListener('keydown', onKey);
-    return () => { window.removeEventListener('message', h); window.removeEventListener('keydown', onKey); };
+    return () => window.removeEventListener('message', h);
   }, []);
   useEffect(() => {
     document.documentElement.style.setProperty('--teal', tweaks.teal);

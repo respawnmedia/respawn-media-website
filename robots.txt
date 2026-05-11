@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# When you have a sitemap, add it here:
+# Sitemap: https://respawnmedia.in/sitemap.xml
