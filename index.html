@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="--teal: #16C4BA; --teal-dim: #16C4BA1f; --teal-border: #16C4BA4d;">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Respawn Media — Creative, Design &amp; Marketing Agency</title>
-<meta name="description" content="Chennai's only creative social media-first agency. We help brands grow through content, strategy, and design."/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<meta name="description" content="Respawn Media is Chennai's only creative social-media-first agency. Strategy, content production, performance ads, branding, and AI-driven design.">
+<meta name="theme-color" content="#080808">
+<link rel="icon" type="image/png" href="/assets/logo-white.png">
+<link rel="apple-touch-icon" href="/assets/logo-white.png">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://respawnmedia.in/">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -150,7 +149,6 @@ a{text-decoration:none;color:inherit}
   .founders-grid{grid-template-columns:repeat(2,1fr)!important}
 }
 </style>
-</head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
@@ -159,7 +157,13 @@ a{text-decoration:none;color:inherit}
 
 
 
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, useContext, createContext } = React;
+
+// Context: a DragMarquee sets this to true while it's being touch-scrolled
+// or auto-cycling so child chips can render in their hovered (teal-outlined)
+// state without needing a real hover event. Lets touch users see the same
+// affordance desktop users get on hover.
+const MarqueeActiveContext = createContext(false);
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "teal": "#16C4BA",
@@ -373,6 +377,7 @@ function Nav({ active }) {
 
 function Hero({ tagline, heroVideos }) {
   const [on, setOn] = useState(false);
+  const videoRef = useRef(null);
   // Build a shuffled playlist of all provided videos. We start with a fresh
   // random order on each page load, play each video to the end, advance to
   // the next, and re-shuffle when we reach the end so the loop is endless.
@@ -410,28 +415,54 @@ function Hero({ tagline, heroVideos }) {
     });
   };
   useEffect(() => {setTimeout(() => setOn(true), 120);}, []);
+  // Force playback on every video swap. On mobile (especially iOS Safari),
+  // autoplay can be blocked unless we call .play() imperatively after each
+  // src change. We also retry on tap/scroll so a stuck video catches up.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const tryPlay = () => {
+      const p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+    tryPlay();
+    const onVis = () => { if (!document.hidden) tryPlay(); };
+    document.addEventListener('visibilitychange', onVis);
+    const kick = () => tryPlay();
+    window.addEventListener('touchstart', kick, { once: true, passive: true });
+    window.addEventListener('scroll', kick, { once: true, passive: true });
+    return () => {
+      document.removeEventListener('visibilitychange', onVis);
+      window.removeEventListener('touchstart', kick);
+      window.removeEventListener('scroll', kick);
+    };
+  }, [idx, playlist]);
   const SlideIn = ({ delay, children }) =>
   <div style={{ overflow: 'hidden' }}>
       <div style={{ transform: on ? 'translateY(0)' : 'translateY(105%)', transition: `transform 1s cubic-bezier(0.16,1,0.3,1) ${delay}ms` }}>{children}</div>
     </div>;
-  // Strong black drop shadow so text reads cleanly over any video background
-  const shadow = '0 2px 8px rgba(0,0,0,0.85), 0 4px 24px rgba(0,0,0,0.75), 0 1px 2px rgba(0,0,0,0.95)';
+  // Tight drop shadow on the text itself — no wide ambient halo (which read
+  // as a rectangular dark box behind the hero copy on lighter video frames).
+  const shadow = '0 2px 4px rgba(0,0,0,0.85), 0 1px 1px rgba(0,0,0,0.9)';
 
   return (
     <section id="hero" data-screen-label="01 Hero" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 3rem 4.5rem', position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', background: '#000' }}>
       {/* Hero background video — rotates randomly through the list set in Tweaks → Brand */}
       {heroVideo &&
         <video
+          ref={videoRef}
           key={heroVideo}
           src={heroVideo}
-          autoPlay muted playsInline
+          autoPlay muted playsInline loop
+          preload="auto"
+          disablePictureInPicture
+          controls={false}
           onEnded={handleVideoEnd}
           aria-hidden="true"
+          tabIndex={-1}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none' }}
         />
       }
-      {/* Subtle vignette to keep text readable on any video */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', background: heroVideo ? 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.7) 100%)' : 'transparent' }} />
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, background: 'var(--teal)', opacity: on ? 1 : 0, transition: 'opacity 1.2s ease 1.4s', zIndex: 2 }} />
       <div style={{ maxWidth: 1280, width: '100%', margin: '0 auto', position: 'relative', zIndex: 2 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '1rem', opacity: on ? 1 : 0, transition: 'opacity 0.5s ease 0.3s', textShadow: shadow }}>
@@ -488,6 +519,24 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
   const trackRef = useRef(null);
   const stateRef = useRef({ dragging: false, startX: 0, startScroll: 0, lastInteract: 0, halfWidth: 0, raf: null, initialized: false, moved: 0, suppressClick: false });
   const [isDragging, setIsDragging] = useState(false);
+  // True while the user is actively interacting with this marquee (drag,
+  // touch scroll, wheel). Used to broadcast a "hovered" state to children so
+  // touch users see the same teal outline desktop hovers produce.
+  const [interacting, setInteracting] = useState(false);
+  const idleTimerRef = useRef(null);
+  // Read inView/direction/speed from a ref inside the RAF so the loop never
+  // tears down when those flip — earlier versions re-created the RAF on every
+  // inView change, which raced with in-flight ticks and silently stalled the
+  // auto-scroll. Keep one tick alive for the lifetime of the marquee.
+  const liveRef = useRef({ inView, direction, speed });
+  liveRef.current = { inView, direction, speed };
+
+  const bumpInteract = () => {
+    stateRef.current.lastInteract = performance.now();
+    setInteracting(true);
+    clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = setTimeout(() => setInteracting(false), 1500);
+  };
 
   useEffect(() => {
     const scroller = scrollerRef.current;
@@ -500,37 +549,53 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
       stateRef.current.halfWidth = hw;
       // For right-scrolling, we need to start from a mid position so we can scroll right (decrease scrollLeft)
       if (!stateRef.current.initialized && hw > 0) {
-        scroller.scrollLeft = direction === 'right' ? hw : 0;
+        scroller.scrollLeft = liveRef.current.direction === 'right' ? hw : 0;
+        stateRef.current.position = scroller.scrollLeft;
         stateRef.current.initialized = true;
       }
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(track);
+    // Also remeasure once images settle — chip logos can change scrollWidth.
+    const imgs = track.querySelectorAll('img');
+    imgs.forEach((img) => {
+      if (!img.complete) img.addEventListener('load', measure, { once: true });
+    });
 
     let last = performance.now();
+    let rafId = 0;
     const tick = (now) => {
       const s = stateRef.current;
+      const live = liveRef.current;
       const dt = Math.min(64, now - last);
       last = now;
       const idle = now - s.lastInteract > 1500;
-      if (!s.dragging && idle && inView && s.halfWidth > 0) {
-        const dx = speed * dt / 1000 * (direction === 'right' ? -1 : 1);
-        scroller.scrollLeft += dx;
+      if (!s.dragging && idle && live.inView && s.halfWidth > 0) {
+        // Accumulate fractional offset in a ref — scrollLeft rounds to the
+        // nearest integer in some browsers, so adding sub-pixel deltas would
+        // otherwise be lost and the marquee would never advance.
+        const dx = live.speed * dt / 1000 * (live.direction === 'right' ? -1 : 1);
+        s.position = (s.position ?? scroller.scrollLeft) + dx;
+        if (s.position >= s.halfWidth) s.position -= s.halfWidth;
+        if (s.position < 0) s.position += s.halfWidth;
+        scroller.scrollLeft = s.position;
+      } else {
+        // User is interacting: keep the position ref in sync with manual scroll.
+        s.position = scroller.scrollLeft;
+        if (s.halfWidth > 0) {
+          if (s.position >= s.halfWidth) { s.position -= s.halfWidth; scroller.scrollLeft = s.position; }
+          if (s.position < 0) { s.position += s.halfWidth; scroller.scrollLeft = s.position; }
+        }
       }
-      // Wrap around for infinite loop
-      if (s.halfWidth > 0) {
-        if (scroller.scrollLeft >= s.halfWidth) scroller.scrollLeft -= s.halfWidth;
-        if (scroller.scrollLeft <= 0) scroller.scrollLeft += s.halfWidth;
-      }
-      s.raf = requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     };
-    stateRef.current.raf = requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
     return () => {
-      cancelAnimationFrame(stateRef.current.raf);
+      cancelAnimationFrame(rafId);
       ro.disconnect();
     };
-  }, [inView, direction, speed]);
+  }, []);
 
   const onPointerDown = (e) => {
     const scroller = scrollerRef.current;
@@ -538,13 +603,13 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
     // On touch devices, let native horizontal scroll (overflow-x:auto + touch-action:pan-x) handle the gesture
     // and let taps pass straight through to <a>/buttons. JS drag is desktop-only.
     if (e.pointerType === 'touch') {
-      stateRef.current.lastInteract = performance.now();
+      bumpInteract();
       return;
     }
     stateRef.current.dragging = true;
     stateRef.current.startX = e.clientX;
     stateRef.current.startScroll = scroller.scrollLeft;
-    stateRef.current.lastInteract = performance.now();
+    bumpInteract();
     stateRef.current.moved = 0;
     setIsDragging(true);
     try {e.currentTarget.setPointerCapture(e.pointerId);} catch (_) {}
@@ -554,12 +619,12 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
     const dx = e.clientX - stateRef.current.startX;
     stateRef.current.moved = Math.max(stateRef.current.moved, Math.abs(dx));
     scrollerRef.current.scrollLeft = stateRef.current.startScroll - dx;
-    stateRef.current.lastInteract = performance.now();
+    bumpInteract();
   };
   const endDrag = (e) => {
     if (!stateRef.current.dragging) return;
     stateRef.current.dragging = false;
-    stateRef.current.lastInteract = performance.now();
+    bumpInteract();
     // Suppress next click if the user actually dragged (not just tapped)
     stateRef.current.suppressClick = stateRef.current.moved > 6;
     setIsDragging(false);
@@ -572,7 +637,12 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
       stateRef.current.suppressClick = false;
     }
   };
-  const onWheel = () => {stateRef.current.lastInteract = performance.now();};
+  const onWheel = () => { bumpInteract(); };
+  // No onScroll handler — our own RAF writes scroller.scrollLeft every frame,
+  // which fires scroll events. If we bumped lastInteract on those, the idle
+  // gate would never re-open and the marquee would self-stall. Pointer/touch/
+  // wheel handlers below already catch every real user interaction.
+  const onTouchStart = () => { bumpInteract(); };
 
   // Duplicate items for seamless loop
   const loop = [...items, ...items];
@@ -585,7 +655,8 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
         WebkitMaskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)',
         maskImage: 'linear-gradient(to right,transparent 0%,black 6%,black 94%,transparent 100%)',
         opacity: inView ? 1 : 0,
-        transition: 'opacity 0.8s ease'
+        transition: 'opacity 0.8s ease, box-shadow 0.35s ease',
+        boxShadow: interacting ? 'inset 0 0 0 1px var(--teal-border), 0 0 0 1px var(--teal-border)' : 'none'
       }}>
       
       <div
@@ -597,8 +668,10 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
         onPointerLeave={(e) => {if (stateRef.current.dragging) endDrag(e);}}
         onClickCapture={onClickCapture}
         onWheel={onWheel}
-        onMouseEnter={() => {stateRef.current.lastInteract = performance.now();}}
-        onMouseMove={() => {stateRef.current.lastInteract = performance.now();}}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchStart}
+        onMouseEnter={() => bumpInteract()}
+        onMouseMove={() => bumpInteract()}
         style={{
           overflowX: 'auto',
           overflowY: 'hidden',
@@ -612,9 +685,11 @@ function DragMarquee({ items, renderItem, speed = 40, direction = 'left', inView
         }}>
         
         <style>{`#${idName}::-webkit-scrollbar{display:none}`}</style>
-        <div id={idName} ref={trackRef} style={{ display: 'flex', gap, width: 'max-content', pointerEvents: isDragging ? 'none' : 'auto' }}>
-          {loop.map((it, i) => renderItem(it, i))}
-        </div>
+        <MarqueeActiveContext.Provider value={interacting}>
+          <div id={idName} ref={trackRef} style={{ display: 'flex', gap, width: 'max-content', pointerEvents: isDragging ? 'none' : 'auto' }}>
+            {loop.map((it, i) => renderItem(it, i))}
+          </div>
+        </MarqueeActiveContext.Provider>
       </div>
     </div>);
 
@@ -667,20 +742,22 @@ function ClientsSection({ clients }) {
 
 function ClientChip({ client }) {
   const [hov, setHov] = useState(false);
+  const marqueeActive = useContext(MarqueeActiveContext);
+  const lit = hov || marqueeActive;
   const eyebrowText = client.industry || 'Client';
   return (
     <a href={client.url} target="_blank" rel="noopener noreferrer"
     onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
     onClick={(e) => {if (!client.url || client.url === '#') e.preventDefault();}}
     draggable={false}
-    style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 14, padding: '1rem 1.5rem 1rem 1rem', background: hov ? 'var(--surface)' : 'rgba(255,255,255,0.025)', border: `1px solid ${hov ? 'var(--teal-border)' : 'var(--border)'}`, transition: 'background 0.25s,border-color 0.25s', position: 'relative', overflow: 'hidden', minWidth: 260 }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--teal)', transform: hov ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s' }} />
+    style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 14, padding: '1rem 1.5rem 1rem 1rem', background: lit ? 'var(--surface)' : 'rgba(255,255,255,0.025)', border: `1px solid ${lit ? 'var(--teal-border)' : 'var(--border)'}`, transition: 'background 0.25s,border-color 0.25s', position: 'relative', overflow: 'hidden', minWidth: 260 }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'var(--teal)', transform: lit ? 'scaleX(1)' : 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.3s' }} />
       <div style={{ width: 56, height: 56, flexShrink: 0, background: 'var(--black)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6 }}>
-        <img src={client.logo} alt={client.name} draggable={false} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: hov ? 'brightness(1)' : 'grayscale(1) brightness(0.8)', transition: 'filter 0.25s', pointerEvents: 'none' }} loading="lazy" />
+        <img src={client.logo} alt={client.name} draggable={false} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', filter: lit ? 'brightness(1)' : 'grayscale(1) brightness(0.8)', transition: 'filter 0.25s', pointerEvents: 'none' }} loading="lazy" />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-        <Eyebrow style={{ fontSize: '9px', color: hov ? 'var(--teal)' : 'rgba(22,196,186,0.5)', transition: 'color 0.25s', whiteSpace: 'nowrap' }}>{eyebrowText}</Eyebrow>
-        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '16px', color: hov ? 'var(--white)' : 'rgba(255,255,255,0.75)', letterSpacing: '0.01em', whiteSpace: 'nowrap', transition: 'color 0.25s' }}>{client.name}</div>
+        <Eyebrow style={{ fontSize: '9px', color: lit ? 'var(--teal)' : 'rgba(22,196,186,0.5)', transition: 'color 0.25s', whiteSpace: 'nowrap' }}>{eyebrowText}</Eyebrow>
+        <div style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '16px', color: lit ? 'var(--white)' : 'rgba(255,255,255,0.75)', letterSpacing: '0.01em', whiteSpace: 'nowrap', transition: 'color 0.25s' }}>{client.name}</div>
       </div>
     </a>);
 
@@ -773,8 +850,11 @@ function WorkCard({ item, onOpen }) {
 // ─── CAMPAIGN MODAL ────────────────────────────────────────────
 function CampaignModal({ item, onClose }) {
   const [mobileOffset, setMobileOffset] = useState(null);
+  // Lightbox state — when a gallery item is clicked, show it full-bleed.
+  const [lightIdx, setLightIdx] = useState(null);
   useEffect(() => {
     if (!item) return;
+    setLightIdx(null);
     const onKey = (e) => {if (e.key === 'Escape') onClose();};
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
@@ -802,11 +882,13 @@ function CampaignModal({ item, onClose }) {
   const isMobile = mobileOffset !== null;
   return (
     <div onClick={onClose} className="case-modal-backdrop" style={{ position: isMobile ? 'absolute' : 'fixed', inset: isMobile ? 'auto' : 0, top: isMobile ? mobileOffset : 0, left: 0, right: 0, height: isMobile ? '100%' : undefined, width: isMobile ? '100%' : undefined, zIndex: 800, background: 'rgba(4,4,4,0.82)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '12px' : '2rem', animation: 'fadeIn 0.25s ease' }}>
-      <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}`}</style>
+      <style>{`@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}.case-gallery-rail::-webkit-scrollbar{height:6px}.case-gallery-rail::-webkit-scrollbar-thumb{background:rgba(22,196,186,0.4);border-radius:3px}.case-gallery-rail::-webkit-scrollbar-track{background:rgba(255,255,255,0.04)}`}</style>
       <div onClick={(e) => e.stopPropagation()} className="case-modal-panel" style={{ position: 'relative', width: '100%', maxWidth: 960, maxHeight: '88vh', background: 'var(--black)', border: '1px solid var(--teal-border)', borderTop: '3px solid var(--teal)', display: 'flex', flexDirection: 'column', animation: 'slideUp 0.35s cubic-bezier(0.16,1,0.3,1)', boxShadow: '0 30px 80px rgba(0,0,0,0.8)', overflow: 'hidden' }}>
-        <button onClick={onClose} aria-label="Close" className="case-modal-close" style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, width: 36, height: 36, background: 'rgba(8,8,8,0.9)', border: '1px solid var(--border-strong)', color: 'var(--white)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }} onMouseEnter={(e) => {e.currentTarget.style.background = 'var(--teal)';e.currentTarget.style.color = 'var(--black)';}} onMouseLeave={(e) => {e.currentTarget.style.background = 'rgba(8,8,8,0.9)';e.currentTarget.style.color = 'var(--white)';}}>✕</button>
+        {/* Close button — high z-index, opaque background, never covered by
+            scrolled-in media. Pinned to the panel (not the scroll area). */}
+        <button onClick={onClose} aria-label="Close" className="case-modal-close" style={{ position: 'absolute', top: 12, right: 12, zIndex: 200, width: 38, height: 38, background: 'rgba(8,8,8,0.95)', border: '1px solid var(--teal-border)', color: 'var(--white)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', backdropFilter: 'blur(6px)', boxShadow: '0 4px 14px rgba(0,0,0,0.6)' }} onMouseEnter={(e) => {e.currentTarget.style.background = 'var(--teal)';e.currentTarget.style.color = 'var(--black)';}} onMouseLeave={(e) => {e.currentTarget.style.background = 'rgba(8,8,8,0.95)';e.currentTarget.style.color = 'var(--white)';}}>✕</button>
 
-        <div style={{ overflowY: 'auto' }}>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden' }}>
           {/* HERO */}
           <div className="case-modal-hero" style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: 'var(--surface)', overflow: 'hidden' }}>
             {hero && <img src={hero} alt={headlineFlat} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />}
@@ -837,21 +919,34 @@ function CampaignModal({ item, onClose }) {
             </div>
           </div>
 
-          {/* MEDIA GALLERY */}
+          {/* MEDIA GALLERY — horizontal scroll rail; click any tile to open
+              full-screen in the lightbox below. */}
           {media.length > 0 &&
-          <div className="case-modal-gallery-wrap" style={{ padding: '0.5rem 2rem 2rem' }}>
-              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', marginBottom: '1rem' }}>
+          <div className="case-modal-gallery-wrap" style={{ padding: '0.5rem 0 2rem' }}>
+              <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', marginBottom: '1rem', padding: '1.5rem 2rem 0', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '1rem' }}>
                 <Eyebrow>Gallery · {media.length} item{media.length !== 1 ? 's' : ''}</Eyebrow>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '11px', fontStyle: 'italic', color: 'rgba(255,255,255,0.4)' }}>scroll → · tap to expand</span>
               </div>
-              <div className="case-modal-gallery" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.5rem' }}>
+              <div className="case-gallery-rail" style={{ display: 'flex', gap: '0.6rem', overflowX: 'auto', overflowY: 'hidden', padding: '0 2rem 0.5rem', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
                 {media.map((m, i) =>
-              <div key={i} style={{ aspectRatio: '1/1', background: 'var(--surface)', overflow: 'hidden', position: 'relative' }}>
+              <a key={i} href={m.url} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, width: 240, aspectRatio: '1/1', background: 'var(--surface)', overflow: 'hidden', position: 'relative', border: '1px solid var(--border)', cursor: 'pointer', padding: 0, scrollSnapAlign: 'start', transition: 'border-color 0.2s, transform 0.25s', display: 'block', textDecoration: 'none' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--teal)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                aria-label={m.type === 'video' ? `Open video ${i + 1} in new tab` : `Open photo ${i + 1} in new tab`}>
                     {m.type === 'video' ?
-                <video src={m.url} controls style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#000' }} /> :
-
-                <img src={m.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                }
+                <>
+                  <video src={m.url} muted playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#000', pointerEvents: 'none' }} /> 
+                  {/* Play badge overlay */}
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.15))', pointerEvents: 'none' }}>
+                    <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(22,196,186,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 6px 24px rgba(0,0,0,0.6)' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="#000"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
                   </div>
+                  <div style={{ position: 'absolute', top: 8, left: 8, padding: '2px 6px', background: 'var(--teal)', color: 'var(--black)', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Video</div>
+                </> :
+                <img src={m.url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }} />
+                }
+                  </a>
               )}
               </div>
             </div>
@@ -866,6 +961,50 @@ function CampaignModal({ item, onClose }) {
           }
         </div>
       </div>
+      {/* LIGHTBOX OVERLAY — shows the tapped media full-size with prev/next */}
+      {lightIdx !== null && media[lightIdx] && (
+        <CampaignLightbox
+          media={media}
+          index={lightIdx}
+          setIndex={setLightIdx}
+          onClose={(e) => { e && e.stopPropagation(); setLightIdx(null); }}
+          isMobile={isMobile}
+          mobileOffset={mobileOffset}
+        />
+      )}
+    </div>);
+
+}
+
+// Full-bleed media viewer that sits on top of CampaignModal. Supports
+// keyboard arrows, click outside to close, and prev/next buttons.
+function CampaignLightbox({ media, index, setIndex, onClose, isMobile, mobileOffset }) {
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); onClose(e); }
+      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % media.length);
+      if (e.key === 'ArrowLeft') setIndex((i) => (i - 1 + media.length) % media.length);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [media.length, setIndex, onClose]);
+  const m = media[index];
+  const prev = (e) => { e.stopPropagation(); setIndex((i) => (i - 1 + media.length) % media.length); };
+  const next = (e) => { e.stopPropagation(); setIndex((i) => (i + 1) % media.length); };
+  return (
+    <div onClick={onClose} style={{ position: isMobile ? 'absolute' : 'fixed', inset: isMobile ? 'auto' : 0, top: isMobile ? mobileOffset : 0, left: 0, right: 0, height: isMobile ? '100%' : undefined, width: isMobile ? '100%' : undefined, zIndex: 900, background: 'rgba(0,0,0,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? 6 : 32, animation: 'fadeIn 0.2s ease' }}>
+      <button onClick={onClose} aria-label="Close viewer" style={{ position: 'absolute', top: 14, right: 14, zIndex: 5, width: 40, height: 40, background: 'rgba(8,8,8,0.95)', border: '1px solid var(--teal-border)', color: 'var(--white)', fontSize: 18, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)' }}>✕</button>
+      {media.length > 1 && <>
+        <button onClick={prev} aria-label="Previous" style={{ position: 'absolute', left: isMobile ? 6 : 18, top: '50%', transform: 'translateY(-50%)', zIndex: 5, width: 44, height: 44, background: 'rgba(8,8,8,0.85)', border: '1px solid var(--teal-border)', color: 'var(--white)', fontSize: 22, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
+        <button onClick={next} aria-label="Next" style={{ position: 'absolute', right: isMobile ? 6 : 18, top: '50%', transform: 'translateY(-50%)', zIndex: 5, width: 44, height: 44, background: 'rgba(8,8,8,0.85)', border: '1px solid var(--teal-border)', color: 'var(--white)', fontSize: 22, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
+      </>}
+      <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: '100%', maxHeight: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        {m.type === 'video' ?
+          <video key={m.url} src={m.url} controls autoPlay playsInline style={{ maxWidth: isMobile ? '94vw' : '90vw', maxHeight: isMobile ? '78vh' : '86vh', background: '#000', display: 'block' }} /> :
+          <img key={m.url} src={m.url} alt="" style={{ maxWidth: isMobile ? '94vw' : '90vw', maxHeight: isMobile ? '78vh' : '86vh', objectFit: 'contain', display: 'block' }} />
+        }
+      </div>
+      <div style={{ position: 'absolute', bottom: 14, left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '11px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>{index + 1} / {media.length}</div>
     </div>);
 
 }
@@ -1116,21 +1255,35 @@ function Footer() {
 
 }
 
-function Site({ tweaks, clients, setClients, workItems, setWorkItems, founders, setFounders, openTweaks, activeSection, setActiveSection }) {
+function Site({ tweaks, clients, setClients, workItems, setWorkItems, founders, setFounders, openTweaks, activeSection, setActiveSection, scrollRoot }) {
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
     const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {if (e.isIntersecting) setActiveSection(e.target.id);});
-    }, { threshold: 0.35 });
+      // Pick whichever observed section currently has the greatest intersection
+      // ratio. This works the same whether the scrolling container is the
+      // window (desktop) or the .mobile-frame element (mobile preview).
+      let best = null;
+      entries.forEach((e) => {
+        if (e.isIntersecting && (!best || e.intersectionRatio > best.intersectionRatio)) best = e;
+      });
+      if (best) setActiveSection(best.target.id);
+    }, { root: scrollRoot || null, threshold: [0.25, 0.4, 0.6] });
     sections.forEach((s) => obs.observe(s));
     return () => obs.disconnect();
-  }, []);
+  }, [scrollRoot]);
   return (
     <>
+      {/* Active-section indicator — a soft teal inset border on whichever
+          section is currently in view. Works on both desktop and mobile
+          (the IO root above accounts for the mobile-frame scroll container). */}
+      <style>{`
+        section[id]{transition: box-shadow 0.45s cubic-bezier(0.16,1,0.3,1);}
+        section[id="${activeSection}"]{box-shadow: inset 0 0 0 2px var(--teal-border), inset 0 0 60px rgba(22,196,186,0.06);}
+      `}</style>
       <Nav active={activeSection} />
       <Hero tagline={tweaks.tagline} heroVideos={[tweaks.heroVideo1, tweaks.heroVideo2, tweaks.heroVideo3, tweaks.heroVideo4]} />
-      <ClientsSection clients={clients} />
-      <WorkSection workItems={workItems} />
+      <ClientsSection clients={clients} scrollRoot={scrollRoot} />
+      <WorkSection workItems={workItems} scrollRoot={scrollRoot} />
       <WhoAreWeSection aboutText={tweaks.aboutText} founders={founders} />
       <ServicesSection />
       <ContactSection email={tweaks.email} phone1={tweaks.phone1} phone2={tweaks.phone2} />
@@ -1439,9 +1592,20 @@ function App() {
   const [tweaksOpen, setTweaksOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
   const [mode, setMode] = useState(() => localStorage.getItem('respawn-preview-mode') || 'desktop');
+  const mobileFrameRef = useRef(null);
+  const [mobileScrollRoot, setMobileScrollRoot] = useState(null);
 
-  // No localStorage persistence for clients / work / founders — content is the file itself.
-  useEffect(() => {localStorage.setItem('respawn-preview-mode', mode);}, [mode]);
+  // Persist preview-mode choice across reloads.
+  useEffect(() => { localStorage.setItem('respawn-preview-mode', mode); }, [mode]);
+  useEffect(() => {
+    if (mode === 'mobile') {
+      // Wait a tick for the frame to mount, then expose it as the IO root.
+      const id = setTimeout(() => setMobileScrollRoot(mobileFrameRef.current || null), 0);
+      return () => clearTimeout(id);
+    } else {
+      setMobileScrollRoot(null);
+    }
+  }, [mode]);
   useEffect(() => {
     const h = (e) => {
       if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
@@ -1470,7 +1634,7 @@ function App() {
           .mobile-frame #hero{padding-top:56px!important}
         `}</style>
         <div className="mobile-shell">
-          <div className="mobile-frame">
+          <div className="mobile-frame" ref={mobileFrameRef}>
             <div className="mobile-notch">
               <span style={{ zIndex: 2 }}>9:41</span>
               <div style={{ display: 'flex', gap: 5, alignItems: 'center', zIndex: 2 }}>
@@ -1482,7 +1646,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <Site tweaks={tweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} openTweaks={() => setTweaksOpen(true)} activeSection={activeSection} setActiveSection={setActiveSection} />
+            <Site tweaks={tweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} openTweaks={() => setTweaksOpen(true)} activeSection={activeSection} setActiveSection={setActiveSection} scrollRoot={mobileScrollRoot} />
           </div>
         </div>
         <TweaksPanel open={tweaksOpen} tweaks={tweaks} setTweaks={setTweaks} clients={clients} setClients={setClients} workItems={workItems} setWorkItems={setWorkItems} founders={founders} setFounders={setFounders} mode={mode} setMode={setMode} />
