@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Careers &amp; Freelance Opportunities | Respawn Media Chennai</title>
+<meta name="description" content="Explore full-time roles, paid internships and freelance collaboration opportunities at Respawn Media in Chennai.">
+<meta name="theme-color" content="#080808">
+<link rel="icon" type="image/png" href="/assets/logo-white.png">
+<link rel="apple-touch-icon" href="/assets/logo-white.png">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://respawnmedia.in/careers">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Careers &amp; Freelance Opportunities | Respawn Media Chennai">
+<meta property="og:description" content="Explore full-time roles, paid internships and freelance collaboration opportunities at Respawn Media in Chennai.">
+<meta property="og:url" content="https://respawnmedia.in/careers">
+<meta property="og:image" content="https://respawnmedia.in/assets/logo-white.png">
+<meta property="og:site_name" content="Respawn Media">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Careers &amp; Freelance Opportunities | Respawn Media Chennai">
+<meta name="twitter:description" content="Explore full-time roles, paid internships and freelance collaboration opportunities at Respawn Media in Chennai.">
+<meta name="twitter:image" content="https://respawnmedia.in/assets/logo-white.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Barlow+Condensed:wght@300;400;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+:root {
+  --black: #080808;
+  --surface: #111111;
+  --surface-2: #1A1A1A;
+  --teal: #16C4BA;
+  --teal-dim: rgba(22,196,186,0.12);
+  --teal-border: rgba(22,196,186,0.3);
+  --white: #FFFFFF;
+  --gray: #888888;
+  --muted: #777777;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --font-display: 'Bebas Neue','Barlow Condensed',Impact,sans-serif;
+  --font-condensed: 'Barlow Condensed','Bebas Neue',Impact,sans-serif;
+  --font-body: 'DM Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button,input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--teal)}
+::selection{background:var(--teal);color:var(--black)}
+.texture{pointer-events:none;position:fixed;inset:0;z-index:0;opacity:0.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");background-size:180px 180px}
+.page{position:relative;z-index:1}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(8,8,8,0.96);border-bottom:1px solid var(--border)}
+.desk-nav{display:flex;align-items:center;gap:2.5rem}
+.nav-a{font-family:var(--font-condensed);font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
+.nav-a:hover,.nav-a.is-on{color:var(--teal)}
+.nav-cta{background:var(--teal);color:var(--black);padding:0.45rem 1.2rem;font-family:var(--font-condensed);font-weight:800;font-size:12px;letter-spacing:0.14em;text-transform:uppercase}
+.ham{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
+.drawer{position:fixed;inset:0;top:56px;background:rgba(5,5,5,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:190}
+.drawer a{font-family:var(--font-display);font-size:2.5rem;letter-spacing:0.04em}
+section{padding:4.5rem 3rem}
+.eyebrow{font-family:var(--font-condensed);font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal)}
+h1,h2,.display{font-family:var(--font-display);letter-spacing:0.02em;line-height:0.92;font-weight:400}
+h1{font-size:clamp(56px,10vw,112px);max-width:14ch}
+h2{font-size:clamp(40px,7vw,80px)}
+.lede{margin-top:1.5rem;max-width:38rem;color:rgba(255,255,255,0.72);font-size:17px}
+.cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.5rem;align-items:center}
+#hero{padding:6.75rem 3rem 4.5rem;border-bottom:1px solid var(--border)}
+#hero .eyebrow{margin-bottom:0.85rem}
+#hero h1{max-width:none;font-size:clamp(40px,7.6vw,96px);letter-spacing:0.01em}
+#hero h1 .h1-line{display:block;white-space:nowrap}
+#hero h1 .h1-accent{color:var(--teal)}
+#hero .lede{margin-top:1.35rem;max-width:36rem}
+#hero .cta-row{margin-top:2rem;gap:0.85rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0.7rem 1.4rem;font-family:var(--font-condensed);font-weight:800;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid transparent;cursor:pointer;background:transparent;color:var(--white)}
+.btn-primary{background:var(--teal);color:var(--black)}
+.btn-ghost{border-color:var(--border-strong);color:var(--white)}
+.btn:focus-visible,.nav-a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border-strong);margin-top:2.5rem}
+.work-card{text-align:left;background:transparent;border:none;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.75rem 1.25rem;cursor:pointer;color:inherit;min-height:140px}
+.work-card:last-child{border-right:none}
+.work-card .num{font-family:var(--font-condensed);color:var(--muted);letter-spacing:0.12em;font-size:13px}
+.work-card h3{font-family:var(--font-display);font-size:clamp(28px,3vw,42px);margin-top:0.6rem;line-height:0.95}
+.work-card.is-on h3{color:var(--teal)}
+.work-card.is-on .num{color:var(--white)}
+.filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:2rem}
+.chip{min-height:44px;padding:0.4rem 0.9rem;border:1px solid var(--border-strong);background:transparent;color:var(--muted);font-family:var(--font-condensed);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-size:12px;cursor:pointer}
+.chip.is-on{border-color:var(--white);color:var(--white)}
+.role-row{border-top:1px solid var(--border);padding:1.6rem 0}
+.role-row:last-of-type{border-bottom:1px solid var(--border)}
+.role-top{display:grid;grid-template-columns:4rem 1fr auto;gap:1rem;align-items:start}
+.role-num{font-family:var(--font-condensed);color:var(--muted);letter-spacing:0.1em;padding-top:0.35rem}
+.role-title{font-family:var(--font-display);font-size:clamp(32px,4vw,52px);line-height:0.92}
+.meta{margin-top:0.55rem;color:var(--muted);font-size:14px}
+.status{display:inline-block;margin-top:0.5rem;font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;font-weight:700;border:1px solid var(--border-strong);padding:0.2rem 0.5rem;color:rgba(255,255,255,0.7)}
+.status-open,.status-always_open{border-color:var(--teal);color:var(--white)}
+.status-closed{color:var(--muted)}
+.role-actions{display:flex;flex-direction:column;gap:0.6rem;align-items:flex-end}
+.linkish{background:none;border:none;color:var(--white);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
+.details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.78)}
+.details ul{margin:1rem 0 0 1.1rem}
+.details li{margin:0.35rem 0}
+.details li.hi{color:var(--white)}
+.apply-panel{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:40rem}
+.steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.steps span{font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:var(--muted)}
+.steps span.is-on{color:var(--white)}
+.field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.1rem}
+.field label{font-family:var(--font-condensed);letter-spacing:0.1em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,0.7)}
+.req{color:var(--teal);margin-left:0.25rem}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],textarea,select{
+  background:var(--surface-2);border:1px solid var(--border-strong);color:var(--white);padding:0.75rem 0.85rem;font-size:16px;border-radius:0;width:100%;
+}
+textarea{min-height:110px;resize:vertical}
+.hp{position:absolute;left:-9999px;height:0;width:0;overflow:hidden}
+.err{color:#ffb4b4;font-size:14px;margin:0.5rem 0 1rem}
+.empty h2{margin-bottom:1rem}
+.success h2{color:var(--white)}
+.success h2 em{font-style:normal;color:var(--teal)}
+footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);background:var(--surface)}
+.check-row{display:flex;flex-wrap:wrap;gap:0.6rem}
+.check-row label{display:flex;align-items:center;gap:0.45rem;min-height:44px;color:rgba(255,255,255,0.8);text-transform:none;letter-spacing:0;font-family:var(--font-body);font-size:15px}
+@media(max-width:768px){
+  nav{padding:0 1rem;height:56px}
+  .desk-nav{display:none}
+  .ham{display:flex}
+  section{padding:3.5rem 1.25rem}
+  h1{font-size:36px;line-height:0.92}
+  h2{font-size:44px}
+  #hero{padding:5.15rem 1.25rem 3rem}
+  #hero h1{font-size:clamp(36px,10.4vw,52px);letter-spacing:0.005em}
+  #hero .lede{margin-top:1.15rem}
+  #hero .cta-row{flex-direction:column;align-items:flex-start;gap:0.7rem;margin-top:1.6rem}
+  #hero .cta-row .btn{width:auto;max-width:100%;min-height:48px;padding:0.85rem 1.25rem}
+  .work-grid{grid-template-columns:1fr}
+  .work-card{border-right:none}
+  .role-top{grid-template-columns:2.5rem 1fr; }
+  .role-actions{grid-column:2;align-items:flex-start;flex-direction:row;flex-wrap:wrap}
+  footer{flex-direction:column;text-align:center;padding:1.5rem 1rem}
+  .filter-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  .filter-row::-webkit-scrollbar{display:none}
+  .chip{flex-shrink:0}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="texture" aria-hidden="true"></div>
+<div id="root" class="page"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+const WORK_TYPES = [
+  { id: 'ALL', num: '00', label: 'ALL' },
+  { id: 'FULL-TIME', num: '01', label: 'FULL-TIME' },
+  { id: 'INTERNSHIP', num: '02', label: 'INTERNSHIPS' },
+  { id: 'FREELANCE', num: '03', label: 'FREELANCE + PROJECT BASIS' }
+];
+const DEPTS = ['ALL','CONTENT','EDITING','PRODUCTION','CREATOR','AI + PERFORMANCE'];
+
+function track(name, params) {
+  try {
+    if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+  } catch (e) {}
+}
+
+function captureUtm() {
+  const q = new URLSearchParams(window.location.search);
+  const utm = {};
+  UTM_KEYS.forEach((k) => { utm[k] = q.get(k) || ''; });
+  utm.referrer = document.referrer || '';
+  const prev = JSON.parse(sessionStorage.getItem('respawn_careers_utm') || '{}');
+  const merged = { ...prev };
+  UTM_KEYS.forEach((k) => { if (utm[k]) merged[k] = utm[k]; });
+  if (utm.referrer) merged.referrer = utm.referrer;
+  sessionStorage.setItem('respawn_careers_utm', JSON.stringify(merged));
+  return merged;
+}
+
+function Logo({ size = 44 }) {
+  return <img src="/assets/logo-white.png" alt="Respawn Media" style={{ height: size, width: 'auto', display: 'block', userSelect: 'none' }} draggable={false} />;
+}
+
+function Nav() {
+  const [open, setOpen] = useState(false);
+  const links = [
+    ['/#clients', 'Clients'],
+    ['/#work', 'Work'],
+    ['/#who', 'Who Are We'],
+    ['/#services', 'Services'],
+    ['/#contact', 'Contact']
+  ];
+  return (
+    <nav>
+      <a href="/" aria-label="Respawn Media home"><Logo size={36} /></a>
+      <div className="desk-nav">
+        {links.map(([href, label]) => <a key={href} className="nav-a" href={href}>{label}</a>)}
+        <a className="nav-a is-on" href="/careers" aria-current="page">Careers</a>
+        <a className="nav-cta" href="/#contact">Let's Talk</a>
+      </div>
+      <button className="ham" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
+        {[0,1,2].map((i) => <span key={i} style={{ display:'block', width:22, height:2, background: open && i===1 ? 'transparent' : 'var(--teal)', transform: open ? (i===0 ? 'rotate(45deg) translate(4px,5px)' : i===2 ? 'rotate(-45deg) translate(4px,-5px)' : 'none') : 'none' }} />)}
+      </button>
+      {open && (
+        <div className="drawer">
+          {links.map(([href, label]) => <a key={href} href={href} onClick={() => setOpen(false)}>{label.toUpperCase()}</a>)}
+          <a href="/careers" onClick={() => setOpen(false)}>CAREERS</a>
+          <a className="nav-cta" href="/#contact" onClick={() => setOpen(false)}>LET'S TALK</a>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function statusLabel(status) {
+  if (status === 'ALWAYS_OPEN') return 'ALWAYS OPEN';
+  return status || '';
+}
+
+function Field({ q, value, onChange, fileName }) {
+  const id = 'q-' + q.question_id;
+  const req = q.required ? <span className="req" aria-hidden="true">*</span> : null;
+  if (q.type === 'textarea') {
+    return (
+      <div className="field">
+        <label htmlFor={id}>{q.label}{req}</label>
+        <textarea id={id} required={q.required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+  if (q.type === 'select') {
+    return (
+      <div className="field">
+        <label htmlFor={id}>{q.label}{req}</label>
+        <select id={id} required={q.required} value={value || ''} onChange={(e) => onChange(e.target.value)}>
+          <option value="">Select</option>
+          {(q.options || []).map((o) => <option key={o} value={o}>{o}</option>)}
+        </select>
+      </div>
+    );
+  }
+  if (q.type === 'multiselect') {
+    const selected = Array.isArray(value) ? value : (value ? String(value).split(',').map((s) => s.trim()).filter(Boolean) : []);
+    const toggle = (o) => {
+      const next = selected.includes(o) ? selected.filter((x) => x !== o) : selected.concat(o);
+      onChange(next);
+    };
+    return (
+      <div className="field">
+        <span id={id}>{q.label}{req}</span>
+        <div className="check-row" role="group" aria-labelledby={id}>
+          {(q.options || []).map((o) => (
+            <label key={o}>
+              <input type="checkbox" checked={selected.includes(o)} onChange={() => toggle(o)} />
+              {o}
+            </label>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (q.type === 'checkbox') {
+    return (
+      <div className="field">
+        <label htmlFor={id} style={{ textTransform:'none', letterSpacing:0, fontFamily:'var(--font-body)', fontSize:15 }}>
+          <input id={id} type="checkbox" checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{req}
+        </label>
+      </div>
+    );
+  }
+  if (q.type === 'file') {
+    return (
+      <div className="field">
+        <label htmlFor={id}>{q.label}{req}</label>
+        <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={q.required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
+        <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Max 10 MB.')}</span>
+      </div>
+    );
+  }
+  const inputType = ['email','tel','url','number'].indexOf(q.type) >= 0 ? q.type : 'text';
+  return (
+    <div className="field">
+      <label htmlFor={id}>{q.label}{req}</label>
+      <input id={id} type={inputType} required={q.required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
+  const [step, setStep] = useState(1);
+  const [answers, setAnswers] = useState({});
+  const [resume, setResume] = useState(null);
+  const [honeypot, setHoneypot] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const uni = (universalQuestions || []).slice().sort((a,b) => a.sort_order - b.sort_order);
+  const spec = (role.questions || []).slice().sort((a,b) => a.sort_order - b.sort_order);
+
+  const setVal = (key, v) => setAnswers((prev) => ({ ...prev, [key]: v }));
+
+  const validateGroup = (qs) => {
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i];
+      if (!q.required) continue;
+      if (q.type === 'file') {
+        if (!resume) return 'Add a resume (PDF, DOC or DOCX, max 10 MB).';
+        continue;
+      }
+      const v = answers[q.question_key];
+      if (q.type === 'checkbox' && !v) return 'Please complete: ' + q.label;
+      if (q.type === 'multiselect' && (!v || !v.length)) return 'Please complete: ' + q.label;
+      if (v === undefined || v === null || String(v).trim() === '') return 'Please complete: ' + q.label;
+    }
+    return '';
+  };
+
+  const go = (next) => {
+    setError('');
+    if (next === 3) {
+      const msg = validateGroup(uni);
+      if (msg) { setError(msg); return; }
+    }
+    if (next === 4) {
+      const msg = validateGroup(spec);
+      if (msg) { setError(msg); return; }
+    }
+    setStep(next);
+  };
+
+  const submit = async () => {
+    setError('');
+    if (resume) {
+      const ext = (resume.name.split('.').pop() || '').toLowerCase();
+      if (['pdf','doc','docx'].indexOf(ext) === -1) { setError('Resume must be PDF, DOC or DOCX.'); return; }
+      if (resume.size > 10 * 1024 * 1024) { setError('Resume is too large. Max 10 MB.'); return; }
+    }
+    setBusy(true);
+    track('career_application_submit', { role_id: role.role_id, role_title: role.title, category: role.category });
+    try {
+      const fd = new FormData();
+      fd.append('website', honeypot);
+      fd.append('payload', JSON.stringify({
+        role_id: role.role_id,
+        answers: answers,
+        utm_source: utm.utm_source || '',
+        utm_medium: utm.utm_medium || '',
+        utm_campaign: utm.utm_campaign || '',
+        utm_content: utm.utm_content || '',
+        utm_term: utm.utm_term || '',
+        referrer: utm.referrer || ''
+      }));
+      if (resume) fd.append('resume', resume, resume.name);
+      const res = await fetch('/api/careers/apply', { method: 'POST', body: fd });
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (res.status === 409 || (data && data.error === 'role_closed')) {
+        setError('This role is no longer accepting applications.');
+        setBusy(false);
+        return;
+      }
+      if (data && data.error === 'invalid_file_type') { setError('Resume must be PDF, DOC or DOCX.'); setBusy(false); return; }
+      if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); setBusy(false); return; }
+      if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); setBusy(false); return; }
+      if (!res.ok || !data.ok) { setError('Submission failed. Try again in a moment.'); setBusy(false); return; }
+      track('career_application_success', { role_id: role.role_id, role_title: role.title, category: role.category });
+      onSuccess();
+    } catch (e) {
+      setError('Submission failed. Try again in a moment.');
+      setBusy(false);
+    }
+  };
+
+  const reviewList = uni.concat(spec).filter((q) => q.type !== 'file');
+
+  return (
+    <div className="apply-panel" role="region" aria-label={'Apply for ' + role.title}>
+      <div className="steps" aria-label="Application steps">
+        {['01 Confirm','02 You','03 Role','04 Review'].map((s, i) => (
+          <span key={s} className={step === i + 1 ? 'is-on' : ''}>{s}</span>
+        ))}
+      </div>
+      {step === 1 && (
+        <div>
+          <p className="lede" style={{ marginTop: 0 }}>You are applying for <strong>{role.title}</strong> — {role.location} · {role.work_mode}.</p>
+          <div className="cta-row">
+            <button className="btn btn-primary" type="button" onClick={() => setStep(2)}>Continue</button>
+            <button className="btn btn-ghost" type="button" onClick={onClose}>Cancel</button>
+          </div>
+        </div>
+      )}
+      {step === 2 && (
+        <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
+          <div className="hp" aria-hidden="true">
+            <label>Website<input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
+          </div>
+          {uni.filter((q) => q.type !== 'file').map((q) => (
+            <Field key={q.question_id} q={q} value={answers[q.question_key]} onChange={(v) => setVal(q.question_key, v)} />
+          ))}
+          {uni.filter((q) => q.type === 'file').map((q) => (
+            <Field key={q.question_id} q={q} fileName={resume && resume.name} onChange={(f) => setResume(f || null)} />
+          ))}
+          {error && <p className="err" role="alert">{error}</p>}
+          <div className="cta-row">
+            <button className="btn btn-ghost" type="button" onClick={() => setStep(1)}>Back</button>
+            <button className="btn btn-primary" type="submit">Continue</button>
+          </div>
+        </form>
+      )}
+      {step === 3 && (
+        <form onSubmit={(e) => { e.preventDefault(); go(4); }}>
+          {spec.length === 0 && <p className="lede" style={{ marginTop: 0 }}>No extra questions for this role.</p>}
+          {spec.map((q) => (
+            <Field key={q.question_id} q={q} value={answers[q.question_key]} fileName={resume && resume.name} onChange={(v) => q.type === 'file' ? setResume(v || null) : setVal(q.question_key, v)} />
+          ))}
+          {error && <p className="err" role="alert">{error}</p>}
+          <div className="cta-row">
+            <button className="btn btn-ghost" type="button" onClick={() => setStep(2)}>Back</button>
+            <button className="btn btn-primary" type="submit">Review</button>
+          </div>
+        </form>
+      )}
+      {step === 4 && (
+        <div>
+          <p className="lede" style={{ marginTop: 0 }}>Check this once, then send.</p>
+          <p className="meta"><strong>{role.title}</strong></p>
+          {reviewList.map((q) => (
+            <p key={q.question_id} className="meta"><span style={{ color: 'rgba(255,255,255,0.45)' }}>{q.label}: </span>{Array.isArray(answers[q.question_key]) ? answers[q.question_key].join(', ') : String(answers[q.question_key] || '—')}</p>
+          ))}
+          <p className="meta">Resume: {resume ? resume.name : '—'}</p>
+          {error && <p className="err" role="alert">{error}</p>}
+          <div className="cta-row">
+            <button className="btn btn-ghost" type="button" onClick={() => setStep(3)} disabled={busy}>Back</button>
+            <button className="btn btn-primary" type="button" onClick={submit} disabled={busy}>{busy ? 'Sending…' : 'Submit'}</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RoleRow({ role, index, expanded, applying, onToggle, onApply, onCloseApply, onSuccess, universalQuestions, utm, freelanceIntro }) {
+  const canApply = role.accepting_applications && role.status !== 'CLOSED';
+  const showFreelanceNote = role.category === 'FREELANCE';
+  return (
+    <article className="role-row" id={role.slug}>
+      <div className="role-top">
+        <div className="role-num">{pad(index + 1)}</div>
+        <div>
+          <h3 className="role-title">{role.title}</h3>
+          <p className="meta">
+            {role.location}<br />
+            {role.category === 'INTERNSHIP' ? 'Internship' : role.category === 'FREELANCE' ? 'Freelance / Project basis' : 'Full-time'}
+            {role.work_mode ? ' · ' + role.work_mode : ''}
+            {role.experience ? <><br />{role.experience}</> : null}
+            {role.department ? <><br />{role.department}</> : null}
+            {role.compensation ? <><br />{role.compensation}</> : null}
+          </p>
+          <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
+        </div>
+        <div className="role-actions">
+          <button className="linkish" type="button" aria-expanded={expanded} onClick={onToggle}>{expanded ? 'HIDE DETAILS' : 'VIEW DETAILS →'}</button>
+          {canApply
+            ? <button className="linkish" type="button" onClick={onApply}>APPLY →</button>
+            : <span className="meta">Applications closed</span>}
+        </div>
+      </div>
+      {expanded && (
+        <div className="details">
+          {showFreelanceNote && freelanceIntro && <p style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.65)' }}>{freelanceIntro}</p>}
+          {role.full_description && <p>{role.full_description}</p>}
+          {role.schedule && <p className="meta" style={{ marginTop: '0.75rem' }}>Schedule: {role.schedule}</p>}
+          {role.requirements && role.requirements.length > 0 && (
+            <ul>
+              {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
+            </ul>
+          )}
+        </div>
+      )}
+      {applying && (
+        canApply
+          ? <ApplyForm role={role} universalQuestions={universalQuestions} utm={utm} onClose={onCloseApply} onSuccess={onSuccess} />
+          : <p className="err" role="alert">This role closed while you were reading. Applications are disabled.</p>
+      )}
+    </article>
+  );
+}
+
+function App() {
+  const [config, setConfig] = useState(null);
+  const [loadError, setLoadError] = useState(false);
+  const [workType, setWorkType] = useState('ALL');
+  const [dept, setDept] = useState('ALL');
+  const [openId, setOpenId] = useState('');
+  const [applyId, setApplyId] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [utm, setUtm] = useState({});
+  const rolesRef = useRef(null);
+
+  useEffect(() => {
+    setUtm(captureUtm());
+    track('careers_view', {});
+    fetch('/api/careers/config')
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data || !data.ok) setLoadError(true);
+        else setConfig(data.data || data);
+      })
+      .catch(() => setLoadError(true));
+  }, []);
+
+  useEffect(() => {
+    if (!config) return;
+    const hash = decodeURIComponent((window.location.hash || '').replace('#', ''));
+    if (!hash) return;
+    const role = (config.roles || []).find((r) => r.slug === hash || r.role_id === hash);
+    if (role) {
+      setOpenId(role.role_id);
+      setWorkType('ALL');
+      setTimeout(() => {
+        const el = document.getElementById(role.slug);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }, [config]);
+
+  const settings = (config && config.settings) || {};
+  const allRoles = (config && config.roles) || [];
+  const filtered = allRoles.filter((r) => {
+    if (workType !== 'ALL' && r.category !== workType) return false;
+    if (dept !== 'ALL' && r.department !== dept) return false;
+    return true;
+  });
+  const alwaysOpen = allRoles.filter((r) => r.status === 'ALWAYS_OPEN');
+  const noneOpen = !loadError && config && allRoles.length === 0;
+
+  const startApply = (role) => {
+    setSuccess(false);
+    setOpenId(role.role_id);
+    setApplyId(role.role_id);
+    track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
+    if (window.location.hash !== '#' + role.slug) history.replaceState(null, '', '#' + role.slug);
+  };
+
+  const toggle = (role) => {
+    const next = openId === role.role_id ? '' : role.role_id;
+    setOpenId(next);
+    if (applyId && applyId !== role.role_id) setApplyId('');
+    track('career_role_expand', { role_id: role.role_id, role_title: role.title, category: role.category });
+    if (next) history.replaceState(null, '', '#' + role.slug);
+  };
+
+  const setType = (id) => {
+    setWorkType(id);
+    track('career_category_filter', { category: id });
+  };
+
+  return (
+    <>
+      <Nav />
+      <section id="hero">
+        <p className="eyebrow">{settings.hero_eyebrow || 'RESPAWN / CAREERS + COLLABORATORS'}</p>
+        <h1>
+          <span className="h1-line">MAKE GOOD STUFF</span>
+          <span className="h1-line h1-accent">WITH US.</span>
+        </h1>
+        <p className="lede">{settings.hero_description || 'Full-time roles, paid internships and freelance collaborations for people who care about content, culture and craft.'}</p>
+        <div className="cta-row">
+          <a className="btn btn-primary" href="#roles">VIEW OPEN ROLES</a>
+          <button className="btn btn-ghost" type="button" onClick={() => { setType('FREELANCE'); document.getElementById('roles') && document.getElementById('roles').scrollIntoView({ behavior: 'smooth' }); }}>JOIN OUR FREELANCE NETWORK →</button>
+        </div>
+      </section>
+
+      <section id="how">
+        <h2>HOW DO YOU<br />WANT TO WORK?</h2>
+        <div className="work-grid">
+          {WORK_TYPES.filter((t) => t.id !== 'ALL').map((t) => (
+            <button key={t.id} type="button" className={'work-card' + (workType === t.id ? ' is-on' : '')} onClick={() => setType(t.id)}>
+              <div className="num">{t.num}</div>
+              <h3>{t.label}</h3>
+            </button>
+          ))}
+        </div>
+        <div className="filter-row" role="tablist" aria-label="Work type">
+          {WORK_TYPES.map((t) => (
+            <button key={t.id} type="button" className={'chip' + (workType === t.id ? ' is-on' : '')} onClick={() => setType(t.id)}>{t.id === 'ALL' ? 'ALL' : t.label}</button>
+          ))}
+        </div>
+        <div className="filter-row" role="tablist" aria-label="Department">
+          {DEPTS.map((d) => (
+            <button key={d} type="button" className={'chip' + (dept === d ? ' is-on' : '')} onClick={() => setDept(d)}>{d}</button>
+          ))}
+        </div>
+      </section>
+
+      <section id="roles" ref={rolesRef}>
+        <div className="sec-head" style={{ marginBottom: '2rem' }}>
+          <p className="eyebrow">OPEN ROLES</p>
+        </div>
+
+        {success && (
+          <div className="success" style={{ marginBottom: '2.5rem' }}>
+            <h2>GOT IT.<br /><em>WE'LL TAKE A LOOK.</em></h2>
+            <p className="lede">{settings.application_success_message || "If your work feels like a fit, we'll get in touch."}</p>
+            <div className="cta-row">
+              <button className="btn btn-primary" type="button" onClick={() => { setSuccess(false); setApplyId(''); document.getElementById('roles').scrollIntoView({ behavior: 'smooth' }); }}>BACK TO OPEN ROLES</button>
+            </div>
+          </div>
+        )}
+
+        {loadError && (
+          <div className="empty">
+            <h2>ROLES ARE<br />OFFLINE.</h2>
+            <p className="lede">The careers list could not load. Try again shortly, or write to {settings.careers_email || 'respawnmediain@gmail.com'}.</p>
+          </div>
+        )}
+
+        {noneOpen && (
+          <div className="empty">
+            <h2>NOTHING OPEN<br />RIGHT NOW.</h2>
+            <p className="lede">We're still building our freelance network.</p>
+            {alwaysOpen.length > 0 && <p className="lede">Freelance collaborations below stay open.</p>}
+          </div>
+        )}
+
+        {!loadError && config && filtered.length === 0 && allRoles.length > 0 && (
+          <div className="empty">
+            <h2>NOTHING IN<br />THIS FILTER.</h2>
+            <p className="lede">Try ALL, or switch work type.</p>
+            {alwaysOpen.length > 0 && workType !== 'FREELANCE' && (
+              <button className="btn btn-ghost" type="button" onClick={() => setType('FREELANCE')}>Show freelance network →</button>
+            )}
+          </div>
+        )}
+
+        {!loadError && filtered.map((role, i) => (
+          <RoleRow
+            key={role.role_id}
+            role={role}
+            index={i}
+            expanded={openId === role.role_id}
+            applying={applyId === role.role_id && !success}
+            onToggle={() => toggle(role)}
+            onApply={() => startApply(role)}
+            onCloseApply={() => setApplyId('')}
+            onSuccess={() => { setSuccess(true); setApplyId(''); }}
+            universalQuestions={config.universalQuestions || []}
+            utm={utm}
+            freelanceIntro={settings.freelance_intro || ''}
+          />
+        ))}
+      </section>
+
+      <footer>
+        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+          <Logo size={24} />
+          <span style={{ fontWeight:300, fontSize:11, letterSpacing:'0.08em', color:'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
+        </div>
+      </footer>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

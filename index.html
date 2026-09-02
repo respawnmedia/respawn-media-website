@@ -360,6 +360,8 @@ function Nav({ active }) {
         <a key={l} href={`#${l}`} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', color: active === l ? 'var(--teal)' : 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}
         onMouseEnter={(e) => e.target.style.color = 'var(--teal)'} onMouseLeave={(e) => e.target.style.color = active === l ? 'var(--teal)' : 'rgba(255,255,255,0.4)'}>{labels[l]}</a>
         )}
+        <a href="/careers" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '13px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', transition: 'color 0.2s' }}
+        onMouseEnter={(e) => e.target.style.color = 'var(--teal)'} onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.4)'}>Careers</a>
         <a href="#contact" style={{ background: 'var(--teal)', color: 'var(--black)', padding: '0.45rem 1.2rem', fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'} onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>Let's Talk</a>
       </div>
       <button className="ham" onClick={() => setOpen((o) => !o)} style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', flexDirection: 'column', gap: 5, padding: 4 }}>
@@ -368,6 +370,7 @@ function Nav({ active }) {
       {open &&
       <div style={{ position: 'fixed', inset: 0, top: 56, background: 'rgba(5,5,5,0.98)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2rem', zIndex: 190 }}>
           {links.map((l) => <a key={l} href={`#${l}`} onClick={() => setOpen(false)} style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '0.04em', color: 'var(--white)' }}>{labels[l].toUpperCase()}</a>)}
+          <a href="/careers" onClick={() => setOpen(false)} style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', letterSpacing: '0.04em', color: 'var(--white)' }}>CAREERS</a>
           <a href="#contact" onClick={() => setOpen(false)} style={{ marginTop: '1rem', background: 'var(--teal)', color: 'var(--black)', padding: '0.75rem 2.5rem', fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '0.9rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>LET'S TALK</a>
         </div>
       }
