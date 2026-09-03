@@ -80,26 +80,28 @@ h2{font-size:clamp(40px,7vw,80px)}
 .btn-primary{background:var(--teal);color:var(--black)}
 .btn-ghost{border-color:var(--border-strong);color:var(--white)}
 .btn:focus-visible,.nav-a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
-.work-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border-strong);margin-top:2.5rem}
-.work-card{text-align:left;background:transparent;border:none;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.75rem 1.25rem;cursor:pointer;color:inherit;min-height:140px}
-.work-card:last-child{border-right:none}
-.work-card .num{font-family:var(--font-condensed);color:var(--muted);letter-spacing:0.12em;font-size:13px}
-.work-card h3{font-family:var(--font-display);font-size:clamp(28px,3vw,42px);margin-top:0.6rem;line-height:0.95}
-.work-card.is-on h3{color:var(--teal)}
-.work-card.is-on .num{color:var(--white)}
-.filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:2rem}
-.chip{min-height:44px;padding:0.4rem 0.9rem;border:1px solid var(--border-strong);background:transparent;color:var(--muted);font-family:var(--font-condensed);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;font-size:12px;cursor:pointer}
-.chip.is-on{border-color:var(--white);color:var(--white)}
-.role-row{border-top:1px solid var(--border);padding:1.6rem 0}
-.role-row:last-of-type{border-bottom:1px solid var(--border)}
-.role-top{display:grid;grid-template-columns:4rem 1fr auto;gap:1rem;align-items:start}
-.role-num{font-family:var(--font-condensed);color:var(--muted);letter-spacing:0.1em;padding-top:0.35rem}
-.role-title{font-family:var(--font-display);font-size:clamp(32px,4vw,52px);line-height:0.92}
+.filters-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.5rem 0 2rem}
+.filter-field{display:flex;flex-direction:column;gap:0.4rem}
+.filter-field span{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.filter-field select{min-height:48px;background:var(--surface-2);border:1px solid var(--border-strong);color:var(--white);padding:0 0.85rem;font-family:var(--font-condensed);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:13px;border-radius:2px}
+.job-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.job-card{display:flex;flex-direction:column;align-items:stretch;text-align:left;background:var(--surface-2);border:1px solid var(--border);padding:1.25rem 1.2rem 1.15rem;min-height:240px;color:inherit;border-radius:4px}
+.job-card.is-on{border-color:var(--teal-border)}
+.job-card h3{font-family:var(--font-display);font-size:clamp(26px,2.4vw,34px);line-height:0.95;margin-bottom:0.85rem}
+.job-card-loc{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;color:var(--muted);font-size:14px;margin-bottom:0.85rem}
+.type-pill{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:800;border:1px solid var(--border-strong);padding:0.25rem 0.55rem;color:rgba(255,255,255,0.85);white-space:nowrap}
+.tag-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
+.tag{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;padding:0.28rem 0.5rem;border-radius:2px}
+.tag-exp{background:var(--teal-dim);color:var(--teal)}
+.tag-dept{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
+.job-card-actions{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
+.job-card-actions .btn{min-height:44px;padding:0.55rem 0.6rem;font-size:12px;width:100%}
+.job-card-actions .btn:disabled{opacity:0.4;cursor:not-allowed}
+.role-panel{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-strong)}
 .meta{margin-top:0.55rem;color:var(--muted);font-size:14px}
 .status{display:inline-block;margin-top:0.5rem;font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;font-weight:700;border:1px solid var(--border-strong);padding:0.2rem 0.5rem;color:rgba(255,255,255,0.7)}
 .status-open,.status-always_open{border-color:var(--teal);color:var(--white)}
 .status-closed{color:var(--muted)}
-.role-actions{display:flex;flex-direction:column;gap:0.6rem;align-items:flex-end}
 .linkish{background:none;border:none;color:var(--white);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
 .details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.78)}
 .details ul{margin:1rem 0 0 1.1rem}
@@ -124,6 +126,10 @@ textarea{min-height:110px;resize:vertical}
 footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);background:var(--surface)}
 .check-row{display:flex;flex-wrap:wrap;gap:0.6rem}
 .check-row label{display:flex;align-items:center;gap:0.45rem;min-height:44px;color:rgba(255,255,255,0.8);text-transform:none;letter-spacing:0;font-family:var(--font-body);font-size:15px}
+@media(max-width:1100px){
+  .job-grid{grid-template-columns:repeat(2,1fr)}
+  .filters-bar{grid-template-columns:1fr 1fr}
+}
 @media(max-width:768px){
   nav{padding:0 1rem;height:56px}
   .desk-nav{display:none}
@@ -136,14 +142,10 @@ footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:
   #hero .lede{margin-top:1.15rem}
   #hero .cta-row{flex-direction:column;align-items:flex-start;gap:0.7rem;margin-top:1.6rem}
   #hero .cta-row .btn{width:auto;max-width:100%;min-height:48px;padding:0.85rem 1.25rem}
-  .work-grid{grid-template-columns:1fr}
-  .work-card{border-right:none}
-  .role-top{grid-template-columns:2.5rem 1fr; }
-  .role-actions{grid-column:2;align-items:flex-start;flex-direction:row;flex-wrap:wrap}
+  .filters-bar{grid-template-columns:1fr}
+  .job-grid{grid-template-columns:1fr}
+  .job-card{min-height:0}
   footer{flex-direction:column;text-align:center;padding:1.5rem 1rem}
-  .filter-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
-  .filter-row::-webkit-scrollbar{display:none}
-  .chip{flex-shrink:0}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -225,6 +227,12 @@ function pad(n) { return String(n).padStart(2, '0'); }
 function statusLabel(status) {
   if (status === 'ALWAYS_OPEN') return 'ALWAYS OPEN';
   return status || '';
+}
+
+function typeLabel(cat) {
+  if (cat === 'INTERNSHIP') return 'Internship';
+  if (cat === 'FREELANCE') return 'Freelance';
+  return 'Full-time';
 }
 
 function Field({ q, value, onChange, fileName }) {
@@ -458,42 +466,49 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
   );
 }
 
-function RoleRow({ role, index, expanded, applying, onToggle, onApply, onCloseApply, onSuccess, universalQuestions, utm, freelanceIntro }) {
+function RoleCard({ role, selected, onDetails, onApply }) {
+  const canApply = role.accepting_applications && role.status !== 'CLOSED';
+  return (
+    <article className={'job-card' + (selected ? ' is-on' : '')} id={role.slug}>
+      <h3>{role.title}</h3>
+      <div className="job-card-loc">
+        <span>{role.location || 'Chennai'}</span>
+        <span className="type-pill">{typeLabel(role.category)}</span>
+      </div>
+      <div className="tag-row">
+        {role.experience ? <span className="tag tag-exp">{role.experience}</span> : null}
+        {role.department ? <span className="tag tag-dept">{role.department}</span> : null}
+      </div>
+      <div className="job-card-actions">
+        <button className="btn btn-ghost" type="button" aria-expanded={selected} onClick={onDetails}>{selected ? 'Hide details' : 'View details'}</button>
+        {canApply
+          ? <button className="btn btn-primary" type="button" onClick={onApply}>Apply</button>
+          : <button className="btn btn-ghost" type="button" disabled>Closed</button>}
+      </div>
+    </article>
+  );
+}
+
+function RoleDetails({ role, applying, onApply, onCloseApply, onSuccess, universalQuestions, utm, freelanceIntro }) {
   const canApply = role.accepting_applications && role.status !== 'CLOSED';
   const showFreelanceNote = role.category === 'FREELANCE';
   return (
-    <article className="role-row" id={role.slug}>
-      <div className="role-top">
-        <div className="role-num">{pad(index + 1)}</div>
-        <div>
-          <h3 className="role-title">{role.title}</h3>
-          <p className="meta">
-            {role.location}<br />
-            {role.category === 'INTERNSHIP' ? 'Internship' : role.category === 'FREELANCE' ? 'Freelance / Project basis' : 'Full-time'}
-            {role.work_mode ? ' · ' + role.work_mode : ''}
-            {role.experience ? <><br />{role.experience}</> : null}
-            {role.department ? <><br />{role.department}</> : null}
-            {role.compensation ? <><br />{role.compensation}</> : null}
-          </p>
-          <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
-        </div>
-        <div className="role-actions">
-          <button className="linkish" type="button" aria-expanded={expanded} onClick={onToggle}>{expanded ? 'HIDE DETAILS' : 'VIEW DETAILS →'}</button>
-          {canApply
-            ? <button className="linkish" type="button" onClick={onApply}>APPLY →</button>
-            : <span className="meta">Applications closed</span>}
-        </div>
-      </div>
-      {expanded && (
-        <div className="details">
-          {showFreelanceNote && freelanceIntro && <p style={{ marginBottom: '1rem', color: 'rgba(255,255,255,0.65)' }}>{freelanceIntro}</p>}
-          {role.full_description && <p>{role.full_description}</p>}
-          {role.schedule && <p className="meta" style={{ marginTop: '0.75rem' }}>Schedule: {role.schedule}</p>}
-          {role.requirements && role.requirements.length > 0 && (
-            <ul>
-              {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
-            </ul>
-          )}
+    <div className="role-panel">
+      <p className="eyebrow">{role.title}</p>
+      <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
+      {showFreelanceNote && freelanceIntro && <p className="lede" style={{ marginTop: '1rem' }}>{freelanceIntro}</p>}
+      {role.full_description && <p className="details" style={{ marginTop: '1rem', maxWidth: '42rem' }}>{role.full_description}</p>}
+      {role.work_mode && <p className="meta">Work mode: {role.work_mode}</p>}
+      {role.schedule && <p className="meta">Schedule: {role.schedule}</p>}
+      {role.compensation && <p className="meta">{role.compensation}</p>}
+      {role.requirements && role.requirements.length > 0 && (
+        <ul className="details" style={{ marginTop: '1rem' }}>
+          {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
+        </ul>
+      )}
+      {canApply && !applying && (
+        <div className="cta-row">
+          <button className="btn btn-primary" type="button" onClick={onApply}>Apply for this role</button>
         </div>
       )}
       {applying && (
@@ -501,7 +516,7 @@ function RoleRow({ role, index, expanded, applying, onToggle, onApply, onCloseAp
           ? <ApplyForm role={role} universalQuestions={universalQuestions} utm={utm} onClose={onCloseApply} onSuccess={onSuccess} />
           : <p className="err" role="alert">This role closed while you were reading. Applications are disabled.</p>
       )}
-    </article>
+    </div>
   );
 }
 
@@ -510,6 +525,7 @@ function App() {
   const [loadError, setLoadError] = useState(false);
   const [workType, setWorkType] = useState('ALL');
   const [dept, setDept] = useState('ALL');
+  const [loc, setLoc] = useState('ALL');
   const [openId, setOpenId] = useState('');
   const [applyId, setApplyId] = useState('');
   const [success, setSuccess] = useState(false);
@@ -548,8 +564,11 @@ function App() {
   const filtered = allRoles.filter((r) => {
     if (workType !== 'ALL' && r.category !== workType) return false;
     if (dept !== 'ALL' && r.department !== dept) return false;
+    if (loc !== 'ALL' && r.location !== loc) return false;
     return true;
   });
+  const locations = Array.from(new Set(allRoles.map((r) => r.location).filter(Boolean)));
+  const openRole = allRoles.find((r) => r.role_id === openId);
   const alwaysOpen = allRoles.filter((r) => r.status === 'ALWAYS_OPEN');
   const noneOpen = !loadError && config && allRoles.length === 0;
 
@@ -557,6 +576,10 @@ function App() {
     setSuccess(false);
     setOpenId(role.role_id);
     setApplyId(role.role_id);
+    setTimeout(function () {
+      const el = document.querySelector('#roles .role-panel');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
     track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
     if (window.location.hash !== '#' + role.slug) history.replaceState(null, '', '#' + role.slug);
   };
@@ -566,7 +589,13 @@ function App() {
     setOpenId(next);
     if (applyId && applyId !== role.role_id) setApplyId('');
     track('career_role_expand', { role_id: role.role_id, role_title: role.title, category: role.category });
-    if (next) history.replaceState(null, '', '#' + role.slug);
+    if (next) {
+      history.replaceState(null, '', '#' + role.slug);
+      setTimeout(function () {
+        const el = document.querySelector('#roles .role-panel');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
   };
 
   const setType = (id) => {
@@ -590,31 +619,29 @@ function App() {
         </div>
       </section>
 
-      <section id="how">
-        <h2>HOW DO YOU<br />WANT TO WORK?</h2>
-        <div className="work-grid">
-          {WORK_TYPES.filter((t) => t.id !== 'ALL').map((t) => (
-            <button key={t.id} type="button" className={'work-card' + (workType === t.id ? ' is-on' : '')} onClick={() => setType(t.id)}>
-              <div className="num">{t.num}</div>
-              <h3>{t.label}</h3>
-            </button>
-          ))}
-        </div>
-        <div className="filter-row" role="tablist" aria-label="Work type">
-          {WORK_TYPES.map((t) => (
-            <button key={t.id} type="button" className={'chip' + (workType === t.id ? ' is-on' : '')} onClick={() => setType(t.id)}>{t.id === 'ALL' ? 'ALL' : t.label}</button>
-          ))}
-        </div>
-        <div className="filter-row" role="tablist" aria-label="Department">
-          {DEPTS.map((d) => (
-            <button key={d} type="button" className={'chip' + (dept === d ? ' is-on' : '')} onClick={() => setDept(d)}>{d}</button>
-          ))}
-        </div>
-      </section>
-
       <section id="roles" ref={rolesRef}>
-        <div className="sec-head" style={{ marginBottom: '2rem' }}>
-          <p className="eyebrow">OPEN ROLES</p>
+        <p className="eyebrow">OPEN ROLES</p>
+        <h2 style={{ marginTop: '0.5rem', maxWidth: '12ch' }}>FIND YOUR FIT.</h2>
+        <div className="filters-bar">
+          <label className="filter-field">
+            <span>Work type</span>
+            <select value={workType} onChange={(e) => setType(e.target.value)} aria-label="Work type">
+              {WORK_TYPES.map((t) => <option key={t.id} value={t.id}>{t.id === 'ALL' ? 'All types' : t.label}</option>)}
+            </select>
+          </label>
+          <label className="filter-field">
+            <span>Department</span>
+            <select value={dept} onChange={(e) => setDept(e.target.value)} aria-label="Department">
+              {DEPTS.map((d) => <option key={d} value={d}>{d === 'ALL' ? 'All departments' : d}</option>)}
+            </select>
+          </label>
+          <label className="filter-field">
+            <span>Location</span>
+            <select value={loc} onChange={(e) => setLoc(e.target.value)} aria-label="Location">
+              <option value="ALL">All locations</option>
+              {locations.map((l) => <option key={l} value={l}>{l}</option>)}
+            </select>
+          </label>
         </div>
 
         {success && (
@@ -645,22 +672,32 @@ function App() {
         {!loadError && config && filtered.length === 0 && allRoles.length > 0 && (
           <div className="empty">
             <h2>NOTHING IN<br />THIS FILTER.</h2>
-            <p className="lede">Try ALL, or switch work type.</p>
+            <p className="lede">Try All types, or switch department.</p>
             {alwaysOpen.length > 0 && workType !== 'FREELANCE' && (
               <button className="btn btn-ghost" type="button" onClick={() => setType('FREELANCE')}>Show freelance network →</button>
             )}
           </div>
         )}
 
-        {!loadError && filtered.map((role, i) => (
-          <RoleRow
-            key={role.role_id}
-            role={role}
-            index={i}
-            expanded={openId === role.role_id}
-            applying={applyId === role.role_id && !success}
-            onToggle={() => toggle(role)}
-            onApply={() => startApply(role)}
+        {!loadError && filtered.length > 0 && (
+          <div className="job-grid">
+            {filtered.map((role) => (
+              <RoleCard
+                key={role.role_id}
+                role={role}
+                selected={openId === role.role_id}
+                onDetails={() => toggle(role)}
+                onApply={() => startApply(role)}
+              />
+            ))}
+          </div>
+        )}
+
+        {openRole && !success && (
+          <RoleDetails
+            role={openRole}
+            applying={applyId === openRole.role_id}
+            onApply={() => startApply(openRole)}
             onCloseApply={() => setApplyId('')}
             onSuccess={() => {
               setSuccess(true);
@@ -670,11 +707,11 @@ function App() {
                 if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }, 50);
             }}
-            universalQuestions={config.universalQuestions || []}
+            universalQuestions={(config && config.universalQuestions) || []}
             utm={utm}
             freelanceIntro={settings.freelance_intro || ''}
           />
-        ))}
+        )}
       </section>
 
       <footer>
