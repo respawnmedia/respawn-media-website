@@ -346,6 +346,9 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
     }
     setBusy(true);
     track('career_application_submit', { role_id: role.role_id, role_title: role.title, category: role.category });
+    const ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = setTimeout(function () { if (ac) ac.abort(); }, 28000);
+    let succeeded = false;
     try {
       const fd = new FormData();
       fd.append('website', honeypot);
@@ -360,22 +363,30 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
         referrer: utm.referrer || ''
       }));
       if (resume) fd.append('resume', resume, resume.name);
-      const res = await fetch('/api/careers/apply', { method: 'POST', body: fd });
-      const data = await res.json().catch(() => ({ ok: false }));
-      if (res.status === 409 || (data && data.error === 'role_closed')) {
-        setError('This role is no longer accepting applications.');
-        setBusy(false);
+      const res = await fetch('/api/careers/apply', { method: 'POST', body: fd, signal: ac ? ac.signal : undefined });
+      const text = await res.text();
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch (e) { data = {}; }
+      const httpOk = res.status >= 200 && res.status < 300;
+      if (httpOk && data && data.ok === true) {
+        succeeded = true;
+        track('career_application_success', { role_id: role.role_id, role_title: role.title, category: role.category });
+        onSuccess();
         return;
       }
-      if (data && data.error === 'invalid_file_type') { setError('Resume must be PDF, DOC or DOCX.'); setBusy(false); return; }
-      if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); setBusy(false); return; }
-      if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); setBusy(false); return; }
-      if (!res.ok || !data.ok) { setError('Submission failed. Try again in a moment.'); setBusy(false); return; }
-      track('career_application_success', { role_id: role.role_id, role_title: role.title, category: role.category });
-      onSuccess();
+      if (res.status === 409 || (data && data.error === 'role_closed')) {
+        setError('This role is no longer accepting applications.');
+        return;
+      }
+      if (data && data.error === 'invalid_file_type') { setError('Resume must be PDF, DOC or DOCX.'); return; }
+      if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); return; }
+      if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); return; }
+      setError('Submission failed. Try again in a moment.');
     } catch (e) {
       setError('Submission failed. Try again in a moment.');
-      setBusy(false);
+    } finally {
+      clearTimeout(timer);
+      if (!succeeded) setBusy(false);
     }
   };
 
@@ -439,7 +450,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
           {error && <p className="err" role="alert">{error}</p>}
           <div className="cta-row">
             <button className="btn btn-ghost" type="button" onClick={() => setStep(3)} disabled={busy}>Back</button>
-            <button className="btn btn-primary" type="button" onClick={submit} disabled={busy}>{busy ? 'Sending…' : 'Submit'}</button>
+            <button className="btn btn-primary" type="button" onClick={submit} disabled={busy}>{busy ? 'Submitting…' : 'Submit'}</button>
           </div>
         </div>
       )}
@@ -651,7 +662,14 @@ function App() {
             onToggle={() => toggle(role)}
             onApply={() => startApply(role)}
             onCloseApply={() => setApplyId('')}
-            onSuccess={() => { setSuccess(true); setApplyId(''); }}
+            onSuccess={() => {
+              setSuccess(true);
+              setApplyId('');
+              setTimeout(function () {
+                const el = document.querySelector('#roles .success');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 50);
+            }}
             universalQuestions={config.universalQuestions || []}
             utm={utm}
             freelanceIntro={settings.freelance_intro || ''}

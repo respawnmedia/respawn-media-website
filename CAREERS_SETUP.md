@@ -81,6 +81,17 @@ Public rules:
 | CLOSED | TRUE | May show; Apply disabled |
 | any | FALSE | Hidden |
 
+### Managing roles (Sheet only — no website deploy)
+
+Edit the **ROLES** tab. Changes show on `/careers` after about two minutes (config cache). You do not need Cursor, Git, or Vercel for hide/show.
+
+1. **Hide a role completely** (e.g. Social Media Manager for ~3 months): on that row, set **`show_on_site`** to **FALSE**. To bring it back later: **`show_on_site` TRUE**, **`status` OPEN** (or ALWAYS_OPEN), **`accepting_applications` TRUE**.
+2. **Keep it visible but stop Apply**: set **`accepting_applications`** to **FALSE**, or set **`status`** to **CLOSED**. The listing can still appear; the button says applications closed.
+3. **Pause / hide for now**: set **`status`** to **PAUSED** (the public site hides paused roles).
+4. **Reopen later**: **`status` OPEN**, **`show_on_site` TRUE**, **`accepting_applications` TRUE**.
+5. **Add a new role**: add a **new row** on **ROLES** with a unique **`role_id`** and **`slug`**. Add matching rows on **REQUIREMENTS** and **QUESTIONS** (same `role_id`). In Apps Script, run **`syncRoleTabs()`** so a QUERY tab appears for that role. No code deploy.
+6. **Social Media Manager**: set **`show_on_site` FALSE** now. In ~3 months, set it **TRUE** (and OPEN + accepting TRUE). The page updates from the Sheet.
+
 ---
 
 ## 6. Google Apps Script deploy
@@ -103,6 +114,8 @@ Public rules:
    - Who has access: **Anyone**
 6. Copy the web app URL (`…/exec`) — this is `CAREERS_APPS_SCRIPT_URL`.
 7. After later script edits: Deploy → Manage deployments → **New version**.
+
+If the Sheet gets a new application row but the site stays on **Submitting**, paste the latest `RespawnCareersBackend.gs` (responses use `MimeType.TEXT`) and save a **New version** of the web app. The Vercel apply function follows Google’s redirect and always returns JSON so **GOT IT** can show.
 
 `doGet` / `doPost` expect the secret (`token` query on GET from Vercel; `api_secret` in POST JSON from Vercel). Custom HTTP headers are unreliable on Apps Script, so the secret is not header-only.
 

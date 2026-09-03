@@ -168,29 +168,69 @@ module.exports = async function handler(req, res) {
   payload.api_secret = secret;
 
   try {
-    const gasRes = await fetch(scriptUrl, {
-      method: 'POST',
-      redirect: 'follow',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const text = await gasRes.text();
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch (e) {
-      sendJson(res, 502, { ok: false, error: 'submit_failed' });
-      return;
-    }
+    const parsed = await postToAppsScript(scriptUrl, payload);
     if (!parsed || parsed.ok !== true) {
       const mapped = mapError(parsed && parsed.error);
       sendJson(res, mapped[0], { ok: false, error: mapped[1], field: parsed && parsed.field });
       return;
     }
-    sendJson(res, 200, { ok: true, application_id: parsed.application_id });
+    sendJson(res, 200, { ok: true, application_id: parsed.application_id || '' });
   } catch (e) {
     sendJson(res, 502, { ok: false, error: 'submit_failed' });
   }
+}
+
+function parseJsonLoose(text) {
+  const stripped = String(text || '').replace(/^\uFEFF/, '').replace(/^\)\]\}'\s*/, '').trim();
+  if (!stripped) return null;
+  try {
+    return JSON.parse(stripped);
+  } catch (e) {
+    const start = stripped.indexOf('{');
+    const end = stripped.lastIndexOf('}');
+    if (start === -1 || end <= start) return null;
+    try {
+      return JSON.parse(stripped.slice(start, end + 1));
+    } catch (e2) {
+      return null;
+    }
+  }
+}
+
+async function readTimed(url, opts, ms) {
+  const ac = new AbortController();
+  const timer = setTimeout(function () { ac.abort(); }, ms);
+  try {
+    return await fetch(url, Object.assign({}, opts, { signal: ac.signal }));
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function postToAppsScript(scriptUrl, payload) {
+  // One POST only. Apps Script MimeType.JSON 302s to googleusercontent;
+  // following that as another POST would duplicate the Sheet row.
+  const first = await readTimed(scriptUrl, {
+    method: 'POST',
+    redirect: 'manual',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }, 22000);
+
+  let text = '';
+  const loc = first.headers.get('location') || '';
+  if (first.status >= 300 && first.status < 400 && loc) {
+    if (/accounts\.google\.com/i.test(loc)) {
+      return { ok: false, error: 'submit_failed' };
+    }
+    try { await first.arrayBuffer(); } catch (e) {}
+    const abs = new URL(loc, scriptUrl).href;
+    const second = await readTimed(abs, { method: 'GET', redirect: 'follow' }, 12000);
+    text = await second.text();
+  } else {
+    text = await first.text();
+  }
+  return parseJsonLoose(text);
 }
 
 function extOf(name) {

@@ -810,7 +810,9 @@ function str_(v) {
 }
 
 function jsonResponse_(obj) {
+  // TEXT not JSON: MimeType.JSON makes Google 302 to a download URL.
+  // Vercel/Node fetch often hangs or gets HTML after doPost already wrote the row.
   return ContentService
     .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+    .setMimeType(ContentService.MimeType.TEXT);
 }
