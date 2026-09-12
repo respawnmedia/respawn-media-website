@@ -33,6 +33,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '1599401624909023');
 fbq('track', 'PageView');
 </script>
+<script src="/js/meta-pixel-events.js"></script>
 <!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -189,17 +190,16 @@ const DEPTS = ['ALL','CONTENT','EDITING','PRODUCTION','CREATOR','AI + PERFORMANC
 function track(name, params) {
   try {
     if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
-    if (typeof window.fbq === 'function') {
-      const p = params || {};
-      if (name === 'career_application_success') {
-        window.fbq('track', 'SubmitApplication', { content_name: p.role_title, content_category: p.category });
-      } else if (name === 'career_apply_start') {
-        window.fbq('track', 'Lead', { content_name: p.role_title, content_category: p.category });
-      } else if (name === 'career_application_submit') {
-        // Pixel conversion fires on success only, to avoid counting failed submits.
-      } else {
-        window.fbq('trackCustom', name, p);
-      }
+    const p = params || {};
+    const pixel = window.respawnPixel && window.respawnPixel.track
+      ? window.respawnPixel.track
+      : function (event, payload) { if (typeof window.fbq === 'function') window.fbq('track', event, payload || {}); };
+    if (name === 'career_application_success') {
+      pixel('SubmitApplication', { content_name: p.role_title, content_category: p.category || 'careers' });
+    } else if (name === 'career_apply_start') {
+      pixel('Lead', { content_name: p.role_title || 'Career application', content_category: 'careers' });
+    } else if (name === 'career_role_expand') {
+      pixel('ViewContent', { content_name: p.role_title, content_category: 'careers', content_type: 'website' });
     }
   } catch (e) {}
 }

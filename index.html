@@ -52,6 +52,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '1599401624909023');
 fbq('track', 'PageView');
 </script>
+<script src="/js/meta-pixel-events.js"></script>
 <!-- End Meta Pixel Code -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -181,6 +182,10 @@ const { useState, useEffect, useRef, useContext, createContext } = React;
 
 function trackMeta(event, params) {
   try {
+    if (window.respawnPixel && typeof window.respawnPixel.track === 'function') {
+      window.respawnPixel.track(event, params);
+      return;
+    }
     if (typeof window.fbq === 'function') window.fbq('track', event, params || {});
   } catch (e) {}
 }
@@ -1153,7 +1158,7 @@ function PressFEmail({ email }) {
   const [hov, setHov] = useState(false);
   const fireEmail = () => {
     setPressed(true);
-    trackMeta('Contact', { content_name: 'Email' });
+    trackMeta('Lead', { content_name: 'Email', content_category: 'contact' });
     window.location.href = `mailto:${email}`;
     setTimeout(() => setPressed(false), 500);
   };
@@ -1243,7 +1248,7 @@ function ContactSection({ email, phone1, phone2 }) {
               <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Call or text</Eyebrow>
               <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                 {[phone1, phone2].map((p) =>
-                <a key={p} href={`tel:${p.replace(/\s/g, '')}`} onClick={() => trackMeta('Contact', { content_name: 'Phone' })} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>{p}</a>
+                <a key={p} href={`tel:${p.replace(/\s/g, '')}`} onClick={() => trackMeta('Lead', { content_name: 'Phone', content_category: 'contact' })} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>{p}</a>
                 )}
               </div>
             </div>
