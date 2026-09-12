@@ -39,6 +39,21 @@
 }
 </script>
 
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1599401624909023');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Barlow+Condensed:wght@300;400;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
@@ -149,7 +164,12 @@ a{text-decoration:none;color:inherit}
   .founders-grid{grid-template-columns:repeat(2,1fr)!important}
 }
 </style>
+</head>
 <body>
+<!-- Meta Pixel noscript -->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1599401624909023&ev=PageView&noscript=1"
+/></noscript>
 <div id="root"></div>
 <script type="text/babel">
 
@@ -158,6 +178,12 @@ a{text-decoration:none;color:inherit}
 
 
 const { useState, useEffect, useRef, useContext, createContext } = React;
+
+function trackMeta(event, params) {
+  try {
+    if (typeof window.fbq === 'function') window.fbq('track', event, params || {});
+  } catch (e) {}
+}
 
 // Context: a DragMarquee sets this to true while it's being touch-scrolled
 // or auto-cycling so child chips can render in their hovered (teal-outlined)
@@ -788,7 +814,10 @@ function WorkSection({ workItems }) {
       <DragMarquee
         idName={`work-${filt}`}
         items={items}
-        renderItem={(w, i) => <WorkCard key={`${w.id}-${i}`} item={w} onOpen={() => setActiveItem(w)} />}
+        renderItem={(w, i) => <WorkCard key={`${w.id}-${i}`} item={w} onOpen={() => {
+          setActiveItem(w);
+          trackMeta('ViewContent', { content_name: w.headline, content_category: w.tag, content_type: 'product' });
+        }} />}
         speed={28} direction="left" inView={inView} gap={16}
       />
       <div style={{ textAlign: 'center', marginTop: '2.5rem', padding: '0 1rem', opacity: inView ? 1 : 0, transition: 'opacity 0.6s ease 0.8s' }}>
@@ -1124,6 +1153,7 @@ function PressFEmail({ email }) {
   const [hov, setHov] = useState(false);
   const fireEmail = () => {
     setPressed(true);
+    trackMeta('Contact', { content_name: 'Email' });
     window.location.href = `mailto:${email}`;
     setTimeout(() => setPressed(false), 500);
   };
@@ -1213,7 +1243,7 @@ function ContactSection({ email, phone1, phone2 }) {
               <Eyebrow style={{ display: 'block', marginBottom: 8 }}>Call or text</Eyebrow>
               <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                 {[phone1, phone2].map((p) =>
-                <a key={p} href={`tel:${p.replace(/\s/g, '')}`} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>{p}</a>
+                <a key={p} href={`tel:${p.replace(/\s/g, '')}`} onClick={() => trackMeta('Contact', { content_name: 'Phone' })} style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, fontSize: '1.05rem', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--teal)'} onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}>{p}</a>
                 )}
               </div>
             </div>

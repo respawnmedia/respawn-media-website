@@ -20,6 +20,20 @@
 <meta name="twitter:title" content="Careers &amp; Freelance Opportunities | Respawn Media Chennai">
 <meta name="twitter:description" content="Explore full-time roles, paid internships and freelance collaboration opportunities at Respawn Media in Chennai.">
 <meta name="twitter:image" content="https://respawnmedia.in/assets/logo-white.png">
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1599401624909023');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Barlow+Condensed:wght@300;400;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
@@ -154,6 +168,10 @@ footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:
 </style>
 </head>
 <body>
+<!-- Meta Pixel noscript -->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1599401624909023&ev=PageView&noscript=1"
+/></noscript>
 <div class="texture" aria-hidden="true"></div>
 <div id="root" class="page"></div>
 <script type="text/babel">
@@ -171,6 +189,18 @@ const DEPTS = ['ALL','CONTENT','EDITING','PRODUCTION','CREATOR','AI + PERFORMANC
 function track(name, params) {
   try {
     if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    if (typeof window.fbq === 'function') {
+      const p = params || {};
+      if (name === 'career_application_success') {
+        window.fbq('track', 'SubmitApplication', { content_name: p.role_title, content_category: p.category });
+      } else if (name === 'career_apply_start') {
+        window.fbq('track', 'Lead', { content_name: p.role_title, content_category: p.category });
+      } else if (name === 'career_application_submit') {
+        // Pixel conversion fires on success only, to avoid counting failed submits.
+      } else {
+        window.fbq('trackCustom', name, p);
+      }
+    }
   } catch (e) {}
 }
 
