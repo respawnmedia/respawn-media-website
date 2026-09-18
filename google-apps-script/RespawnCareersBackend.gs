@@ -118,6 +118,10 @@ function seedSettings_(ss) {
     ['instagram_handle', '@respawnmedia'],
     ['application_success_title', "GOT IT.\nWE'LL TAKE A LOOK."],
     ['application_success_message', "If your work feels like a fit, we'll get in touch."],
+    ['thanks_title', 'THANK YOU SO MUCH.'],
+    ['thanks_message', 'We have noted your application and will get back to you soon. Till then, you can join our WhatsApp group, where we keep updating our regular hiring and this work.'],
+    ['whatsapp_group_url', 'https://chat.whatsapp.com/LHZCScn664h3zTtTVUtaLv'],
+    ['whatsapp_button_label', 'Join WhatsApp group'],
     ['freelance_intro', 'Respawn Media is building a dependable network of creators and production talent who can collaborate repeatedly across client projects, campaigns, shoots and content requirements. These are project collaborations, not permanent employment.']
   ];
   var toAppend = [];

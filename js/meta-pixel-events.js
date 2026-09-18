@@ -14,11 +14,23 @@
     roles: 'Open Roles'
   };
 
+  function careersPath() {
+    return (location.pathname || '').replace(/\/+$/, '');
+  }
+
   function isCareers() {
-    return (location.pathname || '').indexOf('/careers') === 0;
+    return careersPath().indexOf('/careers') === 0;
   }
 
   function pageContent() {
+    var path = careersPath();
+    if (path.indexOf('/careers/apply/') === 0) {
+      var slug = decodeURIComponent(path.slice('/careers/apply/'.length) || '');
+      return { content_name: slug || 'Career application', content_category: 'careers_apply', content_type: 'website' };
+    }
+    if (path === '/careers/thanks') {
+      return { content_name: 'Application thanks', content_category: 'careers_thanks', content_type: 'website' };
+    }
     if (isCareers()) {
       return { content_name: 'Careers', content_category: 'careers', content_type: 'website' };
     }
@@ -53,7 +65,9 @@
   });
 
   function watchSections() {
-    var ids = isCareers() ? ['roles'] : ['clients', 'work', 'who', 'services', 'contact'];
+    var path = careersPath();
+    var ids = (isCareers() && path === '/careers') ? ['roles'] : ['clients', 'work', 'who', 'services', 'contact'];
+    if (isCareers() && path !== '/careers') return;
     ids.forEach(function (id) {
       var el = document.getElementById(id);
       if (!el || sectionSeen[id]) return;
@@ -102,6 +116,10 @@
     }
     if (hrefLower.indexOf('tel:') === 0) {
       track('Lead', { content_name: 'Phone', content_category: 'contact' });
+      return;
+    }
+    if (hrefLower.indexOf('whatsapp.com') >= 0 || hrefLower.indexOf('wa.me') >= 0) {
+      track('Contact', { content_name: 'WhatsApp', content_category: isCareers() ? 'careers' : 'contact' });
       return;
     }
 

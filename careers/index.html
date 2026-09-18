@@ -138,6 +138,11 @@ textarea{min-height:110px;resize:vertical}
 .empty h2{margin-bottom:1rem}
 .success h2{color:var(--white)}
 .success h2 em{font-style:normal;color:var(--teal)}
+.apply-page,.thanks-page{padding:6.75rem 3rem 4.5rem;max-width:46rem}
+.thanks-page{min-height:72vh;max-width:40rem}
+.crumb{display:flex;flex-wrap:wrap;gap:0.45rem;align-items:center;margin-bottom:1.5rem;font-family:var(--font-condensed);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.crumb a{color:rgba(255,255,255,0.55)}
+.crumb a:hover{color:var(--teal)}
 footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);background:var(--surface)}
 .check-row{display:flex;flex-wrap:wrap;gap:0.6rem}
 .check-row label{display:flex;align-items:center;gap:0.45rem;min-height:44px;color:rgba(255,255,255,0.8);text-transform:none;letter-spacing:0;font-family:var(--font-body);font-size:15px}
@@ -157,6 +162,7 @@ footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:
   #hero .lede{margin-top:1.15rem}
   #hero .cta-row{flex-direction:column;align-items:flex-start;gap:0.7rem;margin-top:1.6rem}
   #hero .cta-row .btn{width:auto;max-width:100%;min-height:48px;padding:0.85rem 1.25rem}
+  .apply-page,.thanks-page{padding:5.15rem 1.25rem 3rem}
   .filters-bar{grid-template-columns:1fr}
   .job-grid{grid-template-columns:1fr}
   .job-card{min-height:0}
@@ -179,6 +185,56 @@ src="https://www.facebook.com/tr?id=1599401624909023&ev=PageView&noscript=1"
 const { useState, useEffect, useRef } = React;
 
 const UTM_KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+const APPLIED_KEY = 'respawn_careers_applied';
+const LIST_TITLE = 'Careers & Freelance Opportunities | Respawn Media Chennai';
+const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/LHZCScn664h3zTtTVUtaLv';
+
+function careersSearch() {
+  return window.location.search || '';
+}
+function careersHref(path) {
+  return path + careersSearch();
+}
+function parseCareersRoute() {
+  const path = (window.location.pathname || '').replace(/\/+$/, '') || '/';
+  if (path === '/careers/thanks') return { page: 'thanks' };
+  const m = path.match(/^\/careers\/apply\/([^/]+)$/);
+  if (m) return { page: 'apply', slug: decodeURIComponent(m[1]) };
+  return { page: 'list' };
+}
+function applyHref(role) {
+  return careersHref('/careers/apply/' + encodeURIComponent(role.slug || role.role_id));
+}
+function markApplied(role) {
+  sessionStorage.setItem(APPLIED_KEY, JSON.stringify({
+    at: Date.now(),
+    role_id: role.role_id,
+    role_title: role.title,
+    role_slug: role.slug,
+    category: role.category
+  }));
+}
+function readApplied() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem(APPLIED_KEY) || 'null');
+    if (!data || !data.at || !data.role_id) return null;
+    if (Date.now() - data.at > 6 * 60 * 60 * 1000) return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
+}
+function isSafeWhatsAppUrl(url) {
+  if (!url) return false;
+  try {
+    const u = new URL(String(url).trim());
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
+    const host = u.hostname.replace(/^www\./, '').toLowerCase();
+    return host === 'chat.whatsapp.com' || host === 'wa.me' || host === 'api.whatsapp.com' || host.endsWith('.whatsapp.com');
+  } catch (e) {
+    return false;
+  }
+}
 const WORK_TYPES = [
   { id: 'ALL', num: '00', label: 'ALL' },
   { id: 'FULL-TIME', num: '01', label: 'FULL-TIME' },
@@ -408,7 +464,6 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       const httpOk = res.status >= 200 && res.status < 300;
       if (httpOk && data && data.ok === true) {
         succeeded = true;
-        track('career_application_success', { role_id: role.role_id, role_title: role.title, category: role.category });
         onSuccess();
         return;
       }
@@ -496,7 +551,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
   );
 }
 
-function RoleCard({ role, selected, onDetails, onApply }) {
+function RoleCard({ role, selected, onDetails }) {
   const canApply = role.accepting_applications && role.status !== 'CLOSED';
   return (
     <article className={'job-card' + (selected ? ' is-on' : '')} id={role.slug}>
@@ -512,14 +567,14 @@ function RoleCard({ role, selected, onDetails, onApply }) {
       <div className="job-card-actions">
         <button className="btn btn-ghost" type="button" aria-expanded={selected} onClick={onDetails}>{selected ? 'Hide details' : 'View details'}</button>
         {canApply
-          ? <button className="btn btn-primary" type="button" onClick={onApply}>Apply</button>
+          ? <a className="btn btn-primary" href={applyHref(role)}>Apply</a>
           : <button className="btn btn-ghost" type="button" disabled>Closed</button>}
       </div>
     </article>
   );
 }
 
-function RoleDetails({ role, applying, onApply, onCloseApply, onSuccess, universalQuestions, utm, freelanceIntro }) {
+function RoleDetails({ role, freelanceIntro }) {
   const canApply = role.accepting_applications && role.status !== 'CLOSED';
   const showFreelanceNote = role.category === 'FREELANCE';
   return (
@@ -536,42 +591,35 @@ function RoleDetails({ role, applying, onApply, onCloseApply, onSuccess, univers
           {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
         </ul>
       )}
-      {canApply && !applying && (
+      {canApply && (
         <div className="cta-row">
-          <button className="btn btn-primary" type="button" onClick={onApply}>Apply for this role</button>
+          <a className="btn btn-primary" href={applyHref(role)}>Apply for this role</a>
         </div>
-      )}
-      {applying && (
-        canApply
-          ? <ApplyForm role={role} universalQuestions={universalQuestions} utm={utm} onClose={onCloseApply} onSuccess={onSuccess} />
-          : <p className="err" role="alert">This role closed while you were reading. Applications are disabled.</p>
       )}
     </div>
   );
 }
 
-function App() {
-  const [config, setConfig] = useState(null);
-  const [loadError, setLoadError] = useState(false);
+function PageFooter() {
+  return (
+    <footer>
+      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+        <Logo size={24} />
+        <span style={{ fontWeight:300, fontSize:11, letterSpacing:'0.08em', color:'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
+      </div>
+    </footer>
+  );
+}
+
+function ListingPage({ config, loadError }) {
   const [workType, setWorkType] = useState('ALL');
   const [dept, setDept] = useState('ALL');
   const [loc, setLoc] = useState('ALL');
   const [openId, setOpenId] = useState('');
-  const [applyId, setApplyId] = useState('');
-  const [success, setSuccess] = useState(false);
-  const [utm, setUtm] = useState({});
-  const rolesRef = useRef(null);
 
   useEffect(() => {
-    setUtm(captureUtm());
+    document.title = LIST_TITLE;
     track('careers_view', {});
-    fetch('/api/careers/config')
-      .then((r) => r.json())
-      .then((data) => {
-        if (!data || !data.ok) setLoadError(true);
-        else setConfig(data.data || data);
-      })
-      .catch(() => setLoadError(true));
   }, []);
 
   useEffect(() => {
@@ -602,22 +650,9 @@ function App() {
   const alwaysOpen = allRoles.filter((r) => r.status === 'ALWAYS_OPEN');
   const noneOpen = !loadError && config && allRoles.length === 0;
 
-  const startApply = (role) => {
-    setSuccess(false);
-    setOpenId(role.role_id);
-    setApplyId(role.role_id);
-    setTimeout(function () {
-      const el = document.querySelector('#roles .role-panel');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
-    track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
-    if (window.location.hash !== '#' + role.slug) history.replaceState(null, '', '#' + role.slug);
-  };
-
   const toggle = (role) => {
     const next = openId === role.role_id ? '' : role.role_id;
     setOpenId(next);
-    if (applyId && applyId !== role.role_id) setApplyId('');
     track('career_role_expand', { role_id: role.role_id, role_title: role.title, category: role.category });
     if (next) {
       history.replaceState(null, '', '#' + role.slug);
@@ -649,7 +684,7 @@ function App() {
         </div>
       </section>
 
-      <section id="roles" ref={rolesRef}>
+      <section id="roles">
         <p className="eyebrow">OPEN ROLES</p>
         <h2 style={{ marginTop: '0.5rem', maxWidth: '12ch' }}>FIND YOUR FIT.</h2>
         <div className="filters-bar">
@@ -673,16 +708,6 @@ function App() {
             </select>
           </label>
         </div>
-
-        {success && (
-          <div className="success" style={{ marginBottom: '2.5rem' }}>
-            <h2>GOT IT.<br /><em>WE'LL TAKE A LOOK.</em></h2>
-            <p className="lede">{settings.application_success_message || "If your work feels like a fit, we'll get in touch."}</p>
-            <div className="cta-row">
-              <button className="btn btn-primary" type="button" onClick={() => { setSuccess(false); setApplyId(''); document.getElementById('roles').scrollIntoView({ behavior: 'smooth' }); }}>BACK TO OPEN ROLES</button>
-            </div>
-          </div>
-        )}
 
         {loadError && (
           <div className="empty">
@@ -717,41 +742,171 @@ function App() {
                 role={role}
                 selected={openId === role.role_id}
                 onDetails={() => toggle(role)}
-                onApply={() => startApply(role)}
               />
             ))}
           </div>
         )}
 
-        {openRole && !success && (
+        {openRole && (
           <RoleDetails
             role={openRole}
-            applying={applyId === openRole.role_id}
-            onApply={() => startApply(openRole)}
-            onCloseApply={() => setApplyId('')}
-            onSuccess={() => {
-              setSuccess(true);
-              setApplyId('');
-              setTimeout(function () {
-                const el = document.querySelector('#roles .success');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 50);
-            }}
-            universalQuestions={(config && config.universalQuestions) || []}
-            utm={utm}
             freelanceIntro={settings.freelance_intro || ''}
           />
         )}
       </section>
-
-      <footer>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <Logo size={24} />
-          <span style={{ fontWeight:300, fontSize:11, letterSpacing:'0.08em', color:'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
-        </div>
-      </footer>
+      <PageFooter />
     </>
   );
+}
+
+function ApplyPage({ slug, config, loadError, utm }) {
+  const settings = (config && config.settings) || {};
+  const roles = (config && config.roles) || [];
+  const role = roles.find((r) => r.slug === slug || r.role_id === slug);
+  const canApply = role && role.accepting_applications && role.status !== 'CLOSED';
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (role) document.title = 'Apply: ' + role.title + ' | Respawn Media Careers';
+    else document.title = 'Apply | Respawn Media Careers';
+  }, [role]);
+
+  useEffect(() => {
+    if (!role || started.current) return;
+    started.current = true;
+    track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
+  }, [role]);
+
+  const back = careersHref('/careers');
+
+  return (
+    <>
+      <Nav />
+      <section className="apply-page">
+        <p className="crumb"><a href={back}>Careers</a> <span aria-hidden="true">/</span> <span>Apply</span></p>
+        {!config && !loadError && <p className="lede">Loading this role…</p>}
+        {loadError && (
+          <div className="empty">
+            <h2>ROLES ARE<br />OFFLINE.</h2>
+            <p className="lede">The application could not load. Try again shortly, or write to {settings.careers_email || 'respawnmediain@gmail.com'}.</p>
+            <div className="cta-row"><a className="btn btn-ghost" href={back}>Back to open roles</a></div>
+          </div>
+        )}
+        {!loadError && config && !role && (
+          <div className="empty">
+            <h2>ROLE NOT<br />FOUND.</h2>
+            <p className="lede">This opening is not on the site anymore. Pick another role from the list.</p>
+            <div className="cta-row"><a className="btn btn-primary" href={back}>Back to open roles</a></div>
+          </div>
+        )}
+        {role && (
+          <>
+            <p className="eyebrow">{typeLabel(role.category)} · {role.location || 'Chennai'}</p>
+            <h1 style={{ marginTop: '0.5rem' }}>{role.title}</h1>
+            {role.full_description && <p className="lede">{role.full_description}</p>}
+            {role.work_mode && <p className="meta">Work mode: {role.work_mode}</p>}
+            {role.schedule && <p className="meta">Schedule: {role.schedule}</p>}
+            {role.compensation && <p className="meta">{role.compensation}</p>}
+            {role.requirements && role.requirements.length > 0 && (
+              <ul className="details">
+                {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
+              </ul>
+            )}
+            {canApply
+              ? <ApplyForm
+                  role={role}
+                  universalQuestions={(config && config.universalQuestions) || []}
+                  utm={utm}
+                  onClose={() => { window.location.href = back; }}
+                  onSuccess={() => {
+                    markApplied(role);
+                    window.location.href = careersHref('/careers/thanks');
+                  }}
+                />
+              : (
+                <div className="empty" style={{ marginTop: '2rem' }}>
+                  <p className="err" role="alert">This role is no longer accepting applications.</p>
+                  <div className="cta-row"><a className="btn btn-primary" href={back}>Back to open roles</a></div>
+                </div>
+              )}
+          </>
+        )}
+      </section>
+      <PageFooter />
+    </>
+  );
+}
+
+function ThanksPage({ config }) {
+  const [allowed, setAllowed] = useState(false);
+  const applied = useRef(null);
+  const fired = useRef(false);
+  const settings = (config && config.settings) || {};
+
+  useEffect(() => {
+    const data = readApplied();
+    if (!data) {
+      window.location.replace(careersHref('/careers'));
+      return;
+    }
+    applied.current = data;
+    setAllowed(true);
+    document.title = 'Thank you | Respawn Media Careers';
+    if (!fired.current) {
+      fired.current = true;
+      track('career_application_success', { role_id: data.role_id, role_title: data.role_title, category: data.category });
+    }
+  }, []);
+
+  if (!allowed) return null;
+
+  const title = settings.thanks_title || 'THANK YOU SO MUCH.';
+  const message = settings.thanks_message || 'We have noted your application and will get back to you soon. Till then, you can join our WhatsApp group, where we keep updating our regular hiring and this work.';
+  const waRaw = String(settings.whatsapp_group_url || '').trim() || WHATSAPP_GROUP_URL;
+  const wa = isSafeWhatsAppUrl(waRaw) ? waRaw : '';
+  const waLabel = settings.whatsapp_button_label || 'Join WhatsApp group';
+  const roleTitle = applied.current && applied.current.role_title;
+
+  return (
+    <>
+      <Nav />
+      <section className="thanks-page success">
+        <p className="eyebrow">Application received</p>
+        <h2>{title.split('\n').map((line, i) => <span key={i}>{i > 0 ? <br /> : null}{i === 0 ? <em>{line}</em> : line}</span>)}</h2>
+        {roleTitle && <p className="meta">Role: {roleTitle}</p>}
+        <p className="lede">{message}</p>
+        <div className="cta-row">
+          {wa
+            ? <a className="btn btn-primary" href={wa} target="_blank" rel="noopener noreferrer">{waLabel}</a>
+            : null}
+          <a className="btn btn-ghost" href={careersHref('/careers')}>Back to open roles</a>
+        </div>
+      </section>
+      <PageFooter />
+    </>
+  );
+}
+
+function App() {
+  const route = parseCareersRoute();
+  const [config, setConfig] = useState(null);
+  const [loadError, setLoadError] = useState(false);
+  const [utm, setUtm] = useState({});
+
+  useEffect(() => {
+    setUtm(captureUtm());
+    fetch('/api/careers/config')
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data || !data.ok) setLoadError(true);
+        else setConfig(data.data || data);
+      })
+      .catch(() => setLoadError(true));
+  }, []);
+
+  if (route.page === 'thanks') return <ThanksPage config={config} />;
+  if (route.page === 'apply') return <ApplyPage slug={route.slug} config={config} loadError={loadError} utm={utm} />;
+  return <ListingPage config={config} loadError={loadError} />;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);

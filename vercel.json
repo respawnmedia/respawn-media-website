@@ -1,6 +1,8 @@
 {
   "framework": null,
   "rewrites": [
+    { "source": "/careers/apply/:slug", "destination": "/careers/index.html" },
+    { "source": "/careers/thanks", "destination": "/careers/index.html" },
     { "source": "/careers", "destination": "/careers/index.html" },
     { "source": "/careers/", "destination": "/careers/index.html" }
   ],
