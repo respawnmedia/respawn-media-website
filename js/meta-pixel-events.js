@@ -1,132 +1,57 @@
 (function () {
   var PIXEL_ID = '1599401624909023';
-  var lastKey = '';
-  var lastAt = 0;
-  var sectionSeen = {};
+  var fired = {};
 
-  var SECTION_NAMES = {
-    hero: 'Home',
-    clients: 'Clients',
-    work: 'Work',
-    who: 'About',
-    services: 'Services',
-    contact: 'Contact',
-    roles: 'Open Roles'
-  };
-
-  function careersPath() {
-    return (location.pathname || '').replace(/\/+$/, '');
+  function path() {
+    return (location.pathname || '').replace(/\/+$/, '') || '/';
   }
 
-  function isCareers() {
-    return careersPath().indexOf('/careers') === 0;
+  function isThanks() {
+    return path() === '/careers/thanks';
   }
 
   function pageContent() {
-    var path = careersPath();
-    if (path.indexOf('/careers/apply/') === 0) {
-      var slug = decodeURIComponent(path.slice('/careers/apply/'.length) || '');
+    var p = path();
+    if (p.indexOf('/careers/apply/') === 0) {
+      var slug = decodeURIComponent(p.slice('/careers/apply/'.length) || '');
       return { content_name: slug || 'Career application', content_category: 'careers_apply', content_type: 'website' };
     }
-    if (path === '/careers/thanks') {
-      return { content_name: 'Application thanks', content_category: 'careers_thanks', content_type: 'website' };
-    }
-    if (isCareers()) {
+    if (p === '/careers' || p.indexOf('/careers') === 0) {
       return { content_name: 'Careers', content_category: 'careers', content_type: 'website' };
     }
-    var hash = (location.hash || '').replace('#', '');
-    return {
-      content_name: SECTION_NAMES[hash] || 'Home',
-      content_category: hash || 'home',
-      content_type: 'website'
-    };
+    return { content_name: 'Home', content_category: 'home', content_type: 'website' };
+  }
+
+  function send(event, params) {
+    if (fired[event]) return;
+    fired[event] = true;
+    try {
+      if (typeof fbq === 'function') fbq('track', event, params || {});
+    } catch (e) {}
   }
 
   function track(event, params) {
-    var payload = params || {};
-    var key = event + '|' + (payload.content_name || '') + '|' + (payload.content_category || '');
-    var now = Date.now();
-    if (key === lastKey && now - lastAt < 1000) return;
-    lastKey = key;
-    lastAt = now;
-    try {
-      if (typeof fbq === 'function') fbq('track', event, payload);
-    } catch (e) {}
+    if (event === 'Lead') {
+      if (!isThanks()) return;
+      send('Lead', params || { content_name: 'Career application', content_category: 'careers' });
+      return;
+    }
+    if (event === 'ViewContent') {
+      if (isThanks()) return;
+      send('ViewContent', params || pageContent());
+      return;
+    }
+    if (event === 'PageView') {
+      if (isThanks()) return;
+      send('PageView', params);
+    }
   }
 
   window.respawnPixel = { id: PIXEL_ID, track: track };
   window.trackMeta = track;
 
-  track('ViewContent', pageContent());
-
-  window.addEventListener('hashchange', function () {
-    var content = pageContent();
-    track('ViewContent', content);
-  });
-
-  function watchSections() {
-    var path = careersPath();
-    var ids = (isCareers() && path === '/careers') ? ['roles'] : ['clients', 'work', 'who', 'services', 'contact'];
-    if (isCareers() && path !== '/careers') return;
-    ids.forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el || sectionSeen[id]) return;
-      sectionSeen[id] = 'watching';
-      if (typeof IntersectionObserver !== 'function') return;
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting || sectionSeen[id] === 'fired') return;
-          sectionSeen[id] = 'fired';
-          track('ViewContent', {
-            content_name: SECTION_NAMES[id] || id,
-            content_category: 'section',
-            content_type: 'website'
-          });
-          io.disconnect();
-        });
-      }, { threshold: 0.4 });
-      io.observe(el);
-    });
+  if (!isThanks()) {
+    fired.PageView = true;
+    send('ViewContent', pageContent());
   }
-
-  function startWatch() {
-    watchSections();
-    setTimeout(watchSections, 1200);
-    setTimeout(watchSections, 3500);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startWatch);
-  } else {
-    startWatch();
-  }
-
-  document.addEventListener('click', function (e) {
-    var el = e.target && e.target.closest ? e.target.closest('a, button') : null;
-    if (!el) return;
-
-    var href = (el.getAttribute('href') || '').trim();
-    var hrefLower = href.toLowerCase();
-    var label = ((el.getAttribute('aria-label') || '') + ' ' + (el.textContent || '')).replace(/\s+/g, ' ').trim();
-    var labelLower = label.toLowerCase();
-
-    if (hrefLower.indexOf('mailto:') === 0 || /email us at/.test(labelLower)) {
-      track('Lead', { content_name: 'Email', content_category: 'contact' });
-      return;
-    }
-    if (hrefLower.indexOf('tel:') === 0) {
-      track('Lead', { content_name: 'Phone', content_category: 'contact' });
-      return;
-    }
-    if (hrefLower.indexOf('whatsapp.com') >= 0 || hrefLower.indexOf('wa.me') >= 0) {
-      track('Contact', { content_name: 'WhatsApp', content_category: isCareers() ? 'careers' : 'contact' });
-      return;
-    }
-
-    var isLeadCta = /let'?s talk|start a project/.test(labelLower);
-    if (isLeadCta) {
-      track('Lead', { content_name: label || 'Contact CTA', content_category: 'contact' });
-      return;
-    }
-  }, true);
 })();

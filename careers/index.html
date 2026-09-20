@@ -31,7 +31,9 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1599401624909023');
-fbq('track', 'PageView');
+if (!/\/careers\/thanks\/?$/.test((location.pathname || '').replace(/\/+$/, ''))) {
+  fbq('track', 'PageView');
+}
 </script>
 <script src="/js/meta-pixel-events.js"></script>
 <!-- End Meta Pixel Code -->
@@ -249,13 +251,9 @@ function track(name, params) {
     const p = params || {};
     const pixel = window.respawnPixel && window.respawnPixel.track
       ? window.respawnPixel.track
-      : function (event, payload) { if (typeof window.fbq === 'function') window.fbq('track', event, payload || {}); };
+      : function () {};
     if (name === 'career_application_success') {
-      pixel('SubmitApplication', { content_name: p.role_title, content_category: p.category || 'careers' });
-    } else if (name === 'career_apply_start') {
-      pixel('Lead', { content_name: p.role_title || 'Career application', content_category: 'careers' });
-    } else if (name === 'career_role_expand') {
-      pixel('ViewContent', { content_name: p.role_title, content_category: 'careers', content_type: 'website' });
+      pixel('Lead', { content_name: p.role_title || 'Career application', content_category: p.category || 'careers' });
     }
   } catch (e) {}
 }
