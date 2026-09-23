@@ -319,14 +319,22 @@ function typeLabel(cat) {
   return 'Full-time';
 }
 
+function isBlankAnswer(q, value, resume) {
+  if (q.type === 'file') return !resume;
+  if (q.type === 'checkbox') return !value;
+  if (q.type === 'multiselect') return !value || !value.length;
+  if (value === undefined || value === null) return true;
+  return String(value).trim() === '';
+}
+
 function Field({ q, value, onChange, fileName }) {
   const id = 'q-' + q.question_id;
-  const req = q.required ? <span className="req" aria-hidden="true">*</span> : null;
+  const req = <span className="req" aria-hidden="true">*</span>;
   if (q.type === 'textarea') {
     return (
       <div className="field">
         <label htmlFor={id}>{q.label}{req}</label>
-        <textarea id={id} required={q.required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+        <textarea id={id} required placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
       </div>
     );
   }
@@ -334,7 +342,7 @@ function Field({ q, value, onChange, fileName }) {
     return (
       <div className="field">
         <label htmlFor={id}>{q.label}{req}</label>
-        <select id={id} required={q.required} value={value || ''} onChange={(e) => onChange(e.target.value)}>
+        <select id={id} required value={value || ''} onChange={(e) => onChange(e.target.value)}>
           <option value="">Select</option>
           {(q.options || []).map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
@@ -365,7 +373,7 @@ function Field({ q, value, onChange, fileName }) {
     return (
       <div className="field">
         <label htmlFor={id} style={{ textTransform:'none', letterSpacing:0, fontFamily:'var(--font-body)', fontSize:15 }}>
-          <input id={id} type="checkbox" checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{req}
+          <input id={id} type="checkbox" required checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{req}
         </label>
       </div>
     );
@@ -374,16 +382,16 @@ function Field({ q, value, onChange, fileName }) {
     return (
       <div className="field">
         <label htmlFor={id}>{q.label}{req}</label>
-        <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={q.required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
+        <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={!fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
         <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Max 10 MB.')}</span>
       </div>
     );
   }
-  const inputType = ['email','tel','url','number'].indexOf(q.type) >= 0 ? q.type : 'text';
+  const inputType = ['email','tel','number'].indexOf(q.type) >= 0 ? q.type : 'text';
   return (
     <div className="field">
       <label htmlFor={id}>{q.label}{req}</label>
-      <input id={id} type={inputType} required={q.required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required placeholder={q.placeholder || (q.type === 'url' ? 'https://… or N/A' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
@@ -403,15 +411,15 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
   const validateGroup = (qs) => {
     for (let i = 0; i < qs.length; i++) {
       const q = qs[i];
-      if (!q.required) continue;
       if (q.type === 'file') {
         if (!resume) return 'Add a resume (PDF, DOC or DOCX, max 10 MB).';
         continue;
       }
-      const v = answers[q.question_key];
-      if (q.type === 'checkbox' && !v) return 'Please complete: ' + q.label;
-      if (q.type === 'multiselect' && (!v || !v.length)) return 'Please complete: ' + q.label;
-      if (v === undefined || v === null || String(v).trim() === '') return 'Please complete: ' + q.label;
+      if (isBlankAnswer(q, answers[q.question_key], resume)) return 'Please complete: ' + q.label;
+      if (q.type === 'email') {
+        const email = String(answers[q.question_key] || '');
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Enter a valid email address.';
+      }
     }
     return '';
   };
@@ -431,6 +439,8 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
 
   const submit = async () => {
     setError('');
+    const missing = validateGroup(uni) || validateGroup(spec);
+    if (missing) { setError(missing); return; }
     if (resume) {
       const ext = (resume.name.split('.').pop() || '').toLowerCase();
       if (['pdf','doc','docx'].indexOf(ext) === -1) { setError('Resume must be PDF, DOC or DOCX.'); return; }
@@ -469,7 +479,9 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
         setError('This role is no longer accepting applications.');
         return;
       }
-      if (data && data.error === 'invalid_file_type') { setError('Resume must be PDF, DOC or DOCX.'); return; }
+      if (data && data.error === 'missing_field') { setError('Please complete every question before submitting.'); return; }
+      if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, max 10 MB).'); return; }
+      if (data && data.error === 'invalid_url') { setError('Enter a full URL starting with https://, or write N/A.'); return; }
       if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); return; }
       if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); return; }
       setError('Submission failed. Try again in a moment.');
@@ -501,6 +513,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       )}
       {step === 2 && (
         <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
+          <p className="meta" style={{ marginBottom: '1.1rem' }}>Every question is required. If something does not apply, write N/A.</p>
           <div className="hp" aria-hidden="true">
             <label>Website<input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
           </div>
@@ -520,6 +533,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       {step === 3 && (
         <form onSubmit={(e) => { e.preventDefault(); go(4); }}>
           {spec.length === 0 && <p className="lede" style={{ marginTop: 0 }}>No extra questions for this role.</p>}
+          {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Every role question is required. If something does not apply, write N/A.</p>}
           {spec.map((q) => (
             <Field key={q.question_id} q={q} value={answers[q.question_key]} fileName={resume && resume.name} onChange={(v) => q.type === 'file' ? setResume(v || null) : setVal(q.question_key, v)} />
           ))}

@@ -15,6 +15,8 @@ var ROLES_SHEET = 'ROLES';
 var REQUIREMENTS_SHEET = 'REQUIREMENTS';
 var QUESTIONS_SHEET = 'QUESTIONS';
 var APPLICATIONS_SHEET = 'ALL_APPLICATIONS';
+var CANDIDATES_SHEET = 'CANDIDATES';
+var ANSWERS_SHEET = 'ANSWERS';
 
 var ROLE_HEADERS = [
   'role_id', 'slug', 'title', 'category', 'department', 'location', 'work_mode',
@@ -41,6 +43,20 @@ var APPLICATION_HEADERS = [
   'rating', 'reviewer', 'internal_notes'
 ];
 
+var CANDIDATE_HEADERS = [
+  'Submitted', 'Application ID', 'Role', 'Type', 'Full name', 'WhatsApp', 'Email',
+  'City', 'Instagram', 'Portfolio', 'Resume', 'Experience', 'Occupation / company',
+  'Availability', 'Status', 'Rating', 'Reviewer', 'Notes'
+];
+
+var ANSWER_HEADERS = [
+  'Submitted', 'Application ID', 'Role', 'Full name', 'Section', 'Question', 'Answer'
+];
+
+var ROLE_VIEW_CORE_HEADERS = [
+  'Submitted', 'Application ID', 'Full name', 'WhatsApp', 'Email', 'City', 'Resume', 'Status'
+];
+
 var UNIVERSAL_ANSWER_KEYS = {
   full_name: true,
   whatsapp: true,
@@ -62,6 +78,8 @@ function onOpen() {
     .addItem('1. Setup workbook', 'setupWorkbook')
     .addItem('2. Seed default data', 'seedDefaultCareersData')
     .addItem('3. Sync role tabs', 'syncRoleTabs')
+    .addItem('4. Mark all questions required', 'markAllQuestionsRequired')
+    .addItem('5. Rebuild readable response views', 'rebuildReadableViews')
     .addToUi();
 }
 
@@ -84,6 +102,8 @@ function setupWorkbook() {
   ensureSheet_(ss, REQUIREMENTS_SHEET, REQUIREMENT_HEADERS);
   ensureSheet_(ss, QUESTIONS_SHEET, QUESTION_HEADERS);
   ensureSheet_(ss, APPLICATIONS_SHEET, APPLICATION_HEADERS);
+  ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
+  ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
 }
 
 function ensureSheet_(ss, name, headers) {
@@ -346,17 +366,17 @@ function defaultQuestions_() {
   rows.push(q_('all-whatsapp', 'ALL', 'whatsapp', 'WhatsApp number', 'tel', true, '+91', '', 20));
   rows.push(q_('all-email', 'ALL', 'email', 'Email address', 'email', true, 'you@email.com', '', 30));
   rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', true, 'Chennai', '', 40));
-  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram / profile URL', 'url', false, 'https://instagram.com/', '', 50));
-  rows.push(q_('all-portfolio', 'ALL', 'portfolio_urls', 'Portfolio URL(s)', 'textarea', false, 'One URL per line', '', 60));
+  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram / profile URL', 'url', true, 'https://instagram.com/', '', 50));
+  rows.push(q_('all-portfolio', 'ALL', 'portfolio_urls', 'Portfolio URL(s)', 'textarea', true, 'One URL per line', '', 60));
   rows.push(q_('all-resume', 'ALL', 'resume', 'Resume', 'file', true, 'PDF, DOC or DOCX. Max 10 MB.', '', 70));
   rows.push(q_('all-years', 'ALL', 'years_experience', 'Years of experience', 'text', true, 'e.g. 2', '', 80));
-  rows.push(q_('all-company', 'ALL', 'current_company', 'Current occupation / company', 'text', false, '', '', 90));
+  rows.push(q_('all-company', 'ALL', 'current_company', 'Current occupation / company', 'text', true, '', '', 90));
   rows.push(q_('all-availability', 'ALL', 'availability', 'Availability / start date', 'text', true, '', '', 100));
-  rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', false, '', '', 110));
+  rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', true, '', '', 110));
 
   rows.push(q_('smm-workplaces', 'social-media-manager', 'previous_workplaces', 'Previous workplaces', 'textarea', true, '', '', 10));
-  rows.push(q_('smm-prev-ctc', 'social-media-manager', 'previous_ctc', 'Previous CTC', 'text', false, '', '', 20));
-  rows.push(q_('smm-cur-ctc', 'social-media-manager', 'current_ctc', 'Current CTC if applicable', 'text', false, '', '', 30));
+  rows.push(q_('smm-prev-ctc', 'social-media-manager', 'previous_ctc', 'Previous CTC', 'text', true, '', '', 20));
+  rows.push(q_('smm-cur-ctc', 'social-media-manager', 'current_ctc', 'Current CTC if applicable', 'text', true, '', '', 30));
   rows.push(q_('smm-join', 'social-media-manager', 'join_timeline', 'How soon can you join?', 'text', true, '', '', 40));
   rows.push(q_('smm-wfo', 'social-media-manager', 'chennai_wfo_confirm', 'Confirm Chennai work-from-office availability', 'select', true, '', 'Yes|No', 50));
   rows.push(q_('smm-campaigns', 'social-media-manager', 'favourite_campaigns', 'Favourite Indian brand campaigns and why', 'textarea', true, '', '', 60));
@@ -372,16 +392,16 @@ function defaultQuestions_() {
   rows.push(q_('veft-wfo', 'video-editor-ft', 'chennai_wfo_confirm', 'Confirm Chennai work-from-office availability', 'select', true, '', 'Yes|No', 70));
 
   rows.push(q_('vei-pr', 'video-editor-intern', 'premiere_pro_experience', 'Premiere Pro experience', 'textarea', true, '', '', 10));
-  rows.push(q_('vei-tools', 'video-editor-intern', 'other_editing_tools', 'Other editing tools used', 'text', false, '', '', 20));
+  rows.push(q_('vei-tools', 'video-editor-intern', 'other_editing_tools', 'Other editing tools used', 'text', true, '', '', 20));
   rows.push(q_('vei-port', 'video-editor-intern', 'portfolio_links', 'Portfolio links', 'textarea', true, 'Allow multiple work examples', '', 30));
-  rows.push(q_('vei-ig', 'video-editor-intern', 'instagram_if_relevant', 'Instagram profile if relevant', 'url', false, '', '', 40));
+  rows.push(q_('vei-ig', 'video-editor-intern', 'instagram_if_relevant', 'Instagram profile if relevant', 'url', true, '', '', 40));
   rows.push(q_('vei-city', 'video-editor-intern', 'intern_current_city', 'Current city', 'text', true, '', '', 50));
   rows.push(q_('vei-wfo', 'video-editor-intern', 'chennai_office', 'Can you work from the Chennai office?', 'select', true, '', 'Yes|No', 60));
   rows.push(q_('vei-join', 'video-editor-intern', 'join_timeline', 'How soon can you join?', 'text', true, '', '', 70));
-  rows.push(q_('vei-examples', 'video-editor-intern', 'work_examples', 'Additional work examples', 'textarea', false, 'Multiple links welcome', '', 80));
+  rows.push(q_('vei-examples', 'video-editor-intern', 'work_examples', 'Additional work examples', 'textarea', true, 'Multiple links welcome', '', 80));
 
   rows.push(q_('cci-created', 'content-creative-intern', 'something_created', 'Share something you have created', 'textarea', true, '', '', 10));
-  rows.push(q_('cci-page', 'content-creative-intern', 'creator_page', 'Share your creator page if you have one', 'url', false, '', '', 20));
+  rows.push(q_('cci-page', 'content-creative-intern', 'creator_page', 'Share your creator page if you have one', 'url', true, '', '', 20));
   rows.push(q_('cci-write', 'content-creative-intern', 'writing_examples', 'Share writing / content examples', 'textarea', true, '', '', 30));
   rows.push(q_('cci-consume', 'content-creative-intern', 'content_consumed', 'What kind of content do you consume most?', 'textarea', true, '', '', 40));
   rows.push(q_('cci-early', 'content-creative-intern', 'early_format', 'Tell us about a recent reel / content format you noticed early', 'textarea', true, '', '', 50));
@@ -389,7 +409,7 @@ function defaultQuestions_() {
 
   rows.push(q_('gai-tools', 'gen-ai-meta-ads-intern', 'ai_tools', 'Which AI tools do you use regularly?', 'textarea', true, '', '', 10));
   rows.push(q_('gai-built', 'gen-ai-meta-ads-intern', 'built_with_ai', 'Share something you have built using AI', 'textarea', true, '', '', 20));
-  rows.push(q_('gai-img', 'gen-ai-meta-ads-intern', 'image_gen_examples', 'Share image-generation examples if available', 'textarea', false, '', '', 30));
+  rows.push(q_('gai-img', 'gen-ai-meta-ads-intern', 'image_gen_examples', 'Share image-generation examples if available', 'textarea', true, '', '', 30));
   rows.push(q_('gai-release', 'gen-ai-meta-ads-intern', 'recent_ai_release', 'What recent AI release / tool interested you and why?', 'textarea', true, '', '', 40));
   rows.push(q_('gai-meta', 'gen-ai-meta-ads-intern', 'meta_ads_experience', 'Have you worked with Meta Ads before?', 'select', true, '', 'Yes|No|A little', 50));
   rows.push(q_('gai-metrics', 'gen-ai-meta-ads-intern', 'ad_metrics_understanding', 'Describe your understanding of basic ad metrics', 'textarea', true, '', '', 60));
@@ -399,14 +419,14 @@ function defaultQuestions_() {
   rows.push(q_('cd-role', 'creative-director-events-weddings', 'role_in_projects', 'Describe your role in those projects', 'textarea', true, '', '', 20));
   rows.push(q_('cd-dir', 'creative-director-events-weddings', 'has_creatively_directed', 'Have you creatively directed event content before?', 'select', true, '', 'Yes|No', 30));
   rows.push(q_('cd-port', 'creative-director-events-weddings', 'cd_portfolio', 'Portfolio', 'textarea', true, '', '', 40));
-  rows.push(q_('cd-ig', 'creative-director-events-weddings', 'cd_instagram', 'Instagram / profile', 'url', false, '', '', 50));
+  rows.push(q_('cd-ig', 'creative-director-events-weddings', 'cd_instagram', 'Instagram / profile', 'url', true, '', '', 50));
   rows.push(q_('cd-avail', 'creative-director-events-weddings', 'cd_availability', 'Availability', 'text', true, '', '', 60));
   rows.push(q_('cd-city', 'creative-director-events-weddings', 'cd_city', 'City', 'text', true, '', '', 70));
   rows.push(q_('cd-rate', 'creative-director-events-weddings', 'expected_commercials', 'Expected project / day commercials', 'text', true, '', '', 80));
 
   rows.push(q_('iph-device', 'iphone-videographer', 'device', 'Which iPhone / device do you shoot on?', 'text', true, '', '', 10));
   rows.push(q_('iph-work', 'iphone-videographer', 'strongest_work', 'Share your strongest work', 'textarea', true, '', '', 20));
-  rows.push(q_('iph-ig', 'iphone-videographer', 'ig_profile', 'Instagram / profile', 'url', false, '', '', 30));
+  rows.push(q_('iph-ig', 'iphone-videographer', 'ig_profile', 'Instagram / profile', 'url', true, '', '', 30));
   rows.push(q_('iph-exp', 'iphone-videographer', 'wedding_event_experience', 'Wedding / event experience', 'textarea', true, '', '', 40));
   rows.push(q_('iph-chn', 'iphone-videographer', 'chennai_availability', 'Chennai availability', 'select', true, '', 'Yes|Sometimes|No', 50));
   rows.push(q_('iph-typ', 'iphone-videographer', 'typical_availability', 'Typical availability', 'text', true, '', '', 60));
@@ -432,7 +452,7 @@ function defaultQuestions_() {
   rows.push(q_('vef-edits', 'video-editor-freelance', 'strongest_edits', '3 strongest edits', 'textarea', true, '', '', 20));
   rows.push(q_('vef-soft', 'video-editor-freelance', 'editing_software', 'Editing software', 'text', true, '', '', 30));
   rows.push(q_('vef-types', 'video-editor-freelance', 'content_types', 'Types of content edited', 'textarea', true, '', '', 40));
-  rows.push(q_('vef-lang', 'video-editor-freelance', 'languages', 'Languages understood', 'text', false, '', '', 50));
+  rows.push(q_('vef-lang', 'video-editor-freelance', 'languages', 'Languages understood', 'text', true, '', '', 50));
   rows.push(q_('vef-turn', 'video-editor-freelance', 'turnaround', 'Typical turnaround time', 'text', true, '', '', 60));
   rows.push(q_('vef-avail', 'video-editor-freelance', 'current_availability', 'Current availability', 'text', true, '', '', 70));
   rows.push(q_('vef-rate', 'video-editor-freelance', 'expected_commercials', 'Expected commercials', 'text', true, '', '', 80));
@@ -485,15 +505,11 @@ function publicStatus_(status) {
 function syncRoleTabs() {
   setupWorkbook();
   var ss = getSpreadsheet_();
+  var catalog = questionCatalog_(ss);
   var roles = sheetObjects_(ss.getSheetByName(ROLES_SHEET));
   roles.forEach(function (role) {
     if (!role.role_id) return;
-    var name = roleTabName_(role);
-    var sheet = ss.getSheetByName(name);
-    if (!sheet) sheet = ss.insertSheet(name);
-    var formula = '=IFERROR(QUERY(' + APPLICATIONS_SHEET + '!A:Z,"select * where D = \'' + String(role.role_id).replace(/'/g, "''") + '\'",1),"No applications yet")';
-    sheet.getRange(1, 1).setFormula(formula);
-    sheet.setFrozenRows(1);
+    prepareRoleSheet_(ss, role, catalog, false);
   });
 }
 
@@ -593,7 +609,7 @@ function getPublicCareersConfig_() {
       question_key: q.question_key,
       label: q.label,
       type: String(q.type || 'text').toLowerCase(),
-      required: isTrue_(q.required),
+      required: true,
       placeholder: q.placeholder || '',
       options: String(q.options || '').split('|').map(function (s) { return s.trim(); }).filter(Boolean),
       sort_order: Number(q.sort_order) || 0
@@ -664,6 +680,7 @@ function submitApplication_(payload) {
     return { ok: false, error: 'resume_required' };
   }
 
+  var extraAnswers = extraAnswerMap_(answers);
   var applicationId = generateApplicationId_();
   appendApplication_({
     application_id: applicationId,
@@ -681,7 +698,7 @@ function submitApplication_(payload) {
     years_experience: str_(answers.years_experience),
     current_company: str_(answers.current_company),
     availability: str_(answers.availability),
-    role_answers_json: JSON.stringify(roleOnlyAnswers_(answers)),
+    role_answers_json: JSON.stringify(extraAnswers),
     utm_source: str_(payload.utm_source),
     utm_medium: str_(payload.utm_medium),
     utm_campaign: str_(payload.utm_campaign),
@@ -692,7 +709,7 @@ function submitApplication_(payload) {
     rating: '',
     reviewer: '',
     internal_notes: ''
-  });
+  }, extraAnswers, check.role);
 
   return { ok: true, application_id: applicationId };
 }
@@ -713,7 +730,6 @@ function validateApplication_(payload, answers) {
   var questions = (config.universalQuestions || []).concat(role.questions || []);
   for (var i = 0; i < questions.length; i++) {
     var q = questions[i];
-    if (!q.required) continue;
     if (q.type === 'file') continue;
     var val = answers[q.question_key];
     if (q.type === 'checkbox') {
@@ -730,7 +746,7 @@ function validateApplication_(payload, answers) {
     if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
       return { ok: false, error: 'invalid_email' };
     }
-    if (q.type === 'url' && val && !/^https?:\/\//i.test(String(val).trim())) {
+    if (q.type === 'url' && val && !isSkippedUrl_(val) && !/^https?:\/\//i.test(String(val).trim())) {
       return { ok: false, error: 'invalid_url', field: q.question_key };
     }
   }
@@ -787,6 +803,10 @@ function generateApplicationId_() {
 }
 
 function roleOnlyAnswers_(answers) {
+  return extraAnswerMap_(answers);
+}
+
+function extraAnswerMap_(answers) {
   var out = {};
   Object.keys(answers || {}).forEach(function (key) {
     if (!UNIVERSAL_ANSWER_KEYS[key] && key !== 'resume') out[key] = answers[key];
@@ -794,14 +814,367 @@ function roleOnlyAnswers_(answers) {
   return out;
 }
 
-function appendApplication_(row) {
+function flattenAnswer_(val) {
+  if (val === undefined || val === null) return '';
+  if (Object.prototype.toString.call(val) === '[object Array]') return val.join(', ');
+  if (typeof val === 'boolean') return val ? 'TRUE' : 'FALSE';
+  if (typeof val === 'object') return JSON.stringify(val);
+  return String(val);
+}
+
+function parseAnswersJson_(raw) {
+  if (!raw) return {};
+  if (typeof raw === 'object' && !Array.isArray(raw)) return raw;
+  try {
+    var parsed = JSON.parse(String(raw));
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+  } catch (e) {}
+  return {};
+}
+
+function metadataHeaderSet_() {
+  var set = {};
+  APPLICATION_HEADERS.forEach(function (h) { set[h] = true; });
+  return set;
+}
+
+function answerColumnKeys_(ss, extraAnswers) {
+  var keys = [];
+  var seen = metadataHeaderSet_();
+  function add(key) {
+    key = String(key || '').trim();
+    if (!key || seen[key] || key === 'resume') return;
+    seen[key] = true;
+    keys.push(key);
+  }
+  var qSheet = ss.getSheetByName(QUESTIONS_SHEET);
+  if (qSheet) {
+    sheetObjects_(qSheet).forEach(function (q) {
+      if (String(q.type || '').toLowerCase() === 'file') return;
+      add(q.question_key);
+    });
+  }
+  Object.keys(extraAnswers || {}).forEach(add);
+  return keys;
+}
+
+function ensureApplicationAnswerColumns_(sheet, extraAnswers) {
+  var ss = sheet.getParent();
+  var keys = answerColumnKeys_(ss, extraAnswers);
+  var lastCol = Math.max(sheet.getLastColumn(), APPLICATION_HEADERS.length);
+  var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  var existing = {};
+  headers.forEach(function (h) {
+    if (h) existing[String(h)] = true;
+  });
+  var toAdd = [];
+  keys.forEach(function (k) {
+    if (!existing[k]) toAdd.push(k);
+  });
+  if (!toAdd.length) return;
+  sheet.getRange(1, lastCol + 1, 1, toAdd.length).setValues([toAdd]);
+}
+
+function columnLetter_(n) {
+  var s = '';
+  var num = Number(n) || 1;
+  while (num > 0) {
+    var m = (num - 1) % 26;
+    s = String.fromCharCode(65 + m) + s;
+    num = Math.floor((num - 1) / 26);
+  }
+  return s || 'A';
+}
+
+function isSkippedUrl_(val) {
+  var s = String(val || '').trim().toLowerCase();
+  return s === 'n/a' || s === 'na' || s === 'none' || s === '-' || s === 'nil' || s === 'no';
+}
+
+function markAllQuestionsRequired() {
+  var ss = getSpreadsheet_();
+  var sheet = ss.getSheetByName(QUESTIONS_SHEET);
+  if (!sheet) return;
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) return;
+  var idx = data[0].indexOf('required');
+  if (idx < 0) return;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0] || '').trim()) data[i][idx] = 'TRUE';
+  }
+  sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+}
+
+function questionCatalog_(ss) {
+  var all = [];
+  var byRole = {};
+  sheetObjects_(ss.getSheetByName(QUESTIONS_SHEET)).forEach(function (q) {
+    if (!isTrue_(q.enabled)) return;
+    var item = {
+      question_key: String(q.question_key || ''),
+      label: String(q.label || q.question_key || ''),
+      type: String(q.type || 'text').toLowerCase(),
+      role_id: String(q.role_id || ''),
+      sort_order: Number(q.sort_order) || 0
+    };
+    if (!item.question_key || item.type === 'file') return;
+    if (String(item.role_id).toUpperCase() === 'ALL') all.push(item);
+    else {
+      if (!byRole[item.role_id]) byRole[item.role_id] = [];
+      byRole[item.role_id].push(item);
+    }
+  });
+  all.sort(function (a, b) { return a.sort_order - b.sort_order; });
+  Object.keys(byRole).forEach(function (id) {
+    byRole[id].sort(function (a, b) { return a.sort_order - b.sort_order; });
+  });
+  return { all: all, byRole: byRole };
+}
+
+function questionsForRole_(catalog, roleId) {
+  return (catalog.all || []).concat((catalog.byRole || {})[roleId] || []);
+}
+
+var ROLE_VIEW_SKIP_KEYS = {
+  full_name: true,
+  whatsapp: true,
+  email: true,
+  current_city: true,
+  resume: true
+};
+
+function roleViewHeaders_(role, catalog) {
+  var headers = ROLE_VIEW_CORE_HEADERS.slice();
+  questionsForRole_(catalog, role.role_id).forEach(function (q) {
+    if (ROLE_VIEW_SKIP_KEYS[q.question_key]) return;
+    headers.push(q.label);
+  });
+  return headers;
+}
+
+function formatReadableSheet_(sheet) {
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).setFontWeight('bold');
+  sheet.setRowHeight(1, 28);
+}
+
+function resetSheet_(ss, name, headers) {
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) sheet = ss.insertSheet(name);
+  sheet.clear();
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  formatReadableSheet_(sheet);
+  return sheet;
+}
+
+function prepareRoleSheet_(ss, role, catalog, reset) {
+  var name = roleTabName_(role);
+  var sheet = ss.getSheetByName(name);
+  var headers = roleViewHeaders_(role, catalog);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    reset = true;
+  }
+  var formula = String(sheet.getRange(1, 1).getFormula() || '');
+  if (reset || formula.indexOf('QUERY') !== -1) {
+    sheet.clear();
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    formatReadableSheet_(sheet);
+  } else {
+    var existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
+    var same = existing.length >= headers.length;
+    for (var i = 0; i < headers.length && same; i++) {
+      if (String(existing[i] || '') !== headers[i]) same = false;
+    }
+    if (!same) {
+      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+      formatReadableSheet_(sheet);
+    }
+  }
+  return sheet;
+}
+
+function candidateValues_(row) {
+  return [
+    row.submitted_at || '',
+    row.application_id || '',
+    row.role_title || '',
+    row.category || '',
+    row.full_name || '',
+    row.whatsapp || '',
+    row.email || '',
+    row.current_city || '',
+    row.instagram || '',
+    row.portfolio_urls || '',
+    row.resume_url || '',
+    row.years_experience || '',
+    row.current_company || '',
+    row.availability || '',
+    row.status || '',
+    row.rating || '',
+    row.reviewer || '',
+    row.internal_notes || ''
+  ];
+}
+
+function extrasFromApplicationRow_(row) {
+  var extra = parseAnswersJson_(row.role_answers_json);
+  var meta = metadataHeaderSet_();
+  Object.keys(row || {}).forEach(function (k) {
+    if (meta[k] || k === 'resume') return;
+    if (row[k] !== '' && row[k] != null && extra[k] == null) extra[k] = row[k];
+  });
+  return extra;
+}
+
+function combinedAnswers_(row, extra) {
+  var answers = extrasFromApplicationRow_(row);
+  Object.keys(extra || {}).forEach(function (k) { answers[k] = extra[k]; });
+  answers.full_name = row.full_name;
+  answers.whatsapp = row.whatsapp;
+  answers.email = row.email;
+  answers.current_city = row.current_city;
+  answers.instagram = row.instagram;
+  answers.portfolio_urls = row.portfolio_urls;
+  answers.years_experience = row.years_experience;
+  answers.current_company = row.current_company;
+  answers.availability = row.availability;
+  answers.resume = row.resume_url;
+  return answers;
+}
+
+function answerRows_(row, extra, catalog) {
+  var answers = combinedAnswers_(row, extra);
+  var out = [];
+  function add(q, section) {
+    out.push([
+      row.submitted_at || '',
+      row.application_id || '',
+      row.role_title || '',
+      row.full_name || '',
+      section,
+      q.label,
+      flattenAnswer_(answers[q.question_key])
+    ]);
+  }
+  (catalog.all || []).forEach(function (q) { add(q, 'About you'); });
+  out.push([
+    row.submitted_at || '',
+    row.application_id || '',
+    row.role_title || '',
+    row.full_name || '',
+    'About you',
+    'Resume',
+    row.resume_url || ''
+  ]);
+  ((catalog.byRole || {})[row.role_id] || []).forEach(function (q) { add(q, 'Role'); });
+  return out;
+}
+
+function roleViewValues_(row, extra, role, catalog) {
+  var answers = combinedAnswers_(row, extra);
+  var vals = [
+    row.submitted_at || '',
+    row.application_id || '',
+    row.full_name || '',
+    row.whatsapp || '',
+    row.email || '',
+    row.current_city || '',
+    row.resume_url || '',
+    row.status || ''
+  ];
+  questionsForRole_(catalog, role.role_id).forEach(function (q) {
+    if (ROLE_VIEW_SKIP_KEYS[q.question_key]) return;
+    vals.push(flattenAnswer_(answers[q.question_key]));
+  });
+  return vals;
+}
+
+function appendReadableViews_(ss, row, extraAnswers, role) {
+  var catalog = questionCatalog_(ss);
+  var extra = extraAnswers || extrasFromApplicationRow_(row);
+  var roleSheet = role ? ss.getSheetByName(roleTabName_(role)) : null;
+  var formula = roleSheet ? String(roleSheet.getRange(1, 1).getFormula() || '') : '';
+  if (!ss.getSheetByName(CANDIDATES_SHEET) || formula.indexOf('QUERY') !== -1) {
+    rebuildReadableViews();
+    return;
+  }
+  ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
+  ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
+  ss.getSheetByName(CANDIDATES_SHEET).appendRow(candidateValues_(row));
+  var answerSheet = ss.getSheetByName(ANSWERS_SHEET);
+  var qRows = answerRows_(row, extra, catalog);
+  if (qRows.length) {
+    answerSheet.getRange(answerSheet.getLastRow() + 1, 1, qRows.length, ANSWER_HEADERS.length).setValues(qRows);
+  }
+  if (role) {
+    roleSheet = prepareRoleSheet_(ss, role, catalog, false);
+    roleSheet.appendRow(roleViewValues_(row, extra, role, catalog));
+  }
+}
+
+function rebuildReadableViews() {
+  setupWorkbook();
+  var ss = getSpreadsheet_();
+  var catalog = questionCatalog_(ss);
+  var roles = sheetObjects_(ss.getSheetByName(ROLES_SHEET));
+  var roleById = {};
+  roles.forEach(function (role) {
+    if (role.role_id) roleById[String(role.role_id)] = role;
+  });
+
+  var cand = resetSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
+  var ans = resetSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
+  roles.forEach(function (role) {
+    if (role.role_id) prepareRoleSheet_(ss, role, catalog, true);
+  });
+
+  var applications = sheetObjects_(ss.getSheetByName(APPLICATIONS_SHEET));
+  var candRows = [];
+  var ansRows = [];
+  var roleRows = {};
+  applications.forEach(function (row) {
+    if (!row.application_id && !row.full_name) return;
+    var extra = extrasFromApplicationRow_(row);
+    var role = roleById[String(row.role_id)] || { role_id: row.role_id, title: row.role_title };
+    candRows.push(candidateValues_(row));
+    ansRows = ansRows.concat(answerRows_(row, extra, catalog));
+    var tab = roleTabName_(role);
+    if (!roleRows[tab]) roleRows[tab] = { role: role, rows: [] };
+    roleRows[tab].rows.push(roleViewValues_(row, extra, role, catalog));
+  });
+
+  if (candRows.length) cand.getRange(2, 1, candRows.length, CANDIDATE_HEADERS.length).setValues(candRows);
+  if (ansRows.length) ans.getRange(2, 1, ansRows.length, ANSWER_HEADERS.length).setValues(ansRows);
+  Object.keys(roleRows).forEach(function (tab) {
+    var pack = roleRows[tab];
+    var sheet = prepareRoleSheet_(ss, pack.role, catalog, true);
+    if (pack.rows.length) {
+      var width = Math.max(roleViewHeaders_(pack.role, catalog).length, 1);
+      sheet.getRange(2, 1, pack.rows.length, width).setValues(pack.rows);
+    }
+  });
+  formatReadableSheet_(cand);
+  formatReadableSheet_(ans);
+  ans.setColumnWidth(6, 280);
+  ans.setColumnWidth(7, 420);
+}
+
+function expandExistingApplicationAnswers() {
+  rebuildReadableViews();
+}
+
+function appendApplication_(row, extraAnswers, role) {
   var lock = LockService.getScriptLock();
   lock.waitLock(30000);
   try {
     var ss = getSpreadsheet_();
     var sheet = ss.getSheetByName(APPLICATIONS_SHEET);
-    var values = APPLICATION_HEADERS.map(function (h) { return row[h] != null ? row[h] : ''; });
+    var values = APPLICATION_HEADERS.map(function (h) {
+      return row[h] != null ? row[h] : '';
+    });
     sheet.appendRow(values);
+    appendReadableViews_(ss, row, extraAnswers || {}, role);
   } finally {
     lock.releaseLock();
   }

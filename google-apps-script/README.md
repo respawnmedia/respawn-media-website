@@ -8,11 +8,13 @@ The live website never talks to this URL from the browser. Vercel functions (`ap
 
 | Function | Purpose |
 | --- | --- |
-| `setupWorkbook()` | Creates `SITE_SETTINGS`, `ROLES`, `REQUIREMENTS`, `QUESTIONS`, `ALL_APPLICATIONS` with required headers |
+| `setupWorkbook()` | Creates `SITE_SETTINGS`, `ROLES`, `REQUIREMENTS`, `QUESTIONS`, `ALL_APPLICATIONS`, `CANDIDATES`, `ANSWERS` |
 | `seedDefaultCareersData()` | Inserts default settings, roles, requirements, questions. Skips existing `role_id` / `question_id` / `requirement_id` / settings `key` |
-| `syncRoleTabs()` | Adds a QUERY view tab per role pointing at `ALL_APPLICATIONS` (no copied rows) |
+| `syncRoleTabs()` | Ensures one readable tab per role with question labels as column headers (not QUERY dumps) |
+| `markAllQuestionsRequired()` | Sets every QUESTIONS row `required` to TRUE |
+| `rebuildReadableViews()` | Rebuilds `CANDIDATES`, `ANSWERS`, and each role tab from `ALL_APPLICATIONS` so existing responses are readable |
 | `doGet` | Public careers JSON (site settings, visible roles, enabled requirements/questions). No applicant data |
-| `doPost` | Validates secret + payload, stores resume in Drive, appends one `ALL_APPLICATIONS` row |
+| `doPost` | Validates secret + payload, stores resume in Drive, appends `ALL_APPLICATIONS` plus readable views |
 
 ## Script Properties (Project Settings → Script Properties)
 

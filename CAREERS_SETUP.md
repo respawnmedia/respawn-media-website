@@ -10,7 +10,7 @@ Do **not** put `CAREERS_API_SECRET`, the Apps Script `/exec` URL, or resume file
 
 ## 1. Summary of what was added
 
-A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. Resumes land in a **private** Drive folder. Every application is **one row** on `ALL_APPLICATIONS`. Role tabs are QUERY views, not duplicated databases.
+A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. **Every question is required** before submit. Resumes land in a **private** Drive folder. Raw rows stay on `ALL_APPLICATIONS`. Read applications on **`CANDIDATES`** (one row per person) and **`ANSWERS`** (one row per question). Role tabs use question labels, not JSON.
 
 The browser only talks same-origin:
 
@@ -69,8 +69,11 @@ Exact Vercel dashboard clicks: **§7**.
    - `ROLES`
    - `REQUIREMENTS`
    - `QUESTIONS`
-   - `ALL_APPLICATIONS`
+   - `ALL_APPLICATIONS` (raw archive)
+   - `CANDIDATES` (one readable row per applicant)
+   - `ANSWERS` (one readable row per question)
 5. After seed, you can edit rows in the Sheet. `show_on_site`, `accepting_applications`, `status`, and each requirement/question `enabled` flag control the public page **without a code change**. Re-running seed **skips** existing `role_id` / ids / setting keys.
+6. After updating Apps Script, run **Respawn Careers → 4. Mark all questions required**, then **5. Rebuild readable response views**. That converts existing messy JSON/QUERY tabs into the readable sheets.
 
 Public rules:
 
@@ -89,7 +92,7 @@ Edit the **ROLES** tab. Changes show on `/careers` after about two minutes (conf
 2. **Keep it visible but stop Apply**: set **`accepting_applications`** to **FALSE**, or set **`status`** to **CLOSED**. The listing can still appear; the button says applications closed.
 3. **Pause / hide for now**: set **`status`** to **PAUSED** (the public site hides paused roles).
 4. **Reopen later**: **`status` OPEN**, **`show_on_site` TRUE**, **`accepting_applications` TRUE**.
-5. **Add a new role**: add a **new row** on **ROLES** with a unique **`role_id`** and **`slug`**. Add matching rows on **REQUIREMENTS** and **QUESTIONS** (same `role_id`). In Apps Script, run **`syncRoleTabs()`** so a QUERY tab appears for that role. No code deploy.
+5. **Add a new role**: add a **new row** on **ROLES** with a unique **`role_id`** and **`slug`**. Add matching rows on **REQUIREMENTS** and **QUESTIONS** (same `role_id`). In Apps Script, run **`syncRoleTabs()`** so a readable tab appears for that role. No code deploy.
 6. **Social Media Manager**: set **`show_on_site` FALSE** now. In ~3 months, set it **TRUE** (and OPEN + accepting TRUE). The page updates from the Sheet.
 
 ---
@@ -107,7 +110,8 @@ Edit the **ROLES** tab. Changes show on `/careers` after about two minutes (conf
    - `SPREADSHEET_ID` = `1CEt4x_HDlQJyG4xucsBjsEUPLHBIF5PB-Oy9_36zWtY` (optional if the script is bound to this sheet)
 4. In the editor, open the function dropdown (it currently may say `myFunction`) → pick `setupWorkbook` → **Run** → authorize Sheets/Drive.  
    Then run `seedDefaultCareersData`.  
-   Then run `syncRoleTabs`.  
+   Then run `markAllQuestionsRequired`.  
+   Then run `rebuildReadableViews`.  
    (Menu **Respawn Careers** appears after reload if `onOpen` ran.)
 5. **Deploy → New deployment → Web app**
    - Execute as: **Me**
