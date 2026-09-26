@@ -139,6 +139,7 @@ module.exports = async function handler(req, res) {
     return;
   }
   payload.answers = payload.answers || {};
+  payload.answers = coerceLinkAnswers(payload.answers);
 
   if (file) {
     const ext = extOf(file.filename);
@@ -168,7 +169,11 @@ module.exports = async function handler(req, res) {
   payload.api_secret = secret;
 
   try {
-    const parsed = await postToAppsScript(scriptUrl, payload);
+    let parsed = await postToAppsScript(scriptUrl, payload);
+    if (parsed && parsed.error === 'invalid_url') {
+      payload.answers = coerceLinkAnswers(payload.answers, { forceHttp: true });
+      parsed = await postToAppsScript(scriptUrl, payload);
+    }
     if (!parsed || parsed.ok !== true) {
       const mapped = mapError(parsed && parsed.error);
       sendJson(res, mapped[0], { ok: false, error: mapped[1], field: parsed && parsed.field });
@@ -178,6 +183,34 @@ module.exports = async function handler(req, res) {
   } catch (e) {
     sendJson(res, 502, { ok: false, error: 'submit_failed' });
   }
+}
+
+function coerceLinkAnswers(answers, opts) {
+  opts = opts || {};
+  const skip = /^(n\/a|na|none|nil|-|no)$/i;
+  const out = Object.assign({}, answers || {});
+  Object.keys(out).forEach(function (k) {
+    const v = out[k];
+    if (typeof v !== 'string') return;
+    const s = v.trim();
+    if (!s) return;
+    if (/^https?:\/\//i.test(s)) {
+      out[k] = s;
+      return;
+    }
+    if (skip.test(s)) {
+      out[k] = opts.forceHttp ? 'https://n/a' : 'N/A';
+      return;
+    }
+    if (s.charAt(0) === '@') {
+      out[k] = 'https://instagram.com/' + s.slice(1);
+      return;
+    }
+    if (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) {
+      out[k] = 'https://' + s.replace(/^\/\//, '');
+    }
+  });
+  return out;
 }
 
 function parseJsonLoose(text) {

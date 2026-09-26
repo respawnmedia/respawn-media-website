@@ -746,9 +746,6 @@ function validateApplication_(payload, answers) {
     if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
       return { ok: false, error: 'invalid_email' };
     }
-    if (q.type === 'url' && val && !isSkippedUrl_(val) && !/^https?:\/\//i.test(String(val).trim())) {
-      return { ok: false, error: 'invalid_url', field: q.question_key };
-    }
   }
   return { ok: true, role: role };
 }

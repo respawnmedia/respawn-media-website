@@ -327,6 +327,31 @@ function isBlankAnswer(q, value, resume) {
   return String(value).trim() === '';
 }
 
+function isSkippedLink(val) {
+  var s = String(val || '').trim().toLowerCase();
+  return s === 'n/a' || s === 'na' || s === 'none' || s === '-' || s === 'nil' || s === 'no';
+}
+
+function normalizeLinkAnswer(val) {
+  var s = String(val == null ? '' : val).trim();
+  if (!s || isSkippedLink(s)) return s || 'N/A';
+  if (/^https?:\/\//i.test(s)) return s;
+  if (s.charAt(0) === '@') return 'https://instagram.com/' + s.slice(1);
+  if (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) return 'https://' + s.replace(/^\/\//, '');
+  return s;
+}
+
+function answersForSubmit(questions, answers) {
+  var out = {};
+  Object.keys(answers || {}).forEach(function (k) { out[k] = answers[k]; });
+  (questions || []).forEach(function (q) {
+    if (q.type !== 'url') return;
+    if (out[q.question_key] == null || out[q.question_key] === '') return;
+    out[q.question_key] = normalizeLinkAnswer(out[q.question_key]);
+  });
+  return out;
+}
+
 function Field({ q, value, onChange, fileName }) {
   const id = 'q-' + q.question_id;
   const req = <span className="req" aria-hidden="true">*</span>;
@@ -456,7 +481,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       fd.append('website', honeypot);
       fd.append('payload', JSON.stringify({
         role_id: role.role_id,
-        answers: answers,
+        answers: answersForSubmit(uni.concat(spec), answers),
         utm_source: utm.utm_source || '',
         utm_medium: utm.utm_medium || '',
         utm_campaign: utm.utm_campaign || '',
@@ -481,7 +506,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       }
       if (data && data.error === 'missing_field') { setError('Please complete every question before submitting.'); return; }
       if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, max 10 MB).'); return; }
-      if (data && data.error === 'invalid_url') { setError('Enter a full URL starting with https://, or write N/A.'); return; }
+      if (data && data.error === 'invalid_url') { setError('Please complete every question before submitting.'); return; }
       if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); return; }
       if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); return; }
       setError('Submission failed. Try again in a moment.');
