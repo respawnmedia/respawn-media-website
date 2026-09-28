@@ -135,6 +135,17 @@ function ensureExtraHeaders_(sheet, headers) {
   sheet.getRange(1, last + 1, 1, missing.length).setValues([missing]);
 }
 
+function ensureQuestionRows_(sheet, rows) {
+  if (!sheet || !rows || !rows.length) return;
+  var existing = keyedRows_(sheet, 'question_id');
+  var toAdd = [];
+  rows.forEach(function (row) {
+    if (!existing[row[0]]) toAdd.push(row);
+  });
+  if (!toAdd.length) return;
+  sheet.getRange(sheet.getLastRow() + 1, 1, toAdd.length, QUESTION_HEADERS.length).setValues(toAdd);
+}
+
 function seedDefaultCareersData() {
   setupWorkbook();
   var ss = getSpreadsheet_();
@@ -373,6 +384,24 @@ function questionHelp_(key) {
     portfolio_urls: 'Links to your work (Drive, Behance, website, Instagram). One per line.',
     resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
     years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
+    current_city: 'The city you are based in right now.',
+    intern_current_city: 'The city you are based in right now.',
+    cd_city: 'The city you are based in right now.',
+    ugc_city: 'The city you are based in right now.',
+    instagram: 'If you prefer not to share Instagram, write no. We will understand.',
+    instagram_if_relevant: 'If you prefer not to share Instagram, write no. We will understand.',
+    cd_instagram: 'If you prefer not to share Instagram, write no. We will understand.',
+    ig_profile: 'If you prefer not to share Instagram, write no. We will understand.',
+    social_profiles: 'If you prefer not to share Instagram, write no. We will understand.',
+    availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    join_timeline: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    cd_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    typical_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    current_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    willing_onsite: 'Are you willing to work from the office? Answer Yes or No.',
+    chennai_wfo_confirm: 'Are you willing to work on-site from the office? Answer Yes or No.',
+    chennai_office: 'Are you willing to work on-site from the office? Answer Yes or No.',
+    chennai_availability: 'Are you willing to work on-site in Chennai? Answer Yes, Sometimes, or No.',
     languages: 'Languages you can speak or work in.',
     languages_understood: 'Languages you can comfortably understand while editing.',
     best_language: 'The language you are strongest in.',
@@ -392,6 +421,19 @@ function coreRequiredKeys_() {
     resume: true,
     portfolio_urls: true,
     years_experience: true,
+    current_city: true,
+    intern_current_city: true,
+    cd_city: true,
+    ugc_city: true,
+    availability: true,
+    join_timeline: true,
+    cd_availability: true,
+    typical_availability: true,
+    current_availability: true,
+    willing_onsite: true,
+    chennai_wfo_confirm: true,
+    chennai_office: true,
+    chennai_availability: true,
     languages: true,
     languages_understood: true,
     best_language: true
@@ -433,13 +475,14 @@ function defaultQuestions_() {
   rows.push(q_('all-full-name', 'ALL', 'full_name', 'Full name', 'text', true, 'Your name', '', 10));
   rows.push(q_('all-whatsapp', 'ALL', 'whatsapp', 'WhatsApp number', 'tel', true, '+91', '', 20));
   rows.push(q_('all-email', 'ALL', 'email', 'Email address', 'email', true, 'you@email.com', '', 30));
-  rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', false, 'Chennai', '', 40));
-  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram / profile URL', 'url', false, 'https://instagram.com/', '', 50));
+  rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', true, 'Chennai', '', 40));
+  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram', 'url', false, 'no, or https://instagram.com/…', '', 50));
   rows.push(q_('all-portfolio', 'ALL', 'portfolio_urls', 'Portfolio URL(s)', 'textarea', true, 'One URL per line', '', 60));
   rows.push(q_('all-resume', 'ALL', 'resume', 'Resume', 'file', true, 'PDF, DOC or DOCX. Max 10 MB.', '', 70));
   rows.push(q_('all-years', 'ALL', 'years_experience', 'Years of experience', 'text', true, 'e.g. 2', '', 80));
   rows.push(q_('all-company', 'ALL', 'current_company', 'Current occupation / company', 'text', false, '', '', 90));
-  rows.push(q_('all-availability', 'ALL', 'availability', 'Availability / start date', 'text', false, '', '', 100));
+  rows.push(q_('all-availability', 'ALL', 'availability', 'Availability / start date', 'text', true, 'e.g. immediate or 15 June', '', 100));
+  rows.push(q_('all-onsite', 'ALL', 'willing_onsite', 'Willing to work on-site?', 'select', true, '', 'Yes|No', 105));
   rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', false, '', '', 110));
 
   rows.push(q_('smm-workplaces', 'social-media-manager', 'previous_workplaces', 'Previous workplaces', 'textarea', true, '', '', 10));
@@ -986,6 +1029,9 @@ function applyRequiredFieldPolicy() {
   var sheet = ss.getSheetByName(QUESTIONS_SHEET);
   if (!sheet) return;
   ensureExtraHeaders_(sheet, QUESTION_HEADERS);
+  ensureQuestionRows_(sheet, [
+    q_('all-onsite', 'ALL', 'willing_onsite', 'Willing to work on-site?', 'select', true, '', 'Yes|No', 105)
+  ]);
   var catByRole = {};
   sheetObjects_(ss.getSheetByName(ROLES_SHEET)).forEach(function (r) {
     if (r.role_id) catByRole[String(r.role_id)] = r.category;

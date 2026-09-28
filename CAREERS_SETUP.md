@@ -10,7 +10,7 @@ Do **not** put `CAREERS_API_SECRET`, the Apps Script `/exec` URL, or resume file
 
 ## 1. Summary of what was added
 
-A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. **Core fields are required** (name, email, WhatsApp, resume, portfolio, years of experience, languages, and CTC/rate where the role asks). Everything else is optional. Resumes land in a **private** Drive folder. Raw rows stay on `ALL_APPLICATIONS`. Read applications on **`CANDIDATES`** (one row per person) and **`ANSWERS`** (one row per question). Role tabs use question labels, not JSON.
+A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. **Core fields are required** (name, email, WhatsApp, city, start date, on-site confirmation, resume, portfolio, years of experience, languages, and CTC/rate where the role asks). Instagram is optional. Everything else is optional. Resumes land in a **private** Drive folder. Raw rows stay on `ALL_APPLICATIONS`. Read applications on **`CANDIDATES`** (one row per person) and **`ANSWERS`** (one row per question). Role tabs use question labels, not JSON.
 
 The browser only talks same-origin:
 

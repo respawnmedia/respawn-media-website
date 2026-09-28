@@ -363,6 +363,24 @@ function fieldHelp(q) {
     portfolio_urls: 'Links to your work (Drive, Behance, website, Instagram). One per line.',
     resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
     years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
+    current_city: 'The city you are based in right now.',
+    intern_current_city: 'The city you are based in right now.',
+    cd_city: 'The city you are based in right now.',
+    ugc_city: 'The city you are based in right now.',
+    instagram: 'If you prefer not to share Instagram, write no. We will understand.',
+    instagram_if_relevant: 'If you prefer not to share Instagram, write no. We will understand.',
+    cd_instagram: 'If you prefer not to share Instagram, write no. We will understand.',
+    ig_profile: 'If you prefer not to share Instagram, write no. We will understand.',
+    social_profiles: 'If you prefer not to share Instagram, write no. We will understand.',
+    availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    join_timeline: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    cd_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    typical_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    current_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
+    willing_onsite: 'Are you willing to work from the office? Answer Yes or No.',
+    chennai_wfo_confirm: 'Are you willing to work on-site from the office? Answer Yes or No.',
+    chennai_office: 'Are you willing to work on-site from the office? Answer Yes or No.',
+    chennai_availability: 'Are you willing to work on-site in Chennai? Answer Yes, Sometimes, or No.',
     languages: 'Languages you can speak or work in.',
     languages_understood: 'Languages you can comfortably understand while editing.',
     best_language: 'The language you are strongest in.',
@@ -376,7 +394,7 @@ function fieldHelp(q) {
 
 function isRequired(q, role) {
   var key = String((q && q.question_key) || '').toLowerCase();
-  if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'languages', 'languages_understood', 'best_language'].indexOf(key) !== -1) return true;
+  if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'current_city', 'intern_current_city', 'cd_city', 'ugc_city', 'availability', 'join_timeline', 'cd_availability', 'typical_availability', 'current_availability', 'willing_onsite', 'chennai_wfo_confirm', 'chennai_office', 'chennai_availability', 'languages', 'languages_understood', 'best_language'].indexOf(key) !== -1) return true;
   var cat = String((role && role.category) || '').toUpperCase().replace(/[\s-]+/g, '_');
   if (cat === 'INTERNSHIP') return false;
   if (['previous_ctc', 'current_ctc', 'expected_ctc'].indexOf(key) !== -1) return cat === 'FULL_TIME';
@@ -388,7 +406,7 @@ function Field({ q, value, onChange, fileName, required }) {
   const id = 'q-' + q.question_id;
   const reqMark = required ? <span className="req" aria-hidden="true">*</span> : <span className="opt">optional</span>;
   const help = fieldHelp(q);
-  const helpEl = required && help ? <p className="field-help">{help}</p> : null;
+  const helpEl = help ? <p className="field-help">{help}</p> : null;
   if (q.type === 'textarea') {
     return (
       <div className="field">
