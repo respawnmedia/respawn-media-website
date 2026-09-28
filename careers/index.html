@@ -478,7 +478,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
     let succeeded = false;
     try {
       const fd = new FormData();
-      fd.append('website', honeypot);
+      fd.append('hp_confirm', honeypot);
       fd.append('payload', JSON.stringify({
         role_id: role.role_id,
         answers: answersForSubmit(uni.concat(spec), answers),
@@ -495,9 +495,9 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       let data = {};
       try { data = text ? JSON.parse(text) : {}; } catch (e) { data = {}; }
       const httpOk = res.status >= 200 && res.status < 300;
-      if (httpOk && data && data.ok === true) {
+      if (httpOk && data && data.ok === true && !data.ignored) {
         succeeded = true;
-        onSuccess();
+        onSuccess(data.application_id || '');
         return;
       }
       if (res.status === 409 || (data && data.error === 'role_closed')) {
@@ -540,7 +540,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
         <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
           <p className="meta" style={{ marginBottom: '1.1rem' }}>Every question is required. If something does not apply, write N/A.</p>
           <div className="hp" aria-hidden="true">
-            <label>Website<input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
+            <label>Company fax<input name="hp_confirm" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
           </div>
           {uni.filter((q) => q.type !== 'file').map((q) => (
             <Field key={q.question_id} q={q} value={answers[q.question_key]} onChange={(v) => setVal(q.question_key, v)} />
@@ -855,9 +855,11 @@ function ApplyPage({ slug, config, loadError, utm }) {
                   universalQuestions={(config && config.universalQuestions) || []}
                   utm={utm}
                   onClose={() => { window.location.href = back; }}
-                  onSuccess={() => {
+                  onSuccess={(applicationId) => {
                     markApplied(role);
-                    window.location.href = careersHref('/careers/thanks');
+                    var thanks = careersHref('/careers/thanks');
+                    if (applicationId) thanks += (thanks.indexOf('?') >= 0 ? '&' : '?') + 'id=' + encodeURIComponent(applicationId);
+                    window.location.href = thanks;
                   }}
                 />
               : (

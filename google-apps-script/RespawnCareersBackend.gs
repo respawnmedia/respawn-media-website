@@ -669,19 +669,30 @@ function getPublicCareersConfig_() {
 function submitApplication_(payload) {
   var answers = payload.answers || {};
   var check = validateApplication_(payload, answers);
-  if (!check.ok) return check;
+  if (!check.role) return { ok: false, error: check.error || 'unknown_role' };
+  if (check.error === 'role_closed') return check;
+
+  var notes = [];
+  if (!check.ok && check.error) {
+    notes.push('validation:' + check.error + (check.field ? ':' + check.field : ''));
+  }
 
   var resumeUrl = '';
   if (payload.resume && payload.resume.base64) {
-    var saved = saveResume_(payload.resume, answers.full_name || 'candidate', check.role.role_id);
-    if (!saved.ok) return saved;
-    resumeUrl = saved.url;
-  } else if (hasRequiredFile_(check.role, payload)) {
-    return { ok: false, error: 'resume_required' };
+    try {
+      var saved = saveResume_(payload.resume, answers.full_name || 'candidate', check.role.role_id);
+      if (saved && saved.ok) resumeUrl = saved.url;
+      else notes.push('resume:' + ((saved && saved.error) || 'upload_failed'));
+    } catch (err) {
+      notes.push('resume:exception');
+    }
+  } else {
+    notes.push('resume:missing');
   }
 
   var extraAnswers = extraAnswerMap_(answers);
   var applicationId = generateApplicationId_();
+  var incomplete = !check.ok || notes.length > 0;
   appendApplication_({
     application_id: applicationId,
     submitted_at: nowIso_(),
@@ -705,27 +716,34 @@ function submitApplication_(payload) {
     utm_content: str_(payload.utm_content),
     utm_term: str_(payload.utm_term),
     referrer: str_(payload.referrer),
-    status: 'NEW',
+    status: incomplete ? 'INCOMPLETE' : 'NEW',
     rating: '',
     reviewer: '',
-    internal_notes: ''
+    internal_notes: notes.join('; ')
   }, extraAnswers, check.role);
 
-  return { ok: true, application_id: applicationId };
+  return { ok: true, application_id: applicationId, incomplete: incomplete };
 }
 
 function hasRequiredFile_(role, payload) {
   return !(payload.resume && payload.resume.base64);
 }
 
+function roleMatches_(role, id) {
+  var needle = String(id || '').trim().toLowerCase();
+  if (!needle) return false;
+  return String(role.role_id || '').trim().toLowerCase() === needle
+    || String(role.slug || '').trim().toLowerCase() === needle;
+}
+
 function validateApplication_(payload, answers) {
   var config = getPublicCareersConfig_();
   var role = null;
   config.roles.forEach(function (r) {
-    if (r.role_id === payload.role_id || r.slug === payload.role_id) role = r;
+    if (roleMatches_(r, payload.role_id)) role = r;
   });
   if (!role) return { ok: false, error: 'unknown_role' };
-  if (!role.accepting_applications) return { ok: false, error: 'role_closed' };
+  if (!role.accepting_applications) return { ok: false, error: 'role_closed', role: role };
 
   var questions = (config.universalQuestions || []).concat(role.questions || []);
   for (var i = 0; i < questions.length; i++) {
@@ -734,17 +752,17 @@ function validateApplication_(payload, answers) {
     var val = answers[q.question_key];
     if (q.type === 'checkbox') {
       if (!(val === true || val === 'true' || val === 'Yes' || val === 'on')) {
-        return { ok: false, error: 'missing_field', field: q.question_key };
+        return { ok: false, error: 'missing_field', field: q.question_key, role: role };
       }
     } else if (q.type === 'multiselect') {
       if (!val || (Array.isArray(val) && !val.length) || (typeof val === 'string' && !String(val).trim())) {
-        return { ok: false, error: 'missing_field', field: q.question_key };
+        return { ok: false, error: 'missing_field', field: q.question_key, role: role };
       }
     } else if (val === undefined || val === null || String(val).trim() === '') {
-      return { ok: false, error: 'missing_field', field: q.question_key };
+      return { ok: false, error: 'missing_field', field: q.question_key, role: role };
     }
     if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
-      return { ok: false, error: 'invalid_email' };
+      return { ok: false, error: 'invalid_email', role: role };
     }
   }
   return { ok: true, role: role };
@@ -1090,12 +1108,6 @@ function roleViewValues_(row, extra, role, catalog) {
 function appendReadableViews_(ss, row, extraAnswers, role) {
   var catalog = questionCatalog_(ss);
   var extra = extraAnswers || extrasFromApplicationRow_(row);
-  var roleSheet = role ? ss.getSheetByName(roleTabName_(role)) : null;
-  var formula = roleSheet ? String(roleSheet.getRange(1, 1).getFormula() || '') : '';
-  if (!ss.getSheetByName(CANDIDATES_SHEET) || formula.indexOf('QUERY') !== -1) {
-    rebuildReadableViews();
-    return;
-  }
   ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
   ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
   ss.getSheetByName(CANDIDATES_SHEET).appendRow(candidateValues_(row));
@@ -1105,7 +1117,7 @@ function appendReadableViews_(ss, row, extraAnswers, role) {
     answerSheet.getRange(answerSheet.getLastRow() + 1, 1, qRows.length, ANSWER_HEADERS.length).setValues(qRows);
   }
   if (role) {
-    roleSheet = prepareRoleSheet_(ss, role, catalog, false);
+    var roleSheet = prepareRoleSheet_(ss, role, catalog, false);
     roleSheet.appendRow(roleViewValues_(row, extra, role, catalog));
   }
 }
@@ -1163,17 +1175,26 @@ function expandExistingApplicationAnswers() {
 
 function appendApplication_(row, extraAnswers, role) {
   var lock = LockService.getScriptLock();
-  lock.waitLock(30000);
+  lock.waitLock(15000);
+  var ss;
   try {
-    var ss = getSpreadsheet_();
+    ss = getSpreadsheet_();
     var sheet = ss.getSheetByName(APPLICATIONS_SHEET);
+    if (!sheet) {
+      setupWorkbook();
+      sheet = ss.getSheetByName(APPLICATIONS_SHEET);
+    }
     var values = APPLICATION_HEADERS.map(function (h) {
       return row[h] != null ? row[h] : '';
     });
     sheet.appendRow(values);
-    appendReadableViews_(ss, row, extraAnswers || {}, role);
   } finally {
     lock.releaseLock();
+  }
+  try {
+    appendReadableViews_(ss, row, extraAnswers || {}, role);
+  } catch (err) {
+    // ALL_APPLICATIONS already has the row. Readable tabs can be rebuilt from the menu.
   }
 }
 

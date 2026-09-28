@@ -112,8 +112,9 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  if (fields.website) {
-    sendJson(res, 200, { ok: true, ignored: true });
+  var hp = String(fields.hp_confirm || fields.website || '').trim();
+  if (hp) {
+    sendJson(res, 200, { ok: false, error: 'submit_failed', ignored: true });
     return;
   }
 
