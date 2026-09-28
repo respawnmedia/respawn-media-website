@@ -31,7 +31,7 @@ var REQUIREMENT_HEADERS = [
 
 var QUESTION_HEADERS = [
   'question_id', 'role_id', 'question_key', 'label', 'type', 'required',
-  'enabled', 'placeholder', 'options', 'sort_order'
+  'enabled', 'placeholder', 'options', 'sort_order', 'help'
 ];
 
 var APPLICATION_HEADERS = [
@@ -78,7 +78,7 @@ function onOpen() {
     .addItem('1. Setup workbook', 'setupWorkbook')
     .addItem('2. Seed default data', 'seedDefaultCareersData')
     .addItem('3. Sync role tabs', 'syncRoleTabs')
-    .addItem('4. Mark all questions required', 'markAllQuestionsRequired')
+    .addItem('4. Apply required-field policy', 'applyRequiredFieldPolicy')
     .addItem('5. Rebuild readable response views', 'rebuildReadableViews')
     .addToUi();
 }
@@ -101,6 +101,7 @@ function setupWorkbook() {
   ensureSheet_(ss, ROLES_SHEET, ROLE_HEADERS);
   ensureSheet_(ss, REQUIREMENTS_SHEET, REQUIREMENT_HEADERS);
   ensureSheet_(ss, QUESTIONS_SHEET, QUESTION_HEADERS);
+  ensureExtraHeaders_(ss.getSheetByName(QUESTIONS_SHEET), QUESTION_HEADERS);
   ensureSheet_(ss, APPLICATIONS_SHEET, APPLICATION_HEADERS);
   ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
   ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
@@ -118,6 +119,22 @@ function ensureSheet_(ss, name, headers) {
   return sheet;
 }
 
+function ensureExtraHeaders_(sheet, headers) {
+  if (!sheet || !headers || !headers.length) return;
+  var last = Math.max(sheet.getLastColumn(), 1);
+  var existing = sheet.getRange(1, 1, 1, last).getValues()[0];
+  var have = {};
+  existing.forEach(function (h) {
+    if (h) have[String(h)] = true;
+  });
+  var missing = [];
+  headers.forEach(function (h) {
+    if (!have[h]) missing.push(h);
+  });
+  if (!missing.length) return;
+  sheet.getRange(1, last + 1, 1, missing.length).setValues([missing]);
+}
+
 function seedDefaultCareersData() {
   setupWorkbook();
   var ss = getSpreadsheet_();
@@ -125,6 +142,7 @@ function seedDefaultCareersData() {
   seedRoles_(ss);
   seedRequirements_(ss);
   seedQuestions_(ss);
+  applyRequiredFieldPolicy();
 }
 
 function seedSettings_(ss) {
@@ -344,7 +362,57 @@ function defaultRequirements_() {
 }
 
 function q_(id, roleId, key, label, type, required, placeholder, options, order) {
-  return [id, roleId, key, label, type, required ? 'TRUE' : 'FALSE', 'TRUE', placeholder || '', options || '', order];
+  return [id, roleId, key, label, type, required ? 'TRUE' : 'FALSE', 'TRUE', placeholder || '', options || '', order, questionHelp_(key)];
+}
+
+function questionHelp_(key) {
+  var map = {
+    full_name: 'Your full name as we should address you.',
+    whatsapp: 'WhatsApp number with country code, for example +91…',
+    email: 'We will use this email to contact you about this role.',
+    portfolio_urls: 'Links to your work (Drive, Behance, website, Instagram). One per line.',
+    resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
+    years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
+    languages: 'Languages you can speak or work in.',
+    languages_understood: 'Languages you can comfortably understand while editing.',
+    best_language: 'The language you are strongest in.',
+    previous_ctc: 'Last drawn annual CTC in INR.',
+    current_ctc: 'Current annual CTC in INR. Write N/A if you are not employed.',
+    expected_ctc: 'Expected annual CTC in INR.',
+    expected_commercials: 'Your expected day or project rate.'
+  };
+  return map[String(key || '')] || '';
+}
+
+function coreRequiredKeys_() {
+  return {
+    full_name: true,
+    email: true,
+    whatsapp: true,
+    resume: true,
+    portfolio_urls: true,
+    years_experience: true,
+    languages: true,
+    languages_understood: true,
+    best_language: true
+  };
+}
+
+function compensationRequired_(key, category) {
+  var k = String(key || '').toLowerCase();
+  var cat = String(category || '').toUpperCase().replace(/[\s-]+/g, '_');
+  if (cat === 'INTERNSHIP') return false;
+  if (k === 'previous_ctc' || k === 'current_ctc' || k === 'expected_ctc') {
+    return cat === 'FULL_TIME';
+  }
+  if (k === 'expected_commercials') return cat === 'FREELANCE' || cat === 'FULL_TIME';
+  return false;
+}
+
+function questionIsRequired_(key, category) {
+  var k = String(key || '').trim().toLowerCase();
+  if (coreRequiredKeys_()[k]) return true;
+  return compensationRequired_(k, category);
 }
 
 function seedQuestions_(ss) {
@@ -365,14 +433,14 @@ function defaultQuestions_() {
   rows.push(q_('all-full-name', 'ALL', 'full_name', 'Full name', 'text', true, 'Your name', '', 10));
   rows.push(q_('all-whatsapp', 'ALL', 'whatsapp', 'WhatsApp number', 'tel', true, '+91', '', 20));
   rows.push(q_('all-email', 'ALL', 'email', 'Email address', 'email', true, 'you@email.com', '', 30));
-  rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', true, 'Chennai', '', 40));
-  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram / profile URL', 'url', true, 'https://instagram.com/', '', 50));
+  rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', false, 'Chennai', '', 40));
+  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram / profile URL', 'url', false, 'https://instagram.com/', '', 50));
   rows.push(q_('all-portfolio', 'ALL', 'portfolio_urls', 'Portfolio URL(s)', 'textarea', true, 'One URL per line', '', 60));
   rows.push(q_('all-resume', 'ALL', 'resume', 'Resume', 'file', true, 'PDF, DOC or DOCX. Max 10 MB.', '', 70));
   rows.push(q_('all-years', 'ALL', 'years_experience', 'Years of experience', 'text', true, 'e.g. 2', '', 80));
-  rows.push(q_('all-company', 'ALL', 'current_company', 'Current occupation / company', 'text', true, '', '', 90));
-  rows.push(q_('all-availability', 'ALL', 'availability', 'Availability / start date', 'text', true, '', '', 100));
-  rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', true, '', '', 110));
+  rows.push(q_('all-company', 'ALL', 'current_company', 'Current occupation / company', 'text', false, '', '', 90));
+  rows.push(q_('all-availability', 'ALL', 'availability', 'Availability / start date', 'text', false, '', '', 100));
+  rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', false, '', '', 110));
 
   rows.push(q_('smm-workplaces', 'social-media-manager', 'previous_workplaces', 'Previous workplaces', 'textarea', true, '', '', 10));
   rows.push(q_('smm-prev-ctc', 'social-media-manager', 'previous_ctc', 'Previous CTC', 'text', true, '', '', 20));
@@ -602,15 +670,23 @@ function getPublicCareersConfig_() {
     reqByRole[id].sort(function (a, b) { return a.sort_order - b.sort_order; });
   });
 
+  var roleRows = sheetObjects_(ss.getSheetByName(ROLES_SHEET));
+  var catByRole = {};
+  roleRows.forEach(function (r) {
+    if (r.role_id) catByRole[String(r.role_id)] = r.category;
+  });
+
   var qPublic = questions.map(function (q) {
+    var cat = String(q.role_id).toUpperCase() === 'ALL' ? '' : (catByRole[String(q.role_id)] || '');
     return {
       question_id: q.question_id,
       role_id: q.role_id,
       question_key: q.question_key,
       label: q.label,
       type: String(q.type || 'text').toLowerCase(),
-      required: true,
+      required: questionIsRequired_(q.question_key, cat),
       placeholder: q.placeholder || '',
+      help: String(q.help || questionHelp_(q.question_key) || ''),
       options: String(q.options || '').split('|').map(function (s) { return s.trim(); }).filter(Boolean),
       sort_order: Number(q.sort_order) || 0
     };
@@ -669,14 +745,9 @@ function getPublicCareersConfig_() {
 function submitApplication_(payload) {
   var answers = payload.answers || {};
   var check = validateApplication_(payload, answers);
-  if (!check.role) return { ok: false, error: check.error || 'unknown_role' };
-  if (check.error === 'role_closed') return check;
+  if (!check.ok) return check;
 
   var notes = [];
-  if (!check.ok && check.error) {
-    notes.push('validation:' + check.error + (check.field ? ':' + check.field : ''));
-  }
-
   var resumeUrl = '';
   if (payload.resume && payload.resume.base64) {
     try {
@@ -686,13 +757,10 @@ function submitApplication_(payload) {
     } catch (err) {
       notes.push('resume:exception');
     }
-  } else {
-    notes.push('resume:missing');
   }
 
   var extraAnswers = extraAnswerMap_(answers);
   var applicationId = generateApplicationId_();
-  var incomplete = !check.ok || notes.length > 0;
   appendApplication_({
     application_id: applicationId,
     submitted_at: nowIso_(),
@@ -716,13 +784,13 @@ function submitApplication_(payload) {
     utm_content: str_(payload.utm_content),
     utm_term: str_(payload.utm_term),
     referrer: str_(payload.referrer),
-    status: incomplete ? 'INCOMPLETE' : 'NEW',
+    status: notes.length ? 'INCOMPLETE' : 'NEW',
     rating: '',
     reviewer: '',
     internal_notes: notes.join('; ')
   }, extraAnswers, check.role);
 
-  return { ok: true, application_id: applicationId, incomplete: incomplete };
+  return { ok: true, application_id: applicationId };
 }
 
 function hasRequiredFile_(role, payload) {
@@ -748,8 +816,17 @@ function validateApplication_(payload, answers) {
   var questions = (config.universalQuestions || []).concat(role.questions || []);
   for (var i = 0; i < questions.length; i++) {
     var q = questions[i];
-    if (q.type === 'file') continue;
     var val = answers[q.question_key];
+    if (q.type === 'file') {
+      if (q.required && !(payload.resume && payload.resume.base64)) {
+        return { ok: false, error: 'resume_required', role: role };
+      }
+      continue;
+    }
+    if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
+      return { ok: false, error: 'invalid_email', role: role };
+    }
+    if (!q.required) continue;
     if (q.type === 'checkbox') {
       if (!(val === true || val === 'true' || val === 'Yes' || val === 'on')) {
         return { ok: false, error: 'missing_field', field: q.question_key, role: role };
@@ -760,9 +837,6 @@ function validateApplication_(payload, answers) {
       }
     } else if (val === undefined || val === null || String(val).trim() === '') {
       return { ok: false, error: 'missing_field', field: q.question_key, role: role };
-    }
-    if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
-      return { ok: false, error: 'invalid_email', role: role };
     }
   }
   return { ok: true, role: role };
@@ -906,18 +980,39 @@ function isSkippedUrl_(val) {
   return s === 'n/a' || s === 'na' || s === 'none' || s === '-' || s === 'nil' || s === 'no';
 }
 
-function markAllQuestionsRequired() {
+function applyRequiredFieldPolicy() {
+  setupWorkbook();
   var ss = getSpreadsheet_();
   var sheet = ss.getSheetByName(QUESTIONS_SHEET);
   if (!sheet) return;
+  ensureExtraHeaders_(sheet, QUESTION_HEADERS);
+  var catByRole = {};
+  sheetObjects_(ss.getSheetByName(ROLES_SHEET)).forEach(function (r) {
+    if (r.role_id) catByRole[String(r.role_id)] = r.category;
+  });
   var data = sheet.getDataRange().getValues();
   if (data.length < 2) return;
-  var idx = data[0].indexOf('required');
-  if (idx < 0) return;
+  var headers = data[0];
+  var keyIdx = headers.indexOf('question_key');
+  var roleIdx = headers.indexOf('role_id');
+  var reqIdx = headers.indexOf('required');
+  var helpIdx = headers.indexOf('help');
+  if (keyIdx < 0 || reqIdx < 0) return;
   for (var i = 1; i < data.length; i++) {
-    if (String(data[i][0] || '').trim()) data[i][idx] = 'TRUE';
+    var key = String(data[i][keyIdx] || '');
+    var rid = String(data[i][roleIdx] || '');
+    var cat = String(rid).toUpperCase() === 'ALL' ? '' : (catByRole[rid] || '');
+    data[i][reqIdx] = questionIsRequired_(key, cat) ? 'TRUE' : 'FALSE';
+    if (helpIdx >= 0) {
+      var help = questionHelp_(key);
+      if (help) data[i][helpIdx] = help;
+    }
   }
-  sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+  sheet.getRange(1, 1, data.length, headers.length).setValues(data);
+}
+
+function markAllQuestionsRequired() {
+  applyRequiredFieldPolicy();
 }
 
 function questionCatalog_(ss) {

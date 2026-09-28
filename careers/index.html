@@ -130,6 +130,8 @@ h2{font-size:clamp(40px,7vw,80px)}
 .steps span.is-on{color:var(--white)}
 .field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.1rem}
 .field label{font-family:var(--font-condensed);letter-spacing:0.1em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,0.7)}
+.field-help{margin:0;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.45;font-family:var(--font-body);text-transform:none;letter-spacing:0}
+.opt{margin-left:0.4rem;color:rgba(255,255,255,0.35);font-size:10px;letter-spacing:0.08em}
 .req{color:var(--teal);margin-left:0.25rem}
 input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],textarea,select{
   background:var(--surface-2);border:1px solid var(--border-strong);color:var(--white);padding:0.75rem 0.85rem;font-size:16px;border-radius:0;width:100%;
@@ -352,22 +354,56 @@ function answersForSubmit(questions, answers) {
   return out;
 }
 
-function Field({ q, value, onChange, fileName }) {
+function fieldHelp(q) {
+  if (q && q.help) return String(q.help);
+  var map = {
+    full_name: 'Your full name as we should address you.',
+    whatsapp: 'WhatsApp number with country code, for example +91…',
+    email: 'We will use this email to contact you about this role.',
+    portfolio_urls: 'Links to your work (Drive, Behance, website, Instagram). One per line.',
+    resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
+    years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
+    languages: 'Languages you can speak or work in.',
+    languages_understood: 'Languages you can comfortably understand while editing.',
+    best_language: 'The language you are strongest in.',
+    previous_ctc: 'Last drawn annual CTC in INR.',
+    current_ctc: 'Current annual CTC in INR. Write N/A if you are not employed.',
+    expected_ctc: 'Expected annual CTC in INR.',
+    expected_commercials: 'Your expected day or project rate.'
+  };
+  return map[q && q.question_key] || '';
+}
+
+function isRequired(q, role) {
+  var key = String((q && q.question_key) || '').toLowerCase();
+  if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'languages', 'languages_understood', 'best_language'].indexOf(key) !== -1) return true;
+  var cat = String((role && role.category) || '').toUpperCase().replace(/[\s-]+/g, '_');
+  if (cat === 'INTERNSHIP') return false;
+  if (['previous_ctc', 'current_ctc', 'expected_ctc'].indexOf(key) !== -1) return cat === 'FULL_TIME';
+  if (key === 'expected_commercials') return cat === 'FREELANCE' || cat === 'FULL_TIME';
+  return false;
+}
+
+function Field({ q, value, onChange, fileName, required }) {
   const id = 'q-' + q.question_id;
-  const req = <span className="req" aria-hidden="true">*</span>;
+  const reqMark = required ? <span className="req" aria-hidden="true">*</span> : <span className="opt">optional</span>;
+  const help = fieldHelp(q);
+  const helpEl = required && help ? <p className="field-help">{help}</p> : null;
   if (q.type === 'textarea') {
     return (
       <div className="field">
-        <label htmlFor={id}>{q.label}{req}</label>
-        <textarea id={id} required placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+        <label htmlFor={id}>{q.label}{reqMark}</label>
+        {helpEl}
+        <textarea id={id} required={required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
       </div>
     );
   }
   if (q.type === 'select') {
     return (
       <div className="field">
-        <label htmlFor={id}>{q.label}{req}</label>
-        <select id={id} required value={value || ''} onChange={(e) => onChange(e.target.value)}>
+        <label htmlFor={id}>{q.label}{reqMark}</label>
+        {helpEl}
+        <select id={id} required={required} value={value || ''} onChange={(e) => onChange(e.target.value)}>
           <option value="">Select</option>
           {(q.options || []).map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
@@ -382,7 +418,8 @@ function Field({ q, value, onChange, fileName }) {
     };
     return (
       <div className="field">
-        <span id={id}>{q.label}{req}</span>
+        <span id={id}>{q.label}{reqMark}</span>
+        {helpEl}
         <div className="check-row" role="group" aria-labelledby={id}>
           {(q.options || []).map((o) => (
             <label key={o}>
@@ -398,16 +435,18 @@ function Field({ q, value, onChange, fileName }) {
     return (
       <div className="field">
         <label htmlFor={id} style={{ textTransform:'none', letterSpacing:0, fontFamily:'var(--font-body)', fontSize:15 }}>
-          <input id={id} type="checkbox" required checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{req}
+          <input id={id} type="checkbox" required={required} checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{reqMark}
         </label>
+        {helpEl}
       </div>
     );
   }
   if (q.type === 'file') {
     return (
       <div className="field">
-        <label htmlFor={id}>{q.label}{req}</label>
-        <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={!fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
+        <label htmlFor={id}>{q.label}{reqMark}</label>
+        {helpEl}
+        <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
         <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Max 10 MB.')}</span>
       </div>
     );
@@ -415,8 +454,9 @@ function Field({ q, value, onChange, fileName }) {
   const inputType = ['email','tel','number'].indexOf(q.type) >= 0 ? q.type : 'text';
   return (
     <div className="field">
-      <label htmlFor={id}>{q.label}{req}</label>
-      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required placeholder={q.placeholder || (q.type === 'url' ? 'https://… or N/A' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+      <label htmlFor={id}>{q.label}{reqMark}</label>
+      {helpEl}
+      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={q.placeholder || (q.type === 'url' ? 'https://…' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
@@ -436,8 +476,15 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
   const validateGroup = (qs) => {
     for (let i = 0; i < qs.length; i++) {
       const q = qs[i];
+      const need = isRequired(q, role);
       if (q.type === 'file') {
-        if (!resume) return 'Add a resume (PDF, DOC or DOCX, max 10 MB).';
+        if (need && !resume) return 'Add a resume (PDF, DOC or DOCX, max 10 MB).';
+        continue;
+      }
+      if (!need) {
+        if (q.type === 'email' && answers[q.question_key] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(answers[q.question_key]))) {
+          return 'Enter a valid email address.';
+        }
         continue;
       }
       if (isBlankAnswer(q, answers[q.question_key], resume)) return 'Please complete: ' + q.label;
@@ -504,7 +551,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
         setError('This role is no longer accepting applications.');
         return;
       }
-      if (data && data.error === 'missing_field') { setError('Please complete every question before submitting.'); return; }
+      if (data && data.error === 'missing_field') { setError('Please complete the required fields.'); return; }
       if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, max 10 MB).'); return; }
       if (data && data.error === 'invalid_url') { setError('Please complete every question before submitting.'); return; }
       if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); return; }
@@ -538,15 +585,15 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       )}
       {step === 2 && (
         <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
-          <p className="meta" style={{ marginBottom: '1.1rem' }}>Every question is required. If something does not apply, write N/A.</p>
+          <p className="meta" style={{ marginBottom: '1.1rem' }}>Fields marked * are required. Everything else is optional.</p>
           <div className="hp" aria-hidden="true">
             <label>Company fax<input name="hp_confirm" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
           </div>
           {uni.filter((q) => q.type !== 'file').map((q) => (
-            <Field key={q.question_id} q={q} value={answers[q.question_key]} onChange={(v) => setVal(q.question_key, v)} />
+            <Field key={q.question_id} q={q} required={isRequired(q, role)} value={answers[q.question_key]} onChange={(v) => setVal(q.question_key, v)} />
           ))}
           {uni.filter((q) => q.type === 'file').map((q) => (
-            <Field key={q.question_id} q={q} fileName={resume && resume.name} onChange={(f) => setResume(f || null)} />
+            <Field key={q.question_id} q={q} required={isRequired(q, role)} fileName={resume && resume.name} onChange={(f) => setResume(f || null)} />
           ))}
           {error && <p className="err" role="alert">{error}</p>}
           <div className="cta-row">
@@ -558,9 +605,9 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       {step === 3 && (
         <form onSubmit={(e) => { e.preventDefault(); go(4); }}>
           {spec.length === 0 && <p className="lede" style={{ marginTop: 0 }}>No extra questions for this role.</p>}
-          {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Every role question is required. If something does not apply, write N/A.</p>}
+          {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Only the fields marked * are required for this role.</p>}
           {spec.map((q) => (
-            <Field key={q.question_id} q={q} value={answers[q.question_key]} fileName={resume && resume.name} onChange={(v) => q.type === 'file' ? setResume(v || null) : setVal(q.question_key, v)} />
+            <Field key={q.question_id} q={q} required={isRequired(q, role)} value={answers[q.question_key]} fileName={resume && resume.name} onChange={(v) => q.type === 'file' ? setResume(v || null) : setVal(q.question_key, v)} />
           ))}
           {error && <p className="err" role="alert">{error}</p>}
           <div className="cta-row">

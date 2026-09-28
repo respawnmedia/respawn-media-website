@@ -10,7 +10,7 @@ Do **not** put `CAREERS_API_SECRET`, the Apps Script `/exec` URL, or resume file
 
 ## 1. Summary of what was added
 
-A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. **Every question is required** before submit. Resumes land in a **private** Drive folder. Raw rows stay on `ALL_APPLICATIONS`. Read applications on **`CANDIDATES`** (one row per person) and **`ANSWERS`** (one row per question). Role tabs use question labels, not JSON.
+A `/careers` page (same React 18 + Babel CDN pattern as the homepage) lists full-time, internship, and freelance roles from Google Sheets. Candidates filter in-page, expand a role, and submit a 4-step application. **Core fields are required** (name, email, WhatsApp, resume, portfolio, years of experience, languages, and CTC/rate where the role asks). Everything else is optional. Resumes land in a **private** Drive folder. Raw rows stay on `ALL_APPLICATIONS`. Read applications on **`CANDIDATES`** (one row per person) and **`ANSWERS`** (one row per question). Role tabs use question labels, not JSON.
 
 The browser only talks same-origin:
 
@@ -73,7 +73,7 @@ Exact Vercel dashboard clicks: **§7**.
    - `CANDIDATES` (one readable row per applicant)
    - `ANSWERS` (one readable row per question)
 5. After seed, you can edit rows in the Sheet. `show_on_site`, `accepting_applications`, `status`, and each requirement/question `enabled` flag control the public page **without a code change**. Re-running seed **skips** existing `role_id` / ids / setting keys.
-6. After updating Apps Script, run **Respawn Careers → 4. Mark all questions required**, then **5. Rebuild readable response views**. That converts existing messy JSON/QUERY tabs into the readable sheets.
+6. After updating Apps Script, run **Respawn Careers → 4. Apply required-field policy**, then **5. Rebuild readable response views**. That converts existing messy JSON/QUERY tabs into the readable sheets.
 
 Public rules:
 
