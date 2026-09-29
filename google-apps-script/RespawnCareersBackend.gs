@@ -861,7 +861,7 @@ function validateApplication_(payload, answers) {
     var q = questions[i];
     var val = answers[q.question_key];
     if (q.type === 'file') {
-      if (q.required && !(payload.resume && payload.resume.base64)) {
+      if (questionIsRequired_(q.question_key, role.category) && !(payload.resume && payload.resume.base64)) {
         return { ok: false, error: 'resume_required', role: role };
       }
       continue;
@@ -869,7 +869,7 @@ function validateApplication_(payload, answers) {
     if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
       return { ok: false, error: 'invalid_email', role: role };
     }
-    if (!q.required) continue;
+    if (!questionIsRequired_(q.question_key, role.category)) continue;
     if (q.type === 'checkbox') {
       if (!(val === true || val === 'true' || val === 'Yes' || val === 'on')) {
         return { ok: false, error: 'missing_field', field: q.question_key, role: role };
@@ -1331,11 +1331,6 @@ function appendApplication_(row, extraAnswers, role) {
     sheet.appendRow(values);
   } finally {
     lock.releaseLock();
-  }
-  try {
-    appendReadableViews_(ss, row, extraAnswers || {}, role);
-  } catch (err) {
-    // ALL_APPLICATIONS already has the row. Readable tabs can be rebuilt from the menu.
   }
 }
 

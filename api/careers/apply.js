@@ -6,7 +6,7 @@
 
 module.exports.config = {
   runtime: 'nodejs',
-  maxDuration: 30,
+  maxDuration: 60,
   api: {
     bodyParser: false
   }
@@ -42,6 +42,7 @@ function mapError(code) {
     file_too_large: [413, 'file_too_large'],
     resume_required: [400, 'resume_required'],
     upload_failed: [502, 'upload_failed'],
+    timeout: [504, 'timeout'],
     submit_failed: [502, 'submit_failed']
   };
   return table[code] || [502, 'submit_failed'];
@@ -182,7 +183,8 @@ module.exports = async function handler(req, res) {
     }
     sendJson(res, 200, { ok: true, application_id: parsed.application_id || '' });
   } catch (e) {
-    sendJson(res, 502, { ok: false, error: 'submit_failed' });
+    const timedOut = e && (e.name === 'AbortError' || e.code === 'ABORT_ERR');
+    sendJson(res, timedOut ? 504 : 502, { ok: false, error: timedOut ? 'timeout' : 'submit_failed' });
   }
 }
 
@@ -249,7 +251,7 @@ async function postToAppsScript(scriptUrl, payload) {
     redirect: 'manual',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
-  }, 22000);
+  }, 48000);
 
   let text = '';
   const loc = first.headers.get('location') || '';
@@ -259,7 +261,7 @@ async function postToAppsScript(scriptUrl, payload) {
     }
     try { await first.arrayBuffer(); } catch (e) {}
     const abs = new URL(loc, scriptUrl).href;
-    const second = await readTimed(abs, { method: 'GET', redirect: 'follow' }, 12000);
+    const second = await readTimed(abs, { method: 'GET', redirect: 'follow' }, 15000);
     text = await second.text();
   } else {
     text = await first.text();

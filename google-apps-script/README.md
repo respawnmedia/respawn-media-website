@@ -45,6 +45,6 @@ Apps Script running **as you** can still write files. Candidates never need a pu
 6. Who has access: **Anyone** (so Vercel can POST/GET; the URL is still a secret stored only on Vercel)
 7. Copy the `/exec` URL into Vercel `CAREERS_APPS_SCRIPT_URL`.
 
-After code changes, **Manage deployments → New version** on **careers v1** (same URL). Then in the spreadsheet: **Respawn Careers → 5. Rebuild readable response views**. Look at `ALL_APPLICATIONS` first; role tabs like `SCRIPT WRITER` only fill after this script version is live.
+After each successful test, rows land on `ALL_APPLICATIONS`. Run **5. Rebuild readable response views** when you want `CANDIDATES` / role tabs updated.
 
 Full operator checklist: [`../CAREERS_SETUP.md`](../CAREERS_SETUP.md).

@@ -120,10 +120,22 @@ h2{font-size:clamp(40px,7vw,80px)}
 .status-open,.status-always_open{border-color:var(--teal);color:var(--white)}
 .status-closed{color:var(--muted)}
 .linkish{background:none;border:none;color:var(--white);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
-.details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.78)}
-.details ul{margin:1rem 0 0 1.1rem}
-.details li{margin:0.35rem 0}
-.details li.hi{color:var(--white)}
+.details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.82)}
+.details ul{margin:1rem 0 0 0;list-style:none}
+.details li{margin:0.45rem 0;padding-left:0.9rem;border-left:2px solid rgba(22,196,186,0.35);color:rgba(255,255,255,0.82)}
+.details li.hi{color:var(--white);border-left-color:var(--teal)}
+.role-brief{margin-top:1.5rem;padding:1.5rem 1.35rem 1.4rem;background:var(--surface-2);border:1px solid var(--teal-border);border-radius:4px;max-width:46rem}
+.role-brief h2{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:0.92;letter-spacing:0.02em;margin:0.35rem 0 0.85rem}
+.role-brief h3{font-family:var(--font-condensed);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin:1.35rem 0 0.65rem}
+.role-brief .lede{color:rgba(255,255,255,0.84);max-width:42rem}
+.role-facts{display:grid;gap:0.55rem 1.5rem;margin:1rem 0 0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.role-facts div{min-width:0}
+.role-facts span{display:block;font-family:var(--font-condensed);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
+.role-facts p{margin:0;color:rgba(255,255,255,0.88);font-size:15px}
+.submit-status{margin:1rem 0 0;padding:1rem 1.05rem;border:1px solid var(--teal-border);background:var(--teal-dim);border-radius:4px}
+.submit-status strong{display:block;color:var(--teal);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;margin-bottom:0.35rem}
+.submit-status p{margin:0;color:rgba(255,255,255,0.8);font-size:14px;line-height:1.5}
+.btn.is-busy{opacity:0.85;cursor:wait}
 .apply-panel{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:40rem}
 .steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap}
 .steps span{font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:var(--muted)}
@@ -155,6 +167,7 @@ footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:
   .filters-bar{grid-template-columns:1fr 1fr}
 }
 @media(max-width:768px){
+  .role-facts{grid-template-columns:1fr}
   nav{padding:0 1rem;height:56px}
   .desk-nav{display:none}
   .ham{display:flex}
@@ -465,7 +478,7 @@ function Field({ q, value, onChange, fileName, required }) {
         <label htmlFor={id}>{q.label}{reqMark}</label>
         {helpEl}
         <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
-        <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Max 10 MB.')}</span>
+        <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Under 5 MB works most reliably.')}</span>
       </div>
     );
   }
@@ -534,12 +547,12 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
     if (resume) {
       const ext = (resume.name.split('.').pop() || '').toLowerCase();
       if (['pdf','doc','docx'].indexOf(ext) === -1) { setError('Resume must be PDF, DOC or DOCX.'); return; }
-      if (resume.size > 10 * 1024 * 1024) { setError('Resume is too large. Max 10 MB.'); return; }
+      if (resume.size > 5.5 * 1024 * 1024) { setError('Resume is too large to send from the site. Use a PDF under 5 MB.'); return; }
     }
     setBusy(true);
     track('career_application_submit', { role_id: role.role_id, role_title: role.title, category: role.category });
     const ac = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    const timer = setTimeout(function () { if (ac) ac.abort(); }, 28000);
+    const timer = setTimeout(function () { if (ac) ac.abort(); }, 55000);
     let succeeded = false;
     try {
       const fd = new FormData();
@@ -569,14 +582,18 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
         setError('This role is no longer accepting applications.');
         return;
       }
-      if (data && data.error === 'missing_field') { setError('Please complete the required fields.'); return; }
-      if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, max 10 MB).'); return; }
-      if (data && data.error === 'invalid_url') { setError('Please complete every question before submitting.'); return; }
-      if (data && data.error === 'file_too_large') { setError('Resume is too large for upload. Try a file under 6 MB (hosting limit) / 10 MB max.'); return; }
-      if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try again.'); return; }
-      setError('Submission failed. Try again in a moment.');
+      if (data && data.error === 'missing_field') { setError(data.field ? 'Please complete: ' + data.field : 'Please complete the required fields.'); return; }
+      if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, under 5 MB).'); return; }
+      if (data && data.error === 'invalid_url') { setError('Check any link fields. You can write no for Instagram.'); return; }
+      if (data && data.error === 'file_too_large') { setError('Resume is too large to send. Use a PDF under 5 MB.'); return; }
+      if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try a smaller PDF.'); return; }
+      if (data && data.error === 'timeout') { setError('This is taking too long to confirm. Wait a minute, then try once more with a PDF under 5 MB.'); return; }
+      setError('We could not confirm this application. Wait a minute and try once more. If it happens again, use a PDF under 5 MB.');
     } catch (e) {
-      setError('Submission failed. Try again in a moment.');
+      const aborted = e && (e.name === 'AbortError' || e.code === 20);
+      setError(aborted
+        ? 'This is taking too long to confirm. Wait a minute, then try once more with a PDF under 5 MB.'
+        : 'We could not reach the server. Check your connection and try once more.');
     } finally {
       clearTimeout(timer);
       if (!succeeded) setBusy(false);
@@ -642,10 +659,16 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
             <p key={q.question_id} className="meta"><span style={{ color: 'rgba(255,255,255,0.45)' }}>{q.label}: </span>{Array.isArray(answers[q.question_key]) ? answers[q.question_key].join(', ') : String(answers[q.question_key] || '—')}</p>
           ))}
           <p className="meta">Resume: {resume ? resume.name : '—'}</p>
+          {busy && (
+            <div className="submit-status" role="status" aria-live="polite">
+              <strong>Sending your application</strong>
+              <p>Please keep this page open. We are saving your answers and resume. This can take up to a minute. You will be moved to a thank-you page when it goes through.</p>
+            </div>
+          )}
           {error && <p className="err" role="alert">{error}</p>}
           <div className="cta-row">
             <button className="btn btn-ghost" type="button" onClick={() => setStep(3)} disabled={busy}>Back</button>
-            <button className="btn btn-primary" type="button" onClick={submit} disabled={busy}>{busy ? 'Submitting…' : 'Submit'}</button>
+            <button className={'btn btn-primary' + (busy ? ' is-busy' : '')} type="button" onClick={submit} disabled={busy}>{busy ? 'Sending…' : 'Submit application'}</button>
           </div>
         </div>
       )}
@@ -676,23 +699,56 @@ function RoleCard({ role, selected, onDetails }) {
   );
 }
 
+function RoleBrief({ role, freelanceIntro }) {
+  const showFreelanceNote = role.category === 'FREELANCE';
+  const facts = [
+    ['Location', role.location || 'Chennai'],
+    ['Work mode', role.work_mode],
+    ['Schedule', role.schedule],
+    ['Experience', role.experience],
+    ['Pay', role.compensation]
+  ].filter(function (row) { return row[1]; });
+  return (
+    <div className="role-brief">
+      <p className="eyebrow">{typeLabel(role.category)}</p>
+      <h2>{role.title}</h2>
+      <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
+      {facts.length > 0 && (
+        <div className="role-facts">
+          {facts.map(function (row) {
+            return (
+              <div key={row[0]}>
+                <span>{row[0]}</span>
+                <p>{row[1]}</p>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {(showFreelanceNote && freelanceIntro) || role.full_description ? (
+        <>
+          <h3>The role</h3>
+          {showFreelanceNote && freelanceIntro && <p className="lede" style={{ marginTop: 0 }}>{freelanceIntro}</p>}
+          {role.full_description && <p className="lede">{role.full_description}</p>}
+        </>
+      ) : null}
+      {role.requirements && role.requirements.length > 0 && (
+        <>
+          <h3>What we look for</h3>
+          <ul className="details" style={{ marginTop: 0 }}>
+            {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+
 function RoleDetails({ role, freelanceIntro }) {
   const canApply = role.accepting_applications && role.status !== 'CLOSED';
-  const showFreelanceNote = role.category === 'FREELANCE';
   return (
     <div className="role-panel">
-      <p className="eyebrow">{role.title}</p>
-      <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
-      {showFreelanceNote && freelanceIntro && <p className="lede" style={{ marginTop: '1rem' }}>{freelanceIntro}</p>}
-      {role.full_description && <p className="details" style={{ marginTop: '1rem', maxWidth: '42rem' }}>{role.full_description}</p>}
-      {role.work_mode && <p className="meta">Work mode: {role.work_mode}</p>}
-      {role.schedule && <p className="meta">Schedule: {role.schedule}</p>}
-      {role.compensation && <p className="meta">{role.compensation}</p>}
-      {role.requirements && role.requirements.length > 0 && (
-        <ul className="details" style={{ marginTop: '1rem' }}>
-          {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
-        </ul>
-      )}
+      <RoleBrief role={role} freelanceIntro={freelanceIntro} />
       {canApply && (
         <div className="cta-row">
           <a className="btn btn-primary" href={applyHref(role)}>Apply for this role</a>
@@ -903,17 +959,7 @@ function ApplyPage({ slug, config, loadError, utm }) {
         )}
         {role && (
           <>
-            <p className="eyebrow">{typeLabel(role.category)} · {role.location || 'Chennai'}</p>
-            <h1 style={{ marginTop: '0.5rem' }}>{role.title}</h1>
-            {role.full_description && <p className="lede">{role.full_description}</p>}
-            {role.work_mode && <p className="meta">Work mode: {role.work_mode}</p>}
-            {role.schedule && <p className="meta">Schedule: {role.schedule}</p>}
-            {role.compensation && <p className="meta">{role.compensation}</p>}
-            {role.requirements && role.requirements.length > 0 && (
-              <ul className="details">
-                {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
-              </ul>
-            )}
+            <RoleBrief role={role} freelanceIntro={role.category === 'FREELANCE' ? (settings.freelance_intro || '') : ''} />
             {canApply
               ? <ApplyForm
                   role={role}
