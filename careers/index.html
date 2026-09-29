@@ -960,19 +960,6 @@ function ApplyPage({ slug, config, loadError, utm }) {
     });
   };
 
-  useEffect(() => {
-    if (role) document.title = 'Apply: ' + role.title + ' | Respawn Media Careers';
-    else document.title = 'Apply | Respawn Media Careers';
-  }, [role]);
-
-  useEffect(() => {
-    if (!role || started.current) return;
-    started.current = true;
-    track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
-  }, [role]);
-
-  const back = careersHref('/careers');
-
   return (
     <>
       <Nav />
