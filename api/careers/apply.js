@@ -171,15 +171,9 @@ module.exports = async function handler(req, res) {
   payload.api_secret = secret;
 
   try {
-    const cfg = await loadCareersConfig(scriptUrl, secret);
-    if (cfg) payload.answers = fillBlankAnswers(payload.answers, questionsForRole(cfg, payload.role_id));
-    payload.answers = coerceLinkAnswers(payload.answers);
-  } catch (e) {}
-
-  try {
     let parsed = await postToAppsScript(scriptUrl, payload);
     if (parsed && parsed.error === 'invalid_url') {
-      payload.answers = coerceLinkAnswers(payload.answers, { forceHttp: true });
+      payload.answers = coerceLinkAnswers(payload.answers, { addHttps: true });
       parsed = await postToAppsScript(scriptUrl, payload);
     }
     if (!parsed || parsed.ok !== true) {
@@ -194,53 +188,14 @@ module.exports = async function handler(req, res) {
   }
 }
 
-function questionsForRole(cfg, roleId) {
-  const roles = (cfg && cfg.roles) || [];
-  let role = null;
-  const needle = String(roleId || '').trim().toLowerCase();
-  roles.forEach(function (r) {
-    if (String(r.role_id || '').trim().toLowerCase() === needle) role = r;
-    if (String(r.slug || '').trim().toLowerCase() === needle) role = r;
-  });
-  return ((cfg && cfg.universalQuestions) || []).concat((role && role.questions) || []);
+function looksLikeEmail(s) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
 }
 
-function isBlankAnswerValue(val) {
-  if (val === undefined || val === null) return true;
-  if (Array.isArray(val)) return !val.length;
-  if (typeof val === 'boolean') return false;
-  return String(val).trim() === '';
-}
-
-function fillBlankAnswers(answers, questions) {
-  const skipFake = { full_name: true, email: true, whatsapp: true, resume: true };
-  const out = Object.assign({}, answers || {});
-  (questions || []).forEach(function (q) {
-    if (!q || q.type === 'file' || skipFake[q.question_key]) return;
-    if (!isBlankAnswerValue(out[q.question_key])) return;
-    if (q.type === 'checkbox') {
-      out[q.question_key] = true;
-      return;
-    }
-    if (q.type === 'multiselect') {
-      out[q.question_key] = (q.options && q.options[0]) ? [q.options[0]] : ['N/A'];
-      return;
-    }
-    if (q.type === 'select') {
-      out[q.question_key] = (q.options && q.options[0]) || 'N/A';
-      return;
-    }
-    out[q.question_key] = 'N/A';
-  });
-  return out;
-}
-
-async function loadCareersConfig(scriptUrl, secret) {
-  const url = scriptUrl + (scriptUrl.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(secret);
-  const res = await readTimed(url, { method: 'GET', redirect: 'follow' }, 12000);
-  const parsed = parseJsonLoose(await res.text());
-  if (!parsed || parsed.ok !== true) return null;
-  return parsed.data || null;
+function isLinkField(key) {
+  const k = String(key || '').toLowerCase();
+  if (k === 'email' || k === 'full_name' || k === 'whatsapp' || k === 'current_city' || k === 'years_experience' || k === 'availability' || k === 'current_company' || k === 'anything_else') return false;
+  return /instagram|portfolio|url|website|profile|social_profiles|creator_page|ig_profile/.test(k);
 }
 
 function coerceLinkAnswers(answers, opts) {
@@ -252,19 +207,24 @@ function coerceLinkAnswers(answers, opts) {
     if (typeof v !== 'string') return;
     const s = v.trim();
     if (!s) return;
-    if (/^https?:\/\//i.test(s)) {
+    if (k === 'email' || looksLikeEmail(s)) {
       out[k] = s;
       return;
     }
+    if (!isLinkField(k)) return;
     if (skip.test(s)) {
-      out[k] = opts.forceHttp ? 'https://n/a' : 'N/A';
+      out[k] = s;
+      return;
+    }
+    if (/^https?:\/\//i.test(s)) {
+      out[k] = s;
       return;
     }
     if (s.charAt(0) === '@') {
       out[k] = 'https://instagram.com/' + s.slice(1);
       return;
     }
-    if (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) {
+    if (opts.addHttps && (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) && s.indexOf('@') === -1) {
       out[k] = 'https://' + s.replace(/^\/\//, '');
     }
   });

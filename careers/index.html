@@ -349,10 +349,9 @@ function isSkippedLink(val) {
 
 function normalizeLinkAnswer(val) {
   var s = String(val == null ? '' : val).trim();
-  if (!s || isSkippedLink(s)) return s || 'N/A';
+  if (!s || isSkippedLink(s)) return s;
   if (/^https?:\/\//i.test(s)) return s;
   if (s.charAt(0) === '@') return 'https://instagram.com/' + s.slice(1);
-  if (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) return 'https://' + s.replace(/^\/\//, '');
   return s;
 }
 
@@ -373,7 +372,7 @@ function fieldHelp(q) {
     full_name: 'Your full name as we should address you.',
     whatsapp: 'WhatsApp number with country code, for example +91…',
     email: 'We will use this email to contact you about this role.',
-    portfolio_urls: 'Links to your work (Drive, Behance, website, Instagram). One per line.',
+    portfolio_urls: 'Your work links. www.yoursite.com is enough — https is not required.',
     resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
     years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
     current_city: 'The city you are based in right now.',
@@ -487,7 +486,7 @@ function Field({ q, value, onChange, fileName, required }) {
     <div className="field">
       <label htmlFor={id}>{q.label}{reqMark}</label>
       {helpEl}
-      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={q.placeholder || (q.type === 'url' ? 'https://…' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={q.placeholder || (q.type === 'url' ? 'www.yoursite.com, or no' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
