@@ -140,8 +140,7 @@ module.exports = async function handler(req, res) {
     sendJson(res, 400, { ok: false, error: 'missing_field' });
     return;
   }
-  payload.answers = payload.answers || {};
-  payload.answers = coerceLinkAnswers(payload.answers);
+  payload.answers = prepareAnswers(payload.answers || {});
 
   if (file) {
     const ext = extOf(file.filename);
@@ -172,8 +171,8 @@ module.exports = async function handler(req, res) {
 
   try {
     let parsed = await postToAppsScript(scriptUrl, payload);
-    if (parsed && parsed.error === 'invalid_url') {
-      payload.answers = coerceLinkAnswers(payload.answers, { addHttps: true });
+    if (parsed && (parsed.error === 'invalid_url' || (parsed.error === 'missing_field' && isInstagramField(parsed.field)))) {
+      payload.answers = prepareAnswers(payload.answers, { legacy: true, field: parsed.field });
       parsed = await postToAppsScript(scriptUrl, payload);
     }
     if (!parsed || parsed.ok !== true) {
@@ -192,43 +191,59 @@ function looksLikeEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
 }
 
+function isInstagramField(key) {
+  const k = String(key || '').toLowerCase();
+  return k === 'instagram' || k === 'instagram_if_relevant' || k === 'cd_instagram' || k === 'ig_profile';
+}
+
 function isLinkField(key) {
   const k = String(key || '').toLowerCase();
   if (k === 'email' || k === 'full_name' || k === 'whatsapp' || k === 'current_city' || k === 'years_experience' || k === 'availability' || k === 'current_company' || k === 'anything_else') return false;
-  return /instagram|portfolio|url|website|profile|social_profiles|creator_page|ig_profile/.test(k);
+  return /instagram|portfolio|url|website|profile|social|creator_page|sample|writing|link/.test(k);
 }
 
-function coerceLinkAnswers(answers, opts) {
+const SKIP_LINK = /^(n\/a|na|none|nil|-|no)$/i;
+
+function prepareAnswers(answers, opts) {
   opts = opts || {};
-  const skip = /^(n\/a|na|none|nil|-|no)$/i;
   const out = Object.assign({}, answers || {});
   Object.keys(out).forEach(function (k) {
-    const v = out[k];
-    if (typeof v !== 'string') return;
-    const s = v.trim();
-    if (!s) return;
-    if (k === 'email' || looksLikeEmail(s)) {
-      out[k] = s;
-      return;
-    }
-    if (!isLinkField(k)) return;
-    if (skip.test(s)) {
-      out[k] = s;
-      return;
-    }
-    if (/^https?:\/\//i.test(s)) {
-      out[k] = s;
-      return;
-    }
-    if (s.charAt(0) === '@') {
-      out[k] = 'https://instagram.com/' + s.slice(1);
-      return;
-    }
-    if (opts.addHttps && (s.indexOf('.') !== -1 || s.indexOf('/') !== -1) && s.indexOf('@') === -1) {
-      out[k] = 'https://' + s.replace(/^\/\//, '');
-    }
+    if (typeof out[k] !== 'string') return;
+    if (k === 'email') return;
+    out[k] = out[k].split(/\r?\n/).map(function (line) {
+      return normalizeAnswerLine(k, line, opts.legacy);
+    }).join('\n');
   });
+  ['instagram', 'instagram_if_relevant', 'cd_instagram', 'ig_profile'].forEach(function (k) {
+    const s = String(out[k] == null ? '' : out[k]).trim();
+    if (!s || SKIP_LINK.test(s)) out[k] = opts.legacy ? 'https://n/a' : 'no';
+  });
+  if (opts.legacy && opts.field && !isInstagramField(opts.field)) {
+    const current = String(out[opts.field] == null ? '' : out[opts.field]).trim();
+    if (!current || SKIP_LINK.test(current) || !/^https?:\/\//i.test(current)) {
+      out[opts.field] = (!current || SKIP_LINK.test(current) || current.indexOf(' ') !== -1)
+        ? 'https://n/a'
+        : 'https://' + current.replace(/^\/\//, '');
+    }
+  }
   return out;
+}
+
+function normalizeAnswerLine(key, line, legacy) {
+  const s = String(line || '').trim();
+  if (!s || looksLikeEmail(s)) return line;
+  if (/^https?:\/\//i.test(s)) return s;
+  if (s.charAt(0) === '@' && (isInstagramField(key) || isLinkField(key))) {
+    return 'https://instagram.com/' + s.slice(1);
+  }
+  if (SKIP_LINK.test(s) && (isLinkField(key) || isInstagramField(key))) {
+    if (isInstagramField(key) && !legacy) return 'no';
+    return 'https://n/a';
+  }
+  if (s.indexOf(' ') === -1 && s.indexOf('@') === -1 && /\.[a-z]{2,}/i.test(s) && s.length < 200) {
+    return 'https://' + s.replace(/^\/\//, '');
+  }
+  return line;
 }
 
 function parseJsonLoose(text) {

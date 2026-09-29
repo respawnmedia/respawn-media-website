@@ -11,7 +11,7 @@ The live website never talks to this URL from the browser. Vercel functions (`ap
 | `setupWorkbook()` | Creates `SITE_SETTINGS`, `ROLES`, `REQUIREMENTS`, `QUESTIONS`, `ALL_APPLICATIONS`, `CANDIDATES`, `ANSWERS` |
 | `seedDefaultCareersData()` | Inserts default settings, roles, requirements, questions. Skips existing `role_id` / `question_id` / `requirement_id` / settings `key` |
 | `syncRoleTabs()` | Ensures one readable tab per role with question labels as column headers (not QUERY dumps) |
-| `applyRequiredFieldPolicy()` | Marks core fields required (name, email, WhatsApp, city, start date, on-site, resume, portfolio, experience, languages, CTC/rate) and writes short help text |
+| `applyRequiredFieldPolicy()` | Marks core fields required (name, email, WhatsApp, city, start date, on-site, resume, portfolio, experience, languages, CTC/rate). Instagram stays optional (blank or “no” is fine) |
 | `rebuildReadableViews()` | Rebuilds `CANDIDATES`, `ANSWERS`, and each role tab from `ALL_APPLICATIONS` so existing responses are readable |
 | `doGet` | Public careers JSON (site settings, visible roles, enabled requirements/questions). No applicant data |
 | `doPost` | Validates secret + payload, stores resume in Drive, appends `ALL_APPLICATIONS` plus readable views |

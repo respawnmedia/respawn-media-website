@@ -388,11 +388,11 @@ function questionHelp_(key) {
     intern_current_city: 'The city you are based in right now.',
     cd_city: 'The city you are based in right now.',
     ugc_city: 'The city you are based in right now.',
-    instagram: 'If you prefer not to share Instagram, write no. We will understand. www.instagram.com/you is also fine.',
-    instagram_if_relevant: 'If you prefer not to share Instagram, write no. We will understand.',
-    cd_instagram: 'If you prefer not to share Instagram, write no. We will understand.',
-    ig_profile: 'If you prefer not to share Instagram, write no. We will understand.',
-    social_profiles: 'If you prefer not to share Instagram, write no. We will understand.',
+    instagram: 'Optional. Leave it blank and we will record no.',
+    instagram_if_relevant: 'Optional. Leave it blank and we will record no.',
+    cd_instagram: 'Optional. Leave it blank and we will record no.',
+    ig_profile: 'Optional. Leave it blank and we will record no.',
+    social_profiles: 'Optional. Leave blank, write no, or paste your profiles.',
     availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
     join_timeline: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
     cd_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
@@ -451,8 +451,26 @@ function compensationRequired_(key, category) {
   return false;
 }
 
+function fillInstagramNo_(answers) {
+  var out = answers || {};
+  ['instagram', 'instagram_if_relevant', 'cd_instagram', 'ig_profile'].forEach(function (k) {
+    var s = String(out[k] == null ? '' : out[k]).trim();
+    if (!s || isSkippedUrl_(s)) out[k] = 'no';
+  });
+  return out;
+}
+
+function isOptionalSocialKey_(key) {
+  var k = String(key || '').trim().toLowerCase();
+  return k === 'instagram'
+    || k === 'instagram_if_relevant'
+    || k === 'cd_instagram'
+    || k === 'ig_profile';
+}
+
 function questionIsRequired_(key, category) {
   var k = String(key || '').trim().toLowerCase();
+  if (isOptionalSocialKey_(k)) return false;
   if (coreRequiredKeys_()[k]) return true;
   return compensationRequired_(k, category);
 }
@@ -476,7 +494,7 @@ function defaultQuestions_() {
   rows.push(q_('all-whatsapp', 'ALL', 'whatsapp', 'WhatsApp number', 'tel', true, '+91', '', 20));
   rows.push(q_('all-email', 'ALL', 'email', 'Email address', 'email', true, 'you@email.com', '', 30));
   rows.push(q_('all-city', 'ALL', 'current_city', 'Current city', 'text', true, 'Chennai', '', 40));
-  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram', 'url', false, 'no, or https://instagram.com/…', '', 50));
+  rows.push(q_('all-instagram', 'ALL', 'instagram', 'Instagram', 'text', false, 'optional', '', 50));
   rows.push(q_('all-portfolio', 'ALL', 'portfolio_urls', 'Portfolio URL(s)', 'textarea', true, 'One URL per line', '', 60));
   rows.push(q_('all-resume', 'ALL', 'resume', 'Resume', 'file', true, 'PDF, DOC or DOCX. Max 10 MB.', '', 70));
   rows.push(q_('all-years', 'ALL', 'years_experience', 'Years of experience', 'text', true, 'e.g. 2', '', 80));
@@ -505,7 +523,7 @@ function defaultQuestions_() {
   rows.push(q_('vei-pr', 'video-editor-intern', 'premiere_pro_experience', 'Premiere Pro experience', 'textarea', true, '', '', 10));
   rows.push(q_('vei-tools', 'video-editor-intern', 'other_editing_tools', 'Other editing tools used', 'text', true, '', '', 20));
   rows.push(q_('vei-port', 'video-editor-intern', 'portfolio_links', 'Portfolio links', 'textarea', true, 'Allow multiple work examples', '', 30));
-  rows.push(q_('vei-ig', 'video-editor-intern', 'instagram_if_relevant', 'Instagram profile if relevant', 'url', true, '', '', 40));
+  rows.push(q_('vei-ig', 'video-editor-intern', 'instagram_if_relevant', 'Instagram profile if relevant', 'text', false, 'optional', '', 40));
   rows.push(q_('vei-city', 'video-editor-intern', 'intern_current_city', 'Current city', 'text', true, '', '', 50));
   rows.push(q_('vei-wfo', 'video-editor-intern', 'chennai_office', 'Can you work from the Chennai office?', 'select', true, '', 'Yes|No', 60));
   rows.push(q_('vei-join', 'video-editor-intern', 'join_timeline', 'How soon can you join?', 'text', true, '', '', 70));
@@ -530,14 +548,14 @@ function defaultQuestions_() {
   rows.push(q_('cd-role', 'creative-director-events-weddings', 'role_in_projects', 'Describe your role in those projects', 'textarea', true, '', '', 20));
   rows.push(q_('cd-dir', 'creative-director-events-weddings', 'has_creatively_directed', 'Have you creatively directed event content before?', 'select', true, '', 'Yes|No', 30));
   rows.push(q_('cd-port', 'creative-director-events-weddings', 'cd_portfolio', 'Portfolio', 'textarea', true, '', '', 40));
-  rows.push(q_('cd-ig', 'creative-director-events-weddings', 'cd_instagram', 'Instagram / profile', 'url', true, '', '', 50));
+  rows.push(q_('cd-ig', 'creative-director-events-weddings', 'cd_instagram', 'Instagram / profile', 'text', false, 'optional', '', 50));
   rows.push(q_('cd-avail', 'creative-director-events-weddings', 'cd_availability', 'Availability', 'text', true, '', '', 60));
   rows.push(q_('cd-city', 'creative-director-events-weddings', 'cd_city', 'City', 'text', true, '', '', 70));
   rows.push(q_('cd-rate', 'creative-director-events-weddings', 'expected_commercials', 'Expected project / day commercials', 'text', true, '', '', 80));
 
   rows.push(q_('iph-device', 'iphone-videographer', 'device', 'Which iPhone / device do you shoot on?', 'text', true, '', '', 10));
   rows.push(q_('iph-work', 'iphone-videographer', 'strongest_work', 'Share your strongest work', 'textarea', true, '', '', 20));
-  rows.push(q_('iph-ig', 'iphone-videographer', 'ig_profile', 'Instagram / profile', 'url', true, '', '', 30));
+  rows.push(q_('iph-ig', 'iphone-videographer', 'ig_profile', 'Instagram / profile', 'text', false, 'optional', '', 30));
   rows.push(q_('iph-exp', 'iphone-videographer', 'wedding_event_experience', 'Wedding / event experience', 'textarea', true, '', '', 40));
   rows.push(q_('iph-chn', 'iphone-videographer', 'chennai_availability', 'Chennai availability', 'select', true, '', 'Yes|Sometimes|No', 50));
   rows.push(q_('iph-typ', 'iphone-videographer', 'typical_availability', 'Typical availability', 'text', true, '', '', 60));
@@ -726,7 +744,7 @@ function getPublicCareersConfig_() {
       role_id: q.role_id,
       question_key: q.question_key,
       label: q.label,
-      type: String(q.type || 'text').toLowerCase(),
+      type: isOptionalSocialKey_(q.question_key) ? 'text' : String(q.type || 'text').toLowerCase(),
       required: questionIsRequired_(q.question_key, cat),
       placeholder: q.placeholder || '',
       help: String(q.help || questionHelp_(q.question_key) || ''),
@@ -786,7 +804,8 @@ function getPublicCareersConfig_() {
 }
 
 function submitApplication_(payload) {
-  var answers = payload.answers || {};
+  var answers = fillInstagramNo_(payload.answers || {});
+  payload.answers = answers;
   var check = validateApplication_(payload, answers);
   if (!check.ok) return check;
 
@@ -869,6 +888,7 @@ function validateApplication_(payload, answers) {
     if (q.type === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) {
       return { ok: false, error: 'invalid_email', role: role };
     }
+    if (q.type === 'url' && (isSkippedUrl_(val) || isOptionalSocialKey_(q.question_key))) continue;
     if (!questionIsRequired_(q.question_key, role.category)) continue;
     if (q.type === 'checkbox') {
       if (!(val === true || val === 'true' || val === 'Yes' || val === 'on')) {
@@ -1043,12 +1063,14 @@ function applyRequiredFieldPolicy() {
   var roleIdx = headers.indexOf('role_id');
   var reqIdx = headers.indexOf('required');
   var helpIdx = headers.indexOf('help');
+  var typeIdx = headers.indexOf('type');
   if (keyIdx < 0 || reqIdx < 0) return;
   for (var i = 1; i < data.length; i++) {
     var key = String(data[i][keyIdx] || '');
     var rid = String(data[i][roleIdx] || '');
     var cat = String(rid).toUpperCase() === 'ALL' ? '' : (catByRole[rid] || '');
     data[i][reqIdx] = questionIsRequired_(key, cat) ? 'TRUE' : 'FALSE';
+    if (typeIdx >= 0 && isOptionalSocialKey_(key)) data[i][typeIdx] = 'text';
     if (helpIdx >= 0) {
       var help = questionHelp_(key);
       if (help) data[i][helpIdx] = help;

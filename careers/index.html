@@ -361,10 +361,17 @@ function answersForSubmit(questions, answers) {
   var out = {};
   Object.keys(answers || {}).forEach(function (k) { out[k] = answers[k]; });
   (questions || []).forEach(function (q) {
+    var key = q.question_key;
+    if (isInstagramKey(key)) {
+      var s = String(out[key] == null ? '' : out[key]).trim();
+      out[key] = (!s || isSkippedLink(s)) ? 'no' : normalizeLinkAnswer(s);
+      return;
+    }
     if (q.type !== 'url') return;
-    if (out[q.question_key] == null || out[q.question_key] === '') return;
-    out[q.question_key] = normalizeLinkAnswer(out[q.question_key]);
+    if (out[key] == null || out[key] === '') return;
+    out[key] = normalizeLinkAnswer(out[key]);
   });
+  if (!String(out.instagram || '').trim()) out.instagram = 'no';
   return out;
 }
 
@@ -381,11 +388,11 @@ function fieldHelp(q) {
     intern_current_city: 'The city you are based in right now.',
     cd_city: 'The city you are based in right now.',
     ugc_city: 'The city you are based in right now.',
-    instagram: 'If you prefer not to share Instagram, write no. We will understand.',
-    instagram_if_relevant: 'If you prefer not to share Instagram, write no. We will understand.',
-    cd_instagram: 'If you prefer not to share Instagram, write no. We will understand.',
-    ig_profile: 'If you prefer not to share Instagram, write no. We will understand.',
-    social_profiles: 'If you prefer not to share Instagram, write no. We will understand.',
+    instagram: 'Optional. Leave it blank and we will record no.',
+    instagram_if_relevant: 'Optional. Leave it blank and we will record no.',
+    cd_instagram: 'Optional. Leave it blank and we will record no.',
+    ig_profile: 'Optional. Leave it blank and we will record no.',
+    social_profiles: 'Optional. Leave blank, write no, or paste your profiles.',
     availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
     join_timeline: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
     cd_availability: 'When you can start. A date or a short note such as immediate or 30 days is enough.',
@@ -406,8 +413,14 @@ function fieldHelp(q) {
   return map[q && q.question_key] || '';
 }
 
+function isInstagramKey(key) {
+  var k = String(key || '').toLowerCase();
+  return k === 'instagram' || k === 'instagram_if_relevant' || k === 'cd_instagram' || k === 'ig_profile';
+}
+
 function isRequired(q, role) {
   var key = String((q && q.question_key) || '').toLowerCase();
+  if (isInstagramKey(key)) return false;
   if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'current_city', 'intern_current_city', 'cd_city', 'ugc_city', 'availability', 'join_timeline', 'cd_availability', 'typical_availability', 'current_availability', 'willing_onsite', 'chennai_wfo_confirm', 'chennai_office', 'chennai_availability', 'languages', 'languages_understood', 'best_language'].indexOf(key) !== -1) return true;
   var cat = String((role && role.category) || '').toUpperCase().replace(/[\s-]+/g, '_');
   if (cat === 'INTERNSHIP') return false;
@@ -484,11 +497,12 @@ function Field({ q, value, onChange, fileName, required }) {
     );
   }
   const inputType = ['email','tel','number'].indexOf(q.type) >= 0 ? q.type : 'text';
+  const ph = q.placeholder || (isInstagramKey(q.question_key) ? 'optional — leave blank if none' : (q.type === 'url' ? 'www.yoursite.com' : ''));
   return (
     <div className="field">
       <label htmlFor={id}>{q.label}{reqMark}</label>
       {helpEl}
-      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={q.placeholder || (q.type === 'url' ? 'www.yoursite.com, or no' : '')} value={value || ''} onChange={(e) => onChange(e.target.value)} />
+      <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={ph} value={value || ''} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
@@ -595,9 +609,9 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
         setError('This role is no longer accepting applications.');
         return;
       }
-      if (data && data.error === 'missing_field') { setError(data.field ? 'Please complete: ' + data.field : 'Please complete the required fields.'); return; }
+      if (data && data.error === 'missing_field') { setError(data.field && !isInstagramKey(data.field) ? 'Please complete: ' + data.field : 'Please complete the required fields.'); return; }
       if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, under 5 MB).'); return; }
-      if (data && data.error === 'invalid_url') { setError('Check any link fields. You can write no for Instagram.'); return; }
+      if (data && data.error === 'invalid_url') { setError('Use a site like www.yoursite.com for portfolio. Instagram can stay blank.'); return; }
       if (data && data.error === 'file_too_large') { setError('Resume is too large to send. Use a PDF under 5 MB.'); return; }
       if (data && data.error === 'upload_failed') { setError('Resume upload failed. Try a smaller PDF.'); return; }
       if (data && data.error === 'timeout') { setError('This is taking too long to confirm. Wait a minute, then try once more with a PDF under 5 MB.'); return; }
