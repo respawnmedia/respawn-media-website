@@ -114,7 +114,7 @@ h2{font-size:clamp(40px,7vw,80px)}
 .job-card-actions{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
 .job-card-actions .btn{min-height:44px;padding:0.55rem 0.6rem;font-size:12px;width:100%}
 .job-card-actions .btn:disabled{opacity:0.4;cursor:not-allowed}
-.role-panel{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-strong)}
+.role-panel{margin:1.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:46rem}
 .meta{margin-top:0.55rem;color:var(--muted);font-size:14px}
 .status{display:inline-block;margin-top:0.5rem;font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;font-weight:700;border:1px solid var(--border-strong);padding:0.2rem 0.5rem;color:rgba(255,255,255,0.7)}
 .status-open,.status-always_open{border-color:var(--teal);color:var(--white)}
@@ -124,7 +124,7 @@ h2{font-size:clamp(40px,7vw,80px)}
 .details ul{margin:1rem 0 0 0;list-style:none}
 .details li{margin:0.45rem 0;padding-left:0.9rem;border-left:2px solid rgba(22,196,186,0.35);color:rgba(255,255,255,0.82)}
 .details li.hi{color:var(--white);border-left-color:var(--teal)}
-.role-brief{margin-top:1.5rem;padding:1.5rem 1.35rem 1.4rem;background:var(--surface-2);border:1px solid var(--teal-border);border-radius:4px;max-width:46rem}
+.role-brief{margin:1.5rem auto 0;padding:1.5rem 1.35rem 1.4rem;background:var(--surface-2);border:1px solid var(--teal-border);border-radius:4px;max-width:46rem;width:100%}
 .role-brief h2{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:0.92;letter-spacing:0.02em;margin:0.35rem 0 0.85rem}
 .role-brief h3{font-family:var(--font-condensed);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin:1.35rem 0 0.65rem}
 .role-brief .lede{color:rgba(255,255,255,0.84);max-width:42rem}
@@ -136,8 +136,10 @@ h2{font-size:clamp(40px,7vw,80px)}
 .submit-status strong{display:block;color:var(--teal);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;margin-bottom:0.35rem}
 .submit-status p{margin:0;color:rgba(255,255,255,0.8);font-size:14px;line-height:1.5}
 .btn.is-busy{opacity:0.85;cursor:wait}
-.apply-panel{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:40rem}
-.steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.apply-panel{margin:1.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:40rem;width:100%}
+.apply-panel.is-filling{margin-top:0;padding-top:0;border-top:none}
+.apply-role-title{font-family:var(--font-display);font-size:clamp(32px,4.2vw,48px);line-height:0.92;letter-spacing:0.02em;margin:0 0 1.15rem;text-align:center}
+.steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center}
 .steps span{font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:var(--muted)}
 .steps span.is-on{color:var(--white)}
 .field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.1rem}
@@ -154,9 +156,9 @@ textarea{min-height:110px;resize:vertical}
 .empty h2{margin-bottom:1rem}
 .success h2{color:var(--white)}
 .success h2 em{font-style:normal;color:var(--teal)}
-.apply-page,.thanks-page{padding:6.75rem 3rem 4.5rem;max-width:46rem}
+.apply-page,.thanks-page{padding:6.75rem 3rem 4.5rem;max-width:46rem;margin-left:auto;margin-right:auto;width:100%}
 .thanks-page{min-height:72vh;max-width:40rem}
-.crumb{display:flex;flex-wrap:wrap;gap:0.45rem;align-items:center;margin-bottom:1.5rem;font-family:var(--font-condensed);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
+.crumb{display:flex;flex-wrap:wrap;gap:0.45rem;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:var(--font-condensed);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
 .crumb a{color:rgba(255,255,255,0.55)}
 .crumb a:hover{color:var(--teal)}
 footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);background:var(--surface)}
@@ -491,7 +493,7 @@ function Field({ q, value, onChange, fileName, required }) {
   );
 }
 
-function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
+function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin, onAbort }) {
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState({});
   const [resume, setResume] = useState(null);
@@ -524,6 +526,18 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
       }
     }
     return '';
+  };
+
+  const startApply = () => {
+    setError('');
+    setStep(2);
+    if (onBegin) onBegin();
+  };
+
+  const backToIntro = () => {
+    setError('');
+    setStep(1);
+    if (onAbort) onAbort();
   };
 
   const go = (next) => {
@@ -602,17 +616,19 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
   const reviewList = uni.concat(spec).filter((q) => q.type !== 'file');
 
   return (
-    <div className="apply-panel" role="region" aria-label={'Apply for ' + role.title}>
-      <div className="steps" aria-label="Application steps">
-        {['01 Confirm','02 You','03 Role','04 Review'].map((s, i) => (
-          <span key={s} className={step === i + 1 ? 'is-on' : ''}>{s}</span>
-        ))}
-      </div>
+    <div className={'apply-panel' + (step > 1 ? ' is-filling' : '')} role="region" aria-label={'Apply for ' + role.title}>
+      {step > 1 && (
+        <div className="steps" aria-label="Application steps">
+          {['01 You','02 Role','03 Review'].map((s, i) => (
+            <span key={s} className={step === i + 2 ? 'is-on' : ''}>{s}</span>
+          ))}
+        </div>
+      )}
       {step === 1 && (
         <div>
-          <p className="lede" style={{ marginTop: 0 }}>You are applying for <strong>{role.title}</strong> — {role.location} · {role.work_mode}.</p>
-          <div className="cta-row">
-            <button className="btn btn-primary" type="button" onClick={() => setStep(2)}>Continue</button>
+          <p className="lede" style={{ marginTop: 0, textAlign: 'center' }}>Ready to apply for <strong>{role.title}</strong>?</p>
+          <div className="cta-row" style={{ justifyContent: 'center' }}>
+            <button className="btn btn-primary" type="button" onClick={startApply}>Apply</button>
             <button className="btn btn-ghost" type="button" onClick={onClose}>Cancel</button>
           </div>
         </div>
@@ -631,7 +647,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm }) {
           ))}
           {error && <p className="err" role="alert">{error}</p>}
           <div className="cta-row">
-            <button className="btn btn-ghost" type="button" onClick={() => setStep(1)}>Back</button>
+            <button className="btn btn-ghost" type="button" onClick={backToIntro}>Back</button>
             <button className="btn btn-primary" type="submit">Continue</button>
           </div>
         </form>
@@ -922,6 +938,27 @@ function ApplyPage({ slug, config, loadError, utm }) {
   const role = roles.find((r) => r.slug === slug || r.role_id === slug);
   const canApply = role && role.accepting_applications && role.status !== 'CLOSED';
   const started = useRef(false);
+  const [filling, setFilling] = useState(false);
+
+  useEffect(() => {
+    if (role) document.title = 'Apply: ' + role.title + ' | Respawn Media Careers';
+    else document.title = 'Apply | Respawn Media Careers';
+  }, [role]);
+
+  useEffect(() => {
+    if (!role || started.current) return;
+    started.current = true;
+    track('career_apply_start', { role_id: role.role_id, role_title: role.title, category: role.category });
+  }, [role]);
+
+  const back = careersHref('/careers');
+  const jumpToForm = () => {
+    setFilling(true);
+    window.scrollTo(0, 0);
+    requestAnimationFrame(function () {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    });
+  };
 
   useEffect(() => {
     if (role) document.title = 'Apply: ' + role.title + ' | Respawn Media Careers';
@@ -958,12 +995,15 @@ function ApplyPage({ slug, config, loadError, utm }) {
         )}
         {role && (
           <>
-            <RoleBrief role={role} freelanceIntro={role.category === 'FREELANCE' ? (settings.freelance_intro || '') : ''} />
+            {!filling && <RoleBrief role={role} freelanceIntro={role.category === 'FREELANCE' ? (settings.freelance_intro || '') : ''} />}
+            {filling && <h1 className="apply-role-title">{role.title}</h1>}
             {canApply
               ? <ApplyForm
                   role={role}
                   universalQuestions={(config && config.universalQuestions) || []}
                   utm={utm}
+                  onBegin={jumpToForm}
+                  onAbort={() => setFilling(false)}
                   onClose={() => { window.location.href = back; }}
                   onSuccess={(applicationId) => {
                     markApplied(role);
