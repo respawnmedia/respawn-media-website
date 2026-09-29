@@ -171,6 +171,12 @@ module.exports = async function handler(req, res) {
   payload.api_secret = secret;
 
   try {
+    const cfg = await loadCareersConfig(scriptUrl, secret);
+    if (cfg) payload.answers = fillBlankAnswers(payload.answers, questionsForRole(cfg, payload.role_id));
+    payload.answers = coerceLinkAnswers(payload.answers);
+  } catch (e) {}
+
+  try {
     let parsed = await postToAppsScript(scriptUrl, payload);
     if (parsed && parsed.error === 'invalid_url') {
       payload.answers = coerceLinkAnswers(payload.answers, { forceHttp: true });
@@ -186,6 +192,55 @@ module.exports = async function handler(req, res) {
     const timedOut = e && (e.name === 'AbortError' || e.code === 'ABORT_ERR');
     sendJson(res, timedOut ? 504 : 502, { ok: false, error: timedOut ? 'timeout' : 'submit_failed' });
   }
+}
+
+function questionsForRole(cfg, roleId) {
+  const roles = (cfg && cfg.roles) || [];
+  let role = null;
+  const needle = String(roleId || '').trim().toLowerCase();
+  roles.forEach(function (r) {
+    if (String(r.role_id || '').trim().toLowerCase() === needle) role = r;
+    if (String(r.slug || '').trim().toLowerCase() === needle) role = r;
+  });
+  return ((cfg && cfg.universalQuestions) || []).concat((role && role.questions) || []);
+}
+
+function isBlankAnswerValue(val) {
+  if (val === undefined || val === null) return true;
+  if (Array.isArray(val)) return !val.length;
+  if (typeof val === 'boolean') return false;
+  return String(val).trim() === '';
+}
+
+function fillBlankAnswers(answers, questions) {
+  const skipFake = { full_name: true, email: true, whatsapp: true, resume: true };
+  const out = Object.assign({}, answers || {});
+  (questions || []).forEach(function (q) {
+    if (!q || q.type === 'file' || skipFake[q.question_key]) return;
+    if (!isBlankAnswerValue(out[q.question_key])) return;
+    if (q.type === 'checkbox') {
+      out[q.question_key] = true;
+      return;
+    }
+    if (q.type === 'multiselect') {
+      out[q.question_key] = (q.options && q.options[0]) ? [q.options[0]] : ['N/A'];
+      return;
+    }
+    if (q.type === 'select') {
+      out[q.question_key] = (q.options && q.options[0]) || 'N/A';
+      return;
+    }
+    out[q.question_key] = 'N/A';
+  });
+  return out;
+}
+
+async function loadCareersConfig(scriptUrl, secret) {
+  const url = scriptUrl + (scriptUrl.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(secret);
+  const res = await readTimed(url, { method: 'GET', redirect: 'follow' }, 12000);
+  const parsed = parseJsonLoose(await res.text());
+  if (!parsed || parsed.ok !== true) return null;
+  return parsed.data || null;
 }
 
 function coerceLinkAnswers(answers, opts) {
