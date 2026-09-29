@@ -141,6 +141,12 @@ module.exports = async function handler(req, res) {
     return;
   }
   payload.answers = prepareAnswers(payload.answers || {});
+  if (isBlankValue(payload.answers.current_company)) payload.answers.current_company = '-';
+  if (isBlankValue(payload.answers.anything_else)) payload.answers.anything_else = '-';
+  try {
+    const cfg = await loadCareersConfig(scriptUrl, secret);
+    payload.answers = fillOptionalBlanks(payload.answers, questionsForRole(cfg, payload.role_id));
+  } catch (e) {}
 
   if (file) {
     const ext = extOf(file.filename);
@@ -171,9 +177,20 @@ module.exports = async function handler(req, res) {
 
   try {
     let parsed = await postToAppsScript(scriptUrl, payload);
-    if (parsed && (parsed.error === 'invalid_url' || (parsed.error === 'missing_field' && isInstagramField(parsed.field)))) {
-      payload.answers = prepareAnswers(payload.answers, { legacy: true, field: parsed.field });
-      parsed = await postToAppsScript(scriptUrl, payload);
+    let tries = 0;
+    while (parsed && parsed.ok !== true && tries < 4) {
+      tries += 1;
+      if (parsed.error === 'invalid_url' || parsed.error === 'missing_field') {
+        const field = parsed.field;
+        if (parsed.error === 'missing_field' && field && isCoreField(field)) break;
+        payload.answers = prepareAnswers(payload.answers, { legacy: true, field: field });
+        if (field && isBlankValue(payload.answers[field])) {
+          payload.answers[field] = (isInstagramField(field) || isLinkField(field)) ? 'https://n/a' : '-';
+        }
+        parsed = await postToAppsScript(scriptUrl, payload);
+        continue;
+      }
+      break;
     }
     if (!parsed || parsed.ok !== true) {
       const mapped = mapError(parsed && parsed.error);
@@ -189,6 +206,76 @@ module.exports = async function handler(req, res) {
 
 function looksLikeEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
+}
+
+function isCoreField(key) {
+  const k = String(key || '').toLowerCase();
+  return {
+    full_name: true,
+    email: true,
+    whatsapp: true,
+    resume: true,
+    portfolio_urls: true,
+    years_experience: true,
+    current_city: true,
+    intern_current_city: true,
+    cd_city: true,
+    ugc_city: true,
+    availability: true,
+    join_timeline: true,
+    cd_availability: true,
+    typical_availability: true,
+    current_availability: true,
+    willing_onsite: true,
+    chennai_wfo_confirm: true,
+    chennai_office: true,
+    chennai_availability: true,
+    languages: true,
+    languages_understood: true,
+    best_language: true
+  }[k] === true;
+}
+
+function isBlankValue(v) {
+  if (v == null) return true;
+  if (Array.isArray(v)) return !v.length;
+  return String(v).trim() === '';
+}
+
+function questionsForRole(cfg, roleId) {
+  const data = (cfg && cfg.data) || cfg || {};
+  const uni = data.universalQuestions || [];
+  const roles = data.roles || [];
+  const needle = String(roleId || '').trim().toLowerCase();
+  let role = null;
+  roles.forEach(function (r) {
+    if (!r) return;
+    if (String(r.role_id || '').trim().toLowerCase() === needle) role = r;
+    if (!role && String(r.slug || '').trim().toLowerCase() === needle) role = r;
+  });
+  return uni.concat((role && role.questions) || []);
+}
+
+function fillOptionalBlanks(answers, questions) {
+  const out = Object.assign({}, answers || {});
+  (questions || []).forEach(function (q) {
+    if (!q || q.type === 'file') return;
+    const k = q.question_key;
+    if (!k || isCoreField(k)) return;
+    if (!isBlankValue(out[k])) return;
+    if (isInstagramField(k) || isLinkField(k) || String(q.type || '').toLowerCase() === 'url') {
+      out[k] = 'https://n/a';
+      return;
+    }
+    out[k] = '-';
+  });
+  return out;
+}
+
+async function loadCareersConfig(scriptUrl, secret) {
+  const url = scriptUrl + (scriptUrl.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(secret);
+  const res = await readTimed(url, { method: 'GET', redirect: 'follow' }, 12000);
+  return parseJsonLoose(await res.text());
 }
 
 function isInstagramField(key) {
