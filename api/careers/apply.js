@@ -141,11 +141,14 @@ module.exports = async function handler(req, res) {
     return;
   }
   payload.answers = prepareAnswers(payload.answers || {});
-  if (isBlankValue(payload.answers.current_company)) payload.answers.current_company = '-';
-  if (isBlankValue(payload.answers.anything_else)) payload.answers.anything_else = '-';
+  payload.answers = fillOptionalBlanks(payload.answers, payload.questions || [], payload.category);
   try {
     const cfg = await loadCareersConfig(scriptUrl, secret);
-    payload.answers = fillOptionalBlanks(payload.answers, questionsForRole(cfg, payload.role_id));
+    payload.answers = fillOptionalBlanks(
+      payload.answers,
+      questionsForRole(cfg, payload.role_id),
+      cfgRoleCategory(cfg, payload.role_id) || payload.category
+    );
   } catch (e) {}
 
   if (file) {
@@ -182,7 +185,7 @@ module.exports = async function handler(req, res) {
       tries += 1;
       if (parsed.error === 'invalid_url' || parsed.error === 'missing_field') {
         const field = parsed.field;
-        if (parsed.error === 'missing_field' && field && isCoreField(field)) break;
+        if (parsed.error === 'missing_field' && field && !shouldFillOptional(field, payload.category)) break;
         payload.answers = prepareAnswers(payload.answers, { legacy: true, field: field });
         if (field && isBlankValue(payload.answers[field])) {
           payload.answers[field] = (isInstagramField(field) || isLinkField(field)) ? 'https://n/a' : '-';
@@ -242,6 +245,31 @@ function isBlankValue(v) {
   return String(v).trim() === '';
 }
 
+function shouldFillOptional(key, category) {
+  if (isCoreField(key)) return false;
+  const cat = String(category || '').toUpperCase().replace(/[\s-]+/g, '_');
+  if (['previous_ctc', 'current_ctc', 'expected_ctc'].indexOf(String(key || '').toLowerCase()) !== -1) {
+    return cat !== 'FULL_TIME' && cat !== 'FULLTIME';
+  }
+  if (String(key || '').toLowerCase() === 'expected_commercials') {
+    return cat !== 'FREELANCE' && cat !== 'FULL_TIME' && cat !== 'FULLTIME';
+  }
+  return true;
+}
+
+function cfgRoleCategory(cfg, roleId) {
+  const data = (cfg && cfg.data) || cfg || {};
+  const needle = String(roleId || '').trim().toLowerCase();
+  let cat = '';
+  (data.roles || []).forEach(function (r) {
+    if (!r) return;
+    if (String(r.role_id || '').trim().toLowerCase() === needle || String(r.slug || '').trim().toLowerCase() === needle) {
+      cat = r.category || '';
+    }
+  });
+  return cat;
+}
+
 function questionsForRole(cfg, roleId) {
   const data = (cfg && cfg.data) || cfg || {};
   const uni = data.universalQuestions || [];
@@ -256,19 +284,25 @@ function questionsForRole(cfg, roleId) {
   return uni.concat((role && role.questions) || []);
 }
 
-function fillOptionalBlanks(answers, questions) {
+function fillOptionalBlanks(answers, questions, category) {
   const out = Object.assign({}, answers || {});
-  (questions || []).forEach(function (q) {
-    if (!q || q.type === 'file') return;
-    const k = q.question_key;
-    if (!k || isCoreField(k)) return;
-    if (!isBlankValue(out[k])) return;
-    if (isInstagramField(k) || isLinkField(k) || String(q.type || '').toLowerCase() === 'url') {
-      out[k] = 'https://n/a';
+  const seen = {};
+  function fillKey(k, type) {
+    const key = String(k || '');
+    if (!key || seen[key] || !shouldFillOptional(key, category)) return;
+    seen[key] = true;
+    if (!isBlankValue(out[key])) return;
+    if (isInstagramField(key) || isLinkField(key) || String(type || '').toLowerCase() === 'url') {
+      out[key] = 'https://n/a';
       return;
     }
-    out[k] = '-';
+    out[key] = '-';
+  }
+  (questions || []).forEach(function (q) {
+    if (!q || q.type === 'file') return;
+    fillKey(q.question_key, q.type);
   });
+  Object.keys(out).forEach(function (k) { fillKey(k, ''); });
   return out;
 }
 

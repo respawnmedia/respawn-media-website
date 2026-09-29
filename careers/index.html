@@ -367,9 +367,10 @@ function answersForSubmit(questions, answers) {
       out[key] = (!s || isSkippedLink(s)) ? 'no' : normalizeLinkAnswer(s);
       return;
     }
-    if (q.type !== 'url') return;
-    if (out[key] == null || out[key] === '') return;
-    out[key] = normalizeLinkAnswer(out[key]);
+    if (out[key] == null) out[key] = '';
+    if (q.type === 'url' && String(out[key]).trim()) {
+      out[key] = normalizeLinkAnswer(out[key]);
+    }
   });
   if (!String(out.instagram || '').trim()) out.instagram = 'no';
   return out;
@@ -427,6 +428,10 @@ function isRequired(q, role) {
   if (['previous_ctc', 'current_ctc', 'expected_ctc'].indexOf(key) !== -1) return cat === 'FULL_TIME';
   if (key === 'expected_commercials') return cat === 'FREELANCE' || cat === 'FULL_TIME';
   return false;
+}
+
+function isCoreFieldClient(key, role) {
+  return isRequired({ question_key: key }, role);
 }
 
 function Field({ q, value, onChange, fileName, required }) {
@@ -587,6 +592,10 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
       fd.append('payload', JSON.stringify({
         role_id: role.role_id,
         answers: answersForSubmit(uni.concat(spec), answers),
+        questions: uni.concat(spec).map(function (q) {
+          return { question_key: q.question_key, type: q.type };
+        }),
+        category: role.category || '',
         utm_source: utm.utm_source || '',
         utm_medium: utm.utm_medium || '',
         utm_campaign: utm.utm_campaign || '',
@@ -609,7 +618,8 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
         setError('This role is no longer accepting applications.');
         return;
       }
-      if (data && data.error === 'missing_field') { setError(data.field && !isInstagramKey(data.field) ? 'Please complete: ' + data.field : 'Please complete the required fields.'); return; }
+      if (data && data.error === 'missing_field' && data.field && isCoreFieldClient(data.field, role)) { setError('Please complete: ' + data.field); return; }
+      if (data && data.error === 'missing_field') { setError('Please complete the required fields.'); return; }
       if (data && data.error === 'resume_required') { setError('Add a resume (PDF, DOC or DOCX, under 5 MB).'); return; }
       if (data && data.error === 'invalid_url') { setError('Use a site like www.yoursite.com for portfolio. Instagram can stay blank.'); return; }
       if (data && data.error === 'file_too_large') { setError('Resume is too large to send. Use a PDF under 5 MB.'); return; }
