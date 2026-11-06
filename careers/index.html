@@ -122,12 +122,14 @@ h2{font-size:clamp(40px,7vw,80px)}
 .linkish{background:none;border:none;color:var(--white);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
 .details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.82)}
 .details ul{margin:1rem 0 0 0;list-style:none}
-.details li{margin:0.45rem 0;padding-left:0.9rem;border-left:2px solid rgba(22,196,186,0.35);color:rgba(255,255,255,0.82)}
-.details li.hi{color:var(--white);border-left-color:var(--teal)}
+.look-lines{margin:0.35rem 0 0}
+.look-lines p{margin:0 0 0.95rem;color:rgba(255,255,255,0.86);font-size:16px;line-height:1.55}
+.look-lines p:last-child{margin-bottom:0}
+.look-lines p.hi{color:var(--white);padding-left:0.8rem;border-left:2px solid var(--teal)}
 .role-brief{margin:1.5rem auto 0;padding:1.5rem 1.35rem 1.4rem;background:var(--surface-2);border:1px solid var(--teal-border);border-radius:4px;max-width:46rem;width:100%}
 .role-brief h2{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:0.92;letter-spacing:0.02em;margin:0.35rem 0 0.85rem}
 .role-brief h3{font-family:var(--font-condensed);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin:1.35rem 0 0.65rem}
-.role-brief .lede{color:rgba(255,255,255,0.84);max-width:42rem}
+.role-brief .lede{color:rgba(255,255,255,0.84);max-width:42rem;white-space:pre-wrap}
 .role-facts{display:grid;gap:0.55rem 1.5rem;margin:1rem 0 0;grid-template-columns:repeat(2,minmax(0,1fr))}
 .role-facts div{min-width:0}
 .role-facts span{display:block;font-family:var(--font-condensed);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
@@ -141,9 +143,11 @@ h2{font-size:clamp(40px,7vw,80px)}
 .apply-role-title{font-family:var(--font-display);font-size:clamp(32px,4.2vw,48px);line-height:0.92;letter-spacing:0.02em;margin:0 0 1.15rem;text-align:center}
 .steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center}
 .steps span{font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:var(--muted)}
-.steps span.is-on{color:var(--white)}
+.steps span.is-on{color:var(--teal)}
 .field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.1rem}
-.field label{font-family:var(--font-condensed);letter-spacing:0.1em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,0.7)}
+.field label,.field > span{font-family:var(--font-condensed);letter-spacing:0.1em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,0.7)}
+.field.is-required > label,.field.is-required > span{color:var(--teal)}
+.field.is-required input,.field.is-required textarea,.field.is-required select{border-color:var(--teal-border);box-shadow:inset 3px 0 0 var(--teal)}
 .field-help{margin:0;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.45;font-family:var(--font-body);text-transform:none;letter-spacing:0}
 .opt{margin-left:0.4rem;color:rgba(255,255,255,0.35);font-size:10px;letter-spacing:0.08em}
 .req{color:var(--teal);margin-left:0.25rem}
@@ -409,7 +413,8 @@ function fieldHelp(q) {
     previous_ctc: 'Last drawn annual CTC in INR.',
     current_ctc: 'Current annual CTC in INR. Write N/A if you are not employed.',
     expected_ctc: 'Expected annual CTC in INR.',
-    expected_commercials: 'Your expected day or project rate.'
+    expected_commercials: 'Your expected day or project rate.',
+    why_respawn: 'A short, honest note. Why this desk, not any design job.'
   };
   return map[q && q.question_key] || '';
 }
@@ -422,7 +427,7 @@ function isInstagramKey(key) {
 function isRequired(q, role) {
   var key = String((q && q.question_key) || '').toLowerCase();
   if (isInstagramKey(key)) return false;
-  if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'current_city', 'intern_current_city', 'cd_city', 'ugc_city', 'availability', 'join_timeline', 'cd_availability', 'typical_availability', 'current_availability', 'willing_onsite', 'chennai_wfo_confirm', 'chennai_office', 'chennai_availability', 'languages', 'languages_understood', 'best_language'].indexOf(key) !== -1) return true;
+  if (['full_name', 'email', 'whatsapp', 'resume', 'portfolio_urls', 'years_experience', 'current_city', 'intern_current_city', 'cd_city', 'ugc_city', 'availability', 'join_timeline', 'cd_availability', 'typical_availability', 'current_availability', 'willing_onsite', 'chennai_wfo_confirm', 'chennai_office', 'chennai_availability', 'languages', 'languages_understood', 'best_language', 'why_respawn', 'design_tools', 'strongest_design_work'].indexOf(key) !== -1) return true;
   var cat = String((role && role.category) || '').toUpperCase().replace(/[\s-]+/g, '_');
   if (cat === 'INTERNSHIP') return false;
   if (['previous_ctc', 'current_ctc', 'expected_ctc'].indexOf(key) !== -1) return cat === 'FULL_TIME';
@@ -436,12 +441,13 @@ function isCoreFieldClient(key, role) {
 
 function Field({ q, value, onChange, fileName, required }) {
   const id = 'q-' + q.question_id;
+  const fieldClass = 'field' + (required ? ' is-required' : '');
   const reqMark = required ? <span className="req" aria-hidden="true">*</span> : <span className="opt">optional</span>;
   const help = fieldHelp(q);
   const helpEl = help ? <p className="field-help">{help}</p> : null;
   if (q.type === 'textarea') {
     return (
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor={id}>{q.label}{reqMark}</label>
         {helpEl}
         <textarea id={id} required={required} placeholder={q.placeholder || ''} value={value || ''} onChange={(e) => onChange(e.target.value)} />
@@ -450,7 +456,7 @@ function Field({ q, value, onChange, fileName, required }) {
   }
   if (q.type === 'select') {
     return (
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor={id}>{q.label}{reqMark}</label>
         {helpEl}
         <select id={id} required={required} value={value || ''} onChange={(e) => onChange(e.target.value)}>
@@ -467,7 +473,7 @@ function Field({ q, value, onChange, fileName, required }) {
       onChange(next);
     };
     return (
-      <div className="field">
+      <div className={fieldClass}>
         <span id={id}>{q.label}{reqMark}</span>
         {helpEl}
         <div className="check-row" role="group" aria-labelledby={id}>
@@ -483,7 +489,7 @@ function Field({ q, value, onChange, fileName, required }) {
   }
   if (q.type === 'checkbox') {
     return (
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor={id} style={{ textTransform:'none', letterSpacing:0, fontFamily:'var(--font-body)', fontSize:15 }}>
           <input id={id} type="checkbox" required={required} checked={!!value} onChange={(e) => onChange(e.target.checked)} /> {q.label}{reqMark}
         </label>
@@ -493,7 +499,7 @@ function Field({ q, value, onChange, fileName, required }) {
   }
   if (q.type === 'file') {
     return (
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor={id}>{q.label}{reqMark}</label>
         {helpEl}
         <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
@@ -504,7 +510,7 @@ function Field({ q, value, onChange, fileName, required }) {
   const inputType = ['email','tel','number'].indexOf(q.type) >= 0 ? q.type : 'text';
   const ph = q.placeholder || (isInstagramKey(q.question_key) ? 'optional — leave blank if none' : (q.type === 'url' ? 'www.yoursite.com' : ''));
   return (
-    <div className="field">
+    <div className={fieldClass}>
       <label htmlFor={id}>{q.label}{reqMark}</label>
       {helpEl}
       <input id={id} type={inputType} inputMode={q.type === 'url' ? 'url' : undefined} required={required} placeholder={ph} value={value || ''} onChange={(e) => onChange(e.target.value)} />
@@ -659,7 +665,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
       )}
       {step === 2 && (
         <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
-          <p className="meta" style={{ marginBottom: '1.1rem' }}>Fields marked * are required. Everything else is optional.</p>
+          <p className="meta" style={{ marginBottom: '1.1rem' }}>Fields marked <span className="req">*</span> are required. Everything else is optional.</p>
           <div className="hp" aria-hidden="true">
             <label>Company fax<input name="hp_confirm" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
           </div>
@@ -679,7 +685,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
       {step === 3 && (
         <form onSubmit={(e) => { e.preventDefault(); go(4); }}>
           {spec.length === 0 && <p className="lede" style={{ marginTop: 0 }}>No extra questions for this role.</p>}
-          {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Only the fields marked * are required for this role.</p>}
+          {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Only the fields marked <span className="req">*</span> are required for this role.</p>}
           {spec.map((q) => (
             <Field key={q.question_id} q={q} required={isRequired(q, role)} value={answers[q.question_key]} fileName={resume && resume.name} onChange={(v) => q.type === 'file' ? setResume(v || null) : setVal(q.question_key, v)} />
           ))}
@@ -715,6 +721,94 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
   );
 }
 
+function lookLinesFor(role) {
+  var lines = LOOK_LINES[role && role.role_id];
+  if (lines && lines.length) {
+    return lines.map(function (line, i) {
+      return { requirement_id: role.role_id + '-line-' + i, requirement: line.text, highlight: !!line.hi };
+    });
+  }
+  return (role && role.requirements) || [];
+}
+
+var LOOK_LINES = {
+  'social-media-manager': [
+    { hi: true, text: 'Two years minimum. If you are still collecting your first brand, this seat is not it.' },
+    { text: 'You run the month: the strategy, the content plan, the reel IPs, and the shoot, without waiting to be told what the internet is doing.' },
+    { text: 'You think about the brand first. Views are a result, not the brief.' },
+    { text: 'You can spot a format while it is still becoming one, and you use AI like a tool, not a personality.' },
+    { text: 'Creators, videographers, editors. You hold the room together and the work still feels like one idea.' }
+  ],
+  'video-editor-ft': [
+    { hi: true, text: 'Two or three years in, and a cut that lands before the viewer decides to leave.' },
+    { text: 'Hindi and English are the job. Tamil is how you become the person we call first.' },
+    { text: 'If the music is wrong, the edit is wrong. You already hear that.' },
+    { text: 'Hooks and rhythms move every week. You move your own cut with them, not after the trend deck arrives.' },
+    { hi: true, text: 'Bring the work. We hire the portfolio, then we hire the person who made it.' }
+  ],
+  'video-editor-intern': [
+    { text: 'You can edit, you know Premiere, and you have something to show, even if it is still small.' },
+    { hi: true, text: 'Proof beats potential. A rough cut you actually finished is worth more than a speech about passion.' },
+    { text: 'You want the desk next to the senior editor, and you are ready to get better on purpose.' }
+  ],
+  'content-creative-intern': [
+    { text: 'You have tried things. A page, a draft, a reel that almost worked. Bring the proof.' },
+    { text: 'Hooks, writing, internet culture. Curiosity beats a perfect portfolio you do not have yet.' },
+    { hi: true, text: 'Your own page, or any real proof of work, gets you to the front of the pile.' },
+    { text: 'You can tell a video that got views from a video that actually built a brand.' }
+  ],
+  'graphic-designer': [
+    { hi: true, text: 'Minimum 1 year of professional graphic design experience.' },
+    { text: 'Photoshop, Illustrator and Figma should be working knowledge, not a course you once sat through.' },
+    { text: 'Typography, composition, hierarchy, spacing and colour should actually bother you.' },
+    { text: 'Keep up with what is happening in design without photocopying this week’s trend onto every brand.' },
+    { text: 'A luxury label, a restaurant and a tech company should not leave your desk looking identical.' },
+    { text: 'A degree is nice. Good work and real experience are better.' },
+    { text: 'You save references because a layout or font pairing actually caught your eye, and you can explain why a design works — not only that it looks cool.' },
+    { text: 'You understand social-first: a feed, a Story, an ad and a carousel are not the same job.' },
+    { hi: true, text: 'Do not make the résumé the most creative thing in the application. Show us the work.' }
+  ],
+  'gen-ai-meta-ads-intern': [
+    { text: 'Show what you have actually built. “I use ChatGPT” is not a portfolio.' },
+    { hi: true, text: 'Curiosity first. If your bio says AI expert and your folder is empty, we will notice.' },
+    { text: 'Meta ads, numbers, and the model that dropped this week. You should want all three.' }
+  ],
+  'creative-director-events-weddings': [
+    { hi: true, text: 'Do not apply if the plan is to point a camera at the couple and hope the edit saves you.' },
+    { text: 'You own the story: the emotion, the Vox Pop, the thirty seconds people actually send around.' },
+    { text: 'You know what a wedding looks like on a feed, not just in a highlight film nobody finishes.' },
+    { hi: true, text: 'A strong event reel opens the door. Showing up like a collaborator is how you stay on the list.' }
+  ],
+  'iphone-videographer': [
+    { text: 'A good phone is the starting line, not the portfolio.' },
+    { text: 'You catch the moment while it is still happening: emotion, framing, footage an editor can actually cut.' },
+    { text: 'Weddings, events, lifestyle. Social-first, on time, and worth calling again.' },
+    { hi: true, text: 'If the only flex is the device, we will notice. If the work is good, we will book you.' }
+  ],
+  'professional-videographer': [
+    { hi: true, text: 'You know the camera well enough that the brief does not scare you.' },
+    { text: 'Composition, light, and a brand that still looks like itself when the shoot is over.' },
+    { text: 'You can take direction without losing the frame, inside a team that already has a point of view.' },
+    { hi: true, text: 'Show us three shoots you would still put your name on. Recurring work goes to people we trust twice.' }
+  ],
+  'ugc-creator': [
+    { text: 'Make the product feel like it wandered onto the feed, not like it paid for the slot.' },
+    { text: 'Demos, reviews, lifestyle. A real hook. If it looks like an ad wearing a costume, it is not the brief.' },
+    { hi: true, text: 'If your page already sells without looking desperate, lead with that.' }
+  ],
+  'video-editor-freelance': [
+    { hi: true, text: 'Send the edits you would bet your rate on. We can tell when the portfolio is the safe three.' },
+    { text: 'Pacing and music are the whole job, not a garnish.' },
+    { text: 'You change the cut when the brand changes, instead of making every client look like your last one.' }
+  ],
+  'script-writer': [
+    { hi: true, text: 'A script that needs the viewer to be patient is a script we will not post.' },
+    { text: 'Hooks, humour, language, pacing. You should be able to read the line out loud and still like it.' },
+    { hi: true, text: 'English, Hindi, Tamil. Two of those, comfortably, is the brief.' },
+    { text: 'You watch enough to know what is already tired, and you write the version that is not.' }
+  ]
+};
+
 function RoleCard({ role, selected, onDetails }) {
   const canApply = role.accepting_applications && role.status !== 'CLOSED';
   return (
@@ -740,6 +834,7 @@ function RoleCard({ role, selected, onDetails }) {
 
 function RoleBrief({ role, freelanceIntro }) {
   const showFreelanceNote = role.category === 'FREELANCE';
+  const lines = lookLinesFor(role);
   const facts = [
     ['Location', role.location || 'Chennai'],
     ['Work mode', role.work_mode],
@@ -771,12 +866,12 @@ function RoleBrief({ role, freelanceIntro }) {
           {role.full_description && <p className="lede">{role.full_description}</p>}
         </>
       ) : null}
-      {role.requirements && role.requirements.length > 0 && (
+      {lines.length > 0 && (
         <>
           <h3>What we look for</h3>
-          <ul className="details" style={{ marginTop: 0 }}>
-            {role.requirements.map((r) => <li key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</li>)}
-          </ul>
+          <div className="look-lines">
+            {lines.map((r) => <p key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</p>)}
+          </div>
         </>
       )}
     </div>

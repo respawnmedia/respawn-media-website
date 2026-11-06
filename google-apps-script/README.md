@@ -9,10 +9,13 @@ The live website never talks to this URL from the browser. Vercel functions (`ap
 | Function | Purpose |
 | --- | --- |
 | `setupWorkbook()` | Creates `SITE_SETTINGS`, `ROLES`, `REQUIREMENTS`, `QUESTIONS`, `ALL_APPLICATIONS`, `CANDIDATES`, `ANSWERS` |
-| `seedDefaultCareersData()` | Inserts default settings, roles, requirements, questions. Skips existing `role_id` / `question_id` / `requirement_id` / settings `key` |
+| `seedDefaultCareersData()` | Inserts default settings, roles, requirements, questions. Skips existing ids, then refreshes Social Media Manager questions |
+| `syncSocialMediaManagerQuestions()` | Rewrites the Social Media Manager question rows and turns off questions that role no longer asks |
+| `syncRoleLookLines()` | Rewrites **What we look for** lines on `REQUIREMENTS` for seeded roles |
+| `openGraphicDesignerRole()` | Adds Graphic Designer (full-time, 3-month probation), hides Graphic Design Intern if present, syncs the role tab |
 | `syncRoleTabs()` | Ensures one readable tab per role with question labels as column headers (not QUERY dumps) |
 | `applyRequiredFieldPolicy()` | Marks core fields required (name, email, WhatsApp, city, start date, on-site, resume, portfolio, experience, languages, CTC/rate). Instagram stays optional (blank or “no” is fine) |
-| `rebuildReadableViews()` | Rebuilds `CANDIDATES`, `ANSWERS`, and each role tab from `ALL_APPLICATIONS` so existing responses are readable |
+| `syncReadableViews()` | Adds any missing applications to `CANDIDATES`, `ANSWERS`, and role tabs. Does not clear colour, hidden rows, or notes |
 | `doGet` | Public careers JSON (site settings, visible roles, enabled requirements/questions). No applicant data |
 | `doPost` | Validates secret + payload, stores resume in Drive, appends `ALL_APPLICATIONS` plus readable views |
 
@@ -39,12 +42,12 @@ Apps Script running **as you** can still write files. Candidates never need a pu
 
 1. Paste `RespawnCareersBackend.gs` into the script (Extensions → Apps Script on the Sheet, or a standalone project with `SPREADSHEET_ID`).
 2. Set Script Properties.
-3. Run `setupWorkbook`, then `seedDefaultCareersData`, then `syncRoleTabs` (authorize Drive + Sheets).
+3. Run `setupWorkbook`, then `seedDefaultCareersData`, then `syncRoleTabs` (authorize Drive + Sheets). Seed refreshes the Social Media Manager questions. On an existing sheet you can run `syncSocialMediaManagerQuestions` on its own, then deploy a new web app version.
 4. Deploy → New deployment → Type **Web app**.
 5. Execute as: **Me**
 6. Who has access: **Anyone** (so Vercel can POST/GET; the URL is still a secret stored only on Vercel)
 7. Copy the `/exec` URL into Vercel `CAREERS_APPS_SCRIPT_URL`.
 
-After each successful test, rows land on `ALL_APPLICATIONS`. Run **5. Rebuild readable response views** when you want `CANDIDATES` / role tabs updated.
+New applications are written to `ALL_APPLICATIONS` and also appended to `CANDIDATES` / the role tab. Run **6. Turn on automatic sheet updates** once so a 5-minute backup sync catches anything that did not append during submit. **5. Add missing responses** only inserts new rows — it does not wipe colours or hidden rows.
 
 Full operator checklist: [`../CAREERS_SETUP.md`](../CAREERS_SETUP.md).

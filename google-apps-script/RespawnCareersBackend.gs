@@ -79,7 +79,11 @@ function onOpen() {
     .addItem('2. Seed default data', 'seedDefaultCareersData')
     .addItem('3. Sync role tabs', 'syncRoleTabs')
     .addItem('4. Apply required-field policy', 'applyRequiredFieldPolicy')
-    .addItem('5. Rebuild readable response views', 'rebuildReadableViews')
+    .addItem('5. Add missing responses (keeps colours)', 'syncReadableViews')
+    .addItem('6. Turn on automatic sheet updates', 'installReadableSyncTrigger')
+    .addItem('7. Update Social Media Manager questions', 'syncSocialMediaManagerQuestions')
+    .addItem('8. Refresh what we look for', 'syncRoleLookLines')
+    .addItem('9. Open Graphic Designer role', 'openGraphicDesignerRole')
     .addToUi();
 }
 
@@ -152,8 +156,10 @@ function seedDefaultCareersData() {
   seedSettings_(ss);
   seedRoles_(ss);
   seedRequirements_(ss);
+  syncRoleLookLines();
   seedQuestions_(ss);
-  applyRequiredFieldPolicy();
+  syncSocialMediaManagerQuestions();
+  openGraphicDesignerRole();
 }
 
 function seedSettings_(ss) {
@@ -198,12 +204,54 @@ function seedRoles_(ss) {
   }
 }
 
+function graphicDesignerDescription_() {
+  return [
+    'We spend an unreasonable amount of time caring about fonts, spacing, references and whether something actually looks right.',
+    'We work across different brands and industries, so the design language changes constantly. Your job is not to force one aesthetic everywhere. It is to understand the brand, understand the audience, and figure out what visual direction actually makes sense.',
+    'You will make social creatives, layouts, campaign assets and other digital visuals. Photoshop, Illustrator, Figma — whichever the project needs. You turn briefs, references and rough ideas into strong concepts, then into clean files for feed, Story, ad, carousel and print. You take feedback, improve fast, and know when a design needs another round — and when it just needs fewer elements.',
+    'The role starts with a 3-month probation. We will use that time to see how you think, how quickly you adapt, how you work with briefs and feedback, and whether your instincts fit the way we work.',
+    'One request: do not make the résumé the most creative thing in your application. We are hiring a designer. Show us the work.'
+  ].join('\n\n');
+}
+
+function openGraphicDesignerRole() {
+  setupWorkbook();
+  var ss = getSpreadsheet_();
+  seedRoles_(ss);
+  hideGraphicDesignIntern_(ss);
+  seedRequirements_(ss);
+  syncRoleLookLines();
+  seedQuestions_(ss);
+  applyRequiredFieldPolicy();
+  syncRoleTabs();
+}
+
+function hideGraphicDesignIntern_(ss) {
+  var sheet = ss.getSheetByName(ROLES_SHEET);
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) return;
+  var headers = data[0];
+  var idIdx = headers.indexOf('role_id');
+  var showIdx = headers.indexOf('show_on_site');
+  var acceptIdx = headers.indexOf('accepting_applications');
+  var statusIdx = headers.indexOf('status');
+  if (idIdx < 0) return;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][idIdx] || '') !== 'graphic-design-intern') continue;
+    if (showIdx >= 0) data[i][showIdx] = 'FALSE';
+    if (acceptIdx >= 0) data[i][acceptIdx] = 'FALSE';
+    if (statusIdx >= 0) data[i][statusIdx] = 'PAUSED';
+    sheet.getRange(i + 1, 1, 1, headers.length).setValues([data[i]]);
+  }
+}
+
 function defaultRoles_(ts) {
   return [
     roleRow_('social-media-manager', 'social-media-manager', 'Social Media Manager', 'FULL-TIME', 'CONTENT', 'Chennai', 'Work from office', 'Mon–Sat', '2+ years', '₹20,000–₹35,000/month depending on skill and experience', 'OPEN', 'TRUE', 'TRUE', 'TRUE', 10, 'FULL-TIME', 'Own the social strategy. Lead the work.', 'Own social media strategy, monthly content plans, reel and content IPs, shoots, and coordination with creators, videographers and editors. This role is for people who already think about brands — not only views — and who can take ownership in a work-from-office Chennai team. Freshers are not the target.', ts),
     roleRow_('video-editor-ft', 'video-editor', 'Video Editor', 'FULL-TIME', 'EDITING', 'Chennai', 'Work from office', 'Mon–Sat', 'Around 2–3 years', '', 'OPEN', 'TRUE', 'TRUE', 'TRUE', 20, 'FULL-TIME', 'Editors who track how the internet actually cuts.', 'Professional editing with a strong music sense, pacing, and storytelling instinct. You notice how hooks, rhythms and styles change week to week, and you evolve your own cut accordingly. Portfolio quality is a major evaluation criterion.', ts),
     roleRow_('video-editor-intern', 'video-editor-intern', 'Video Editor Intern', 'INTERNSHIP', 'EDITING', 'Chennai', 'Work from office', 'Mon–Sat', 'Paid internship', 'Paid', 'OPEN', 'TRUE', 'TRUE', 'FALSE', 30, 'INTERNSHIP', 'Learn the cut beside the desk.', 'Paid internship in Chennai. Comfortable with professional video editing, Premiere Pro knowledge, and some proof of previous work. Eager to learn alongside the senior editor and team.', ts),
     roleRow_('content-creative-intern', 'content-creative-intern', 'Content + Creative Intern', 'INTERNSHIP', 'CONTENT', 'Chennai', 'Work from office', 'Mon–Sat', 'Paid internship', 'Paid', 'OPEN', 'TRUE', 'TRUE', 'FALSE', 40, 'INTERNSHIP', 'Curiosity, proof of trying, writing instincts.', 'Paid internship for people with some previous content creation, strong writing instincts, and a feel for hooks, reels and internet culture. You do not need to already know everything. Curiosity and evidence of trying things matter. Own page or proof of work is a major advantage.', ts),
+    roleRow_('graphic-designer', 'graphic-designer', 'Graphic Designer', 'FULL-TIME', 'DESIGN', 'Chennai', 'Work from office', 'Mon–Sat', '1+ year · 3-month probation', '', 'OPEN', 'TRUE', 'TRUE', 'TRUE', 15, 'FULL-TIME', 'Taste first. One aesthetic is not a personality.', graphicDesignerDescription_(), ts),
     roleRow_('gen-ai-meta-ads-intern', 'gen-ai-meta-ads-intern', 'Gen AI + Meta Ads Intern', 'INTERNSHIP', 'AI + PERFORMANCE', 'Chennai', 'Work from office', 'Mon–Sat', 'Paid internship', 'Paid', 'OPEN', 'TRUE', 'TRUE', 'FALSE', 50, 'INTERNSHIP', 'Experiment first. Claim expertise later.', 'Paid internship for people who already use AI, try generative tools, and can show things they have actually built. Interest in Meta Ads, performance marketing, numbers and metrics. Curiosity and experimentation matter more than claiming expertise.', ts),
     roleRow_('creative-director-events-weddings', 'creative-director', 'Creative Director — Events + Weddings', 'FREELANCE', 'PRODUCTION', 'Chennai', 'Project basis', 'Project / day', 'Portfolio-led', '', 'ALWAYS_OPEN', 'TRUE', 'TRUE', 'FALSE', 60, 'FREELANCE', 'Own the story. Do not only shoot footage.', 'Freelance / project collaboration. Creatively own wedding and event content: storytelling, emotional moments, visual judgement, Vox Pops, post-event content, and reels people actually want to watch. Strong wedding or event portfolio is a major advantage. This is not a permanent employment role.', ts),
     roleRow_('iphone-videographer', 'iphone-videographer', 'iPhone Videographer', 'FREELANCE', 'PRODUCTION', 'Chennai', 'Project basis', 'Project / day', 'Portfolio-led', '', 'ALWAYS_OPEN', 'TRUE', 'TRUE', 'FALSE', 70, 'FREELANCE', 'Social-first footage. Recurring collaboration.', 'Freelance / project basis for wedding content, events, lifestyle coverage and storytelling-led shoots. Understands moments, emotion, framing and social-first capture. Dependable execution. Owning an expensive phone is not enough on its own.', ts),
@@ -234,6 +282,55 @@ function req_(id, roleId, text, highlight, order) {
   return [id, roleId, text, 'TRUE', highlight ? 'TRUE' : 'FALSE', order];
 }
 
+function syncRoleLookLines() {
+  setupWorkbook();
+  var sheet = getSpreadsheet_().getSheetByName(REQUIREMENTS_SHEET);
+  if (!sheet) return;
+  var wanted = defaultRequirements_();
+  var data = sheet.getDataRange().getValues();
+  if (!data.length) return;
+  var headers = data[0].map(function (h) { return String(h || ''); });
+  var idIdx = headers.indexOf('requirement_id');
+  var roleIdx = headers.indexOf('role_id');
+  var textIdx = headers.indexOf('requirement');
+  var enIdx = headers.indexOf('enabled');
+  var hiIdx = headers.indexOf('highlight');
+  var sortIdx = headers.indexOf('sort_order');
+  if (idIdx < 0 || roleIdx < 0) return;
+  var rowById = {};
+  for (var i = 1; i < data.length; i++) {
+    var existingId = String(data[i][idIdx] || '').trim();
+    if (existingId) rowById[existingId] = i;
+  }
+  var keep = {};
+  var roles = {};
+  wanted.forEach(function (row) {
+    keep[row[0]] = true;
+    roles[row[1]] = true;
+    var at = rowById[row[0]];
+    if (!at) {
+      var blank = headers.map(function () { return ''; });
+      REQUIREMENT_HEADERS.forEach(function (h, idx) {
+        var col = headers.indexOf(h);
+        if (col >= 0) blank[col] = row[idx];
+      });
+      data.push(blank);
+      return;
+    }
+    if (textIdx >= 0) data[at][textIdx] = row[2];
+    if (enIdx >= 0) data[at][enIdx] = row[3];
+    if (hiIdx >= 0) data[at][hiIdx] = row[4];
+    if (sortIdx >= 0) data[at][sortIdx] = row[5];
+  });
+  for (var r = 1; r < data.length; r++) {
+    var roleId = String(data[r][roleIdx] || '');
+    if (!roles[roleId]) continue;
+    var qid = String(data[r][idIdx] || '').trim();
+    if (qid && !keep[qid] && enIdx >= 0) data[r][enIdx] = 'FALSE';
+  }
+  sheet.getRange(1, 1, data.length, headers.length).setValues(data);
+}
+
 function defaultRequirements_() {
   var r = [];
   var n = 0;
@@ -246,128 +343,79 @@ function defaultRequirements_() {
     });
   }
   add('social-media-manager', [
-    '*2+ years relevant experience',
-    'Own social media strategy',
-    'Create monthly content plans',
-    'Conceptualise reels and content IPs',
-    'Lead shoots',
-    'Coordinate creators, videographers and editors',
-    'Understand Instagram and internet culture',
-    'Spot emerging trends',
-    'Think about brands rather than simply chasing views',
-    'Use AI intelligently inside the workflow',
-    'Take ownership',
-    'Communicate well and work collaboratively',
-    '*Freshers are not the target for this role'
+    '*Two years minimum. If you are still collecting your first brand, this seat is not it.',
+    'You run the month: the strategy, the content plan, the reel IPs, and the shoot, without waiting to be told what the internet is doing.',
+    'You think about the brand first. Views are a result, not the brief.',
+    'You can spot a format while it is still becoming one, and you use AI like a tool, not a personality.',
+    'Creators, videographers, editors. You hold the room together and the work still feels like one idea.'
   ]);
   add('video-editor-ft', [
-    '*Professional video editing experience',
-    '*Approximately 2–3 years experience',
-    'Comfortable understanding Hindi content',
-    'Comfortable understanding English content',
-    'Comfortable understanding Tamil content',
-    'Strong music sense',
-    'Strong understanding of pacing',
-    'Strong storytelling instinct',
-    'Sharp observation skills',
-    'Tracks how editing styles change',
-    'Tracks changes in hooks',
-    'Tracks changes in pacing and rhythms',
-    'Understands that editing trends evolve weekly and monthly',
-    'Actively evolves their own editing style',
-    '*Strong previous work is a major advantage',
-    '*Portfolio quality is a major evaluation criterion'
+    '*Two or three years in, and a cut that lands before the viewer decides to leave.',
+    'Hindi and English are the job. Tamil is how you become the person we call first.',
+    'If the music is wrong, the edit is wrong. You already hear that.',
+    'Hooks and rhythms move every week. You move your own cut with them, not after the trend deck arrives.',
+    '*Bring the work. We hire the portfolio, then we hire the person who made it.'
   ]);
   add('video-editor-intern', [
-    'Comfortable with professional video editing',
-    'Premiere Pro knowledge',
-    '*Some proof of previous editing work',
-    'Eager to learn',
-    'Comfortable learning alongside the senior editor/team'
+    'You can edit, you know Premiere, and you have something to show, even if it is still small.',
+    '*Proof beats potential. A rough cut you actually finished is worth more than a speech about passion.',
+    'You want the desk next to the senior editor, and you are ready to get better on purpose.'
   ]);
   add('content-creative-intern', [
-    'Some previous content creation',
-    'Strong writing instincts',
-    'Understands hooks',
-    'Can visualise reels and shots',
-    'Follows pop culture',
-    'Understands internet culture',
-    'Spots trends early',
-    'Analyses why content works',
-    'Interested in storytelling and content craft',
-    'Interested in understanding the difference between views-first content and brand content',
-    '*Own page or proof of work is a major advantage',
-    'Curiosity and evidence of trying things matter more than already knowing everything'
+    'You have tried things. A page, a draft, a reel that almost worked. Bring the proof.',
+    'Hooks, writing, internet culture. Curiosity beats a perfect portfolio you do not have yet.',
+    '*Your own page, or any real proof of work, gets you to the front of the pile.',
+    'You can tell a video that got views from a video that actually built a brand.'
+  ]);
+  add('graphic-designer', [
+    '*Minimum 1 year of professional graphic design experience.',
+    'Photoshop, Illustrator and Figma should be working knowledge, not a course you once sat through.',
+    'Typography, composition, hierarchy, spacing and colour should actually bother you.',
+    'Keep up with what is happening in design without photocopying this week’s trend onto every brand.',
+    'A luxury label, a restaurant and a tech company should not leave your desk looking identical.',
+    'A degree is nice. Good work and real experience are better.',
+    'You save references because a layout or font pairing actually caught your eye, and you can explain why a design works — not only that it looks cool.',
+    'You understand social-first: a feed, a Story, an ad and a carousel are not the same job.',
+    '*Do not make the résumé the most creative thing in the application. Show us the work.'
   ]);
   add('gen-ai-meta-ads-intern', [
-    'Uses AI regularly',
-    'Experiments with generative AI tools',
-    'Has tried AI image generation',
-    '*Can show things they have actually built using AI',
-    'Follows new AI models and tools',
-    'Learns quickly because AI changes constantly',
-    'Interested in Meta Ads',
-    'Interested in performance marketing',
-    'Comfortable with numbers',
-    'Interested in data and metrics',
-    '*Curiosity and experimentation matter more than claiming expertise'
+    'Show what you have actually built. “I use ChatGPT” is not a portfolio.',
+    '*Curiosity first. If your bio says AI expert and your folder is empty, we will notice.',
+    'Meta ads, numbers, and the model that dropped this week. You should want all three.'
   ]);
   add('creative-director-events-weddings', [
-    '*Creatively own wedding and event content',
-    'Not simply shoot footage',
-    'Understands storytelling',
-    'Understands emotional moments',
-    'Strong visual/aesthetic judgement',
-    'Understands current social trends',
-    'Understands Vox Pops',
-    'Understands post-event content',
-    'Can conceptualise reels',
-    'Can identify moments worth capturing',
-    'Can turn events into content people actually want to watch',
-    'Can create content that feels emotional, rich and rewatchable',
-    '*Strong wedding or event portfolio is a major advantage'
+    '*Do not apply if the plan is to point a camera at the couple and hope the edit saves you.',
+    'You own the story: the emotion, the Vox Pop, the thirty seconds people actually send around.',
+    'You know what a wedding looks like on a feed, not just in a highlight film nobody finishes.',
+    '*A strong event reel opens the door. Showing up like a collaborator is how you stay on the list.'
   ]);
   add('iphone-videographer', [
-    'Understands moments',
-    'Understands emotion',
-    'Understands framing',
-    'Understands storytelling',
-    'Can capture social-first footage',
-    'Can capture spontaneous moments',
-    'Dependable execution',
-    'Interested in recurring collaboration',
-    'Owning an expensive phone alone is not enough'
+    'A good phone is the starting line, not the portfolio.',
+    'You catch the moment while it is still happening: emotion, framing, footage an editor can actually cut.',
+    'Weddings, events, lifestyle. Social-first, on time, and worth calling again.',
+    '*If the only flex is the device, we will notice. If the work is good, we will book you.'
   ]);
   add('professional-videographer', [
-    '*Strong camera knowledge',
-    'Understands creative briefs',
-    'Understands visual storytelling',
-    'Strong composition',
-    'Dependable execution',
-    'Can work within brand requirements',
-    'Works collaboratively with a creative team',
-    '*Strong portfolio is a major advantage',
-    'Interested in recurring collaboration'
+    '*You know the camera well enough that the brief does not scare you.',
+    'Composition, light, and a brand that still looks like itself when the shoot is over.',
+    'You can take direction without losing the frame, inside a team that already has a point of view.',
+    '*Show us three shoots you would still put your name on. Recurring work goes to people we trust twice.'
   ]);
   add('ugc-creator', [
-    'Can make products feel natural on social media',
-    'Comfortable creating demos',
-    'Comfortable creating reviews',
-    'Can create aesthetic product videos',
-    'Can create lifestyle-led content',
-    'Understands hooks',
-    'Strong presentation ability',
-    'Understands product storytelling',
-    'Avoids making every video feel obviously like an advertisement',
-    '*Strong existing product-led content is a major advantage'
+    'Make the product feel like it wandered onto the feed, not like it paid for the slot.',
+    'Demos, reviews, lifestyle. A real hook. If it looks like an ad wearing a costume, it is not the brief.',
+    '*If your page already sells without looking desperate, lead with that.'
   ]);
   add('video-editor-freelance', [
-    '*Strong editing portfolio',
-    'Strong pacing',
-    'Strong music sense',
-    'Strong storytelling ability',
-    'Aware of contemporary editing styles',
-    'Can adapt editing style across different brands and content formats'
+    '*Send the edits you would bet your rate on. We can tell when the portfolio is the safe three.',
+    'Pacing and music are the whole job, not a garnish.',
+    'You change the cut when the brand changes, instead of making every client look like your last one.'
+  ]);
+  add('script-writer', [
+    '*A script that needs the viewer to be patient is a script we will not post.',
+    'Hooks, humour, language, pacing. You should be able to read the line out loud and still like it.',
+    '*English, Hindi, Tamil. Two of those, comfortably, is the brief.',
+    'You watch enough to know what is already tired, and you write the version that is not.'
   ]);
   return r;
 }
@@ -408,7 +456,8 @@ function questionHelp_(key) {
     previous_ctc: 'Last drawn annual CTC in INR.',
     current_ctc: 'Current annual CTC in INR. Write N/A if you are not employed.',
     expected_ctc: 'Expected annual CTC in INR.',
-    expected_commercials: 'Your expected day or project rate.'
+    expected_commercials: 'Your expected day or project rate.',
+    why_respawn: 'A short, honest note. Why this desk, not any design job.'
   };
   return map[String(key || '')] || '';
 }
@@ -436,7 +485,10 @@ function coreRequiredKeys_() {
     chennai_availability: true,
     languages: true,
     languages_understood: true,
-    best_language: true
+    best_language: true,
+    why_respawn: true,
+    design_tools: true,
+    strongest_design_work: true
   };
 }
 
@@ -475,6 +527,64 @@ function questionIsRequired_(key, category) {
   return compensationRequired_(k, category);
 }
 
+function socialMediaManagerQuestions_() {
+  return [
+    q_('smm-workplaces', 'social-media-manager', 'previous_workplaces', 'Previous workplaces', 'textarea', true, '', '', 10),
+    q_('smm-prev-ctc', 'social-media-manager', 'previous_ctc', 'Previous CTC', 'text', true, '', '', 20),
+    q_('smm-cur-ctc', 'social-media-manager', 'current_ctc', 'Current CTC if applicable', 'text', true, '', '', 30),
+    q_('smm-join', 'social-media-manager', 'join_timeline', 'How soon can you join?', 'text', true, '', '', 40),
+    q_('smm-wfo', 'social-media-manager', 'chennai_wfo_confirm', 'Confirm Chennai work-from-office availability', 'select', true, '', 'Yes|No', 50),
+    q_('smm-campaigns', 'social-media-manager', 'favourite_campaigns', 'Favourite Indian brand campaigns and why', 'textarea', true, '', '', 60),
+    q_('smm-why', 'social-media-manager', 'why_respawn', 'Why do you want to join Respawn Media?', 'textarea', true, '', '', 70),
+    q_('smm-links', 'social-media-manager', 'portfolio_social_links', 'Portfolio / social profile links', 'textarea', true, 'One URL per line', '', 80)
+  ];
+}
+
+function syncSocialMediaManagerQuestions() {
+  setupWorkbook();
+  var sheet = getSpreadsheet_().getSheetByName(QUESTIONS_SHEET);
+  ensureExtraHeaders_(sheet, QUESTION_HEADERS);
+  var wanted = socialMediaManagerQuestions_();
+  var data = sheet.getDataRange().getValues();
+  if (!data.length) return;
+  var headers = data[0].map(function (h) { return String(h || ''); });
+  var idIdx = headers.indexOf('question_id');
+  var roleIdx = headers.indexOf('role_id');
+  var enIdx = headers.indexOf('enabled');
+  if (idIdx < 0 || roleIdx < 0) return;
+  var rowById = {};
+  for (var i = 1; i < data.length; i++) {
+    var existingId = String(data[i][idIdx] || '').trim();
+    if (existingId) rowById[existingId] = i;
+  }
+  var keep = {};
+  wanted.forEach(function (row) {
+    keep[row[0]] = true;
+    var obj = {};
+    QUESTION_HEADERS.forEach(function (h, idx) { obj[h] = row[idx]; });
+    var at = rowById[row[0]];
+    if (!at) {
+      var blank = headers.map(function () { return ''; });
+      QUESTION_HEADERS.forEach(function (h) {
+        var col = headers.indexOf(h);
+        if (col >= 0) blank[col] = obj[h];
+      });
+      data.push(blank);
+      return;
+    }
+    QUESTION_HEADERS.forEach(function (h) {
+      var col = headers.indexOf(h);
+      if (col >= 0) data[at][col] = obj[h];
+    });
+  });
+  for (var r = 1; r < data.length; r++) {
+    if (String(data[r][roleIdx] || '') !== 'social-media-manager') continue;
+    var qid = String(data[r][idIdx] || '').trim();
+    if (qid && !keep[qid] && enIdx >= 0) data[r][enIdx] = 'FALSE';
+  }
+  sheet.getRange(1, 1, data.length, headers.length).setValues(data);
+}
+
 function seedQuestions_(ss) {
   var sheet = ss.getSheetByName(QUESTIONS_SHEET);
   var existing = keyedRows_(sheet, 'question_id');
@@ -503,14 +613,7 @@ function defaultQuestions_() {
   rows.push(q_('all-onsite', 'ALL', 'willing_onsite', 'Willing to work on-site?', 'select', true, '', 'Yes|No', 105));
   rows.push(q_('all-else', 'ALL', 'anything_else', 'Anything else we should know?', 'textarea', false, '', '', 110));
 
-  rows.push(q_('smm-workplaces', 'social-media-manager', 'previous_workplaces', 'Previous workplaces', 'textarea', true, '', '', 10));
-  rows.push(q_('smm-prev-ctc', 'social-media-manager', 'previous_ctc', 'Previous CTC', 'text', true, '', '', 20));
-  rows.push(q_('smm-cur-ctc', 'social-media-manager', 'current_ctc', 'Current CTC if applicable', 'text', true, '', '', 30));
-  rows.push(q_('smm-join', 'social-media-manager', 'join_timeline', 'How soon can you join?', 'text', true, '', '', 40));
-  rows.push(q_('smm-wfo', 'social-media-manager', 'chennai_wfo_confirm', 'Confirm Chennai work-from-office availability', 'select', true, '', 'Yes|No', 50));
-  rows.push(q_('smm-campaigns', 'social-media-manager', 'favourite_campaigns', 'Favourite Indian brand campaigns and why', 'textarea', true, '', '', 60));
-  rows.push(q_('smm-why', 'social-media-manager', 'why_respawn', 'Why do you want to join Respawn Media?', 'textarea', true, '', '', 70));
-  rows.push(q_('smm-links', 'social-media-manager', 'portfolio_social_links', 'Portfolio / social profile links', 'textarea', true, 'One URL per line', '', 80));
+  socialMediaManagerQuestions_().forEach(function (row) { rows.push(row); });
 
   rows.push(q_('veft-lang', 'video-editor-ft', 'languages_understood', 'Which languages can you comfortably understand while editing?', 'multiselect', true, '', 'Hindi|English|Tamil|Other', 10));
   rows.push(q_('veft-soft', 'video-editor-ft', 'editing_software', 'Which editing software do you use?', 'text', true, '', '', 20));
@@ -535,6 +638,8 @@ function defaultQuestions_() {
   rows.push(q_('cci-consume', 'content-creative-intern', 'content_consumed', 'What kind of content do you consume most?', 'textarea', true, '', '', 40));
   rows.push(q_('cci-early', 'content-creative-intern', 'early_format', 'Tell us about a recent reel / content format you noticed early', 'textarea', true, '', '', 50));
   rows.push(q_('cci-why', 'content-creative-intern', 'why_learn_respawn', 'Why do you want to learn at Respawn?', 'textarea', true, '', '', 60));
+
+  rows.push(q_('gd-why', 'graphic-designer', 'why_respawn', 'Why would you like to work with Respawn Media?', 'textarea', true, '', '', 10));
 
   rows.push(q_('gai-tools', 'gen-ai-meta-ads-intern', 'ai_tools', 'Which AI tools do you use regularly?', 'textarea', true, '', '', 10));
   rows.push(q_('gai-built', 'gen-ai-meta-ads-intern', 'built_with_ai', 'Share something you have built using AI', 'textarea', true, '', '', 20));
@@ -1130,18 +1235,34 @@ function roleViewHeaders_(role, catalog) {
   return headers;
 }
 
-function formatReadableSheet_(sheet) {
+function formatHeaderRow_(sheet) {
+  if (!sheet) return;
   sheet.setFrozenRows(1);
-  sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).setFontWeight('bold');
+  var cols = Math.max(sheet.getLastColumn(), 1);
+  sheet.getRange(1, 1, 1, cols).setFontWeight('bold');
   sheet.setRowHeight(1, 28);
+}
+
+function formatReadableSheet_(sheet) {
+  formatHeaderRow_(sheet);
 }
 
 function resetSheet_(ss, name, headers) {
   var sheet = ss.getSheetByName(name);
   if (!sheet) sheet = ss.insertSheet(name);
-  sheet.clear();
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  formatReadableSheet_(sheet);
+  if (sheet.getLastRow() < 2) {
+    sheet.clear();
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    formatHeaderRow_(sheet);
+  } else {
+    var existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
+    var same = existing.length >= headers.length;
+    for (var i = 0; i < headers.length && same; i++) {
+      if (String(existing[i] || '') !== headers[i]) same = false;
+    }
+    if (!same) sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    formatHeaderRow_(sheet);
+  }
   return sheet;
 }
 
@@ -1151,25 +1272,58 @@ function prepareRoleSheet_(ss, role, catalog, reset) {
   var headers = roleViewHeaders_(role, catalog);
   if (!sheet) {
     sheet = ss.insertSheet(name);
-    reset = true;
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    formatHeaderRow_(sheet);
+    return sheet;
   }
   var formula = String(sheet.getRange(1, 1).getFormula() || '');
-  if (reset || formula.indexOf('QUERY') !== -1) {
+  if (formula.indexOf('QUERY') !== -1) {
     sheet.clear();
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    formatReadableSheet_(sheet);
-  } else {
-    var existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
-    var same = existing.length >= headers.length;
-    for (var i = 0; i < headers.length && same; i++) {
-      if (String(existing[i] || '') !== headers[i]) same = false;
-    }
-    if (!same) {
+    formatHeaderRow_(sheet);
+    return sheet;
+  }
+  if (sheet.getLastRow() < 2 && reset) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    formatHeaderRow_(sheet);
+    return sheet;
+  }
+  var existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), headers.length)).getValues()[0];
+  var same = existing.length >= headers.length;
+  for (var i = 0; i < headers.length && same; i++) {
+    if (String(existing[i] || '') !== headers[i]) same = false;
+  }
+  if (!same) {
+    if (sheet.getLastRow() < 2) {
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-      formatReadableSheet_(sheet);
+    } else {
+      var have = {};
+      existing.forEach(function (h) { if (h) have[String(h)] = true; });
+      var add = [];
+      headers.forEach(function (h) {
+        if (!have[h]) add.push(h);
+      });
+      if (add.length) {
+        var lastUsed = 0;
+        for (var c2 = 0; c2 < existing.length; c2++) {
+          if (String(existing[c2] || '').trim()) lastUsed = c2 + 1;
+        }
+        sheet.getRange(1, lastUsed + 1, 1, add.length).setValues([add]);
+      }
     }
+    formatHeaderRow_(sheet);
   }
   return sheet;
+}
+
+function sheetHeaderRow_(sheet) {
+  var width = Math.max(sheet.getLastColumn(), 1);
+  var headers = sheet.getRange(1, 1, 1, width).getValues()[0];
+  var last = 0;
+  for (var i = 0; i < headers.length; i++) {
+    if (String(headers[i] || '').trim()) last = i + 1;
+  }
+  return headers.slice(0, last);
 }
 
 function candidateValues_(row) {
@@ -1249,43 +1403,68 @@ function answerRows_(row, extra, catalog) {
   return out;
 }
 
-function roleViewValues_(row, extra, role, catalog) {
+function roleViewValues_(row, extra, role, catalog, headers) {
   var answers = combinedAnswers_(row, extra);
-  var vals = [
-    row.submitted_at || '',
-    row.application_id || '',
-    row.full_name || '',
-    row.whatsapp || '',
-    row.email || '',
-    row.current_city || '',
-    row.resume_url || '',
-    row.status || ''
-  ];
+  var byLabel = {};
   questionsForRole_(catalog, role.role_id).forEach(function (q) {
     if (ROLE_VIEW_SKIP_KEYS[q.question_key]) return;
-    vals.push(flattenAnswer_(answers[q.question_key]));
+    byLabel[String(q.label)] = flattenAnswer_(answers[q.question_key]);
   });
-  return vals;
+  var core = {
+    'Submitted': row.submitted_at || '',
+    'Application ID': row.application_id || '',
+    'Full name': row.full_name || '',
+    'WhatsApp': row.whatsapp || '',
+    'Email': row.email || '',
+    'City': row.current_city || '',
+    'Resume': row.resume_url || '',
+    'Status': row.status || ''
+  };
+  var cols = headers && headers.length ? headers : roleViewHeaders_(role, catalog);
+  return cols.map(function (h) {
+    var name = String(h || '');
+    if (Object.prototype.hasOwnProperty.call(core, name)) return core[name];
+    return byLabel[name] != null ? byLabel[name] : '';
+  });
+}
+
+function applicationIdSet_(sheet, col) {
+  var seen = {};
+  if (!sheet) return seen;
+  var last = sheet.getLastRow();
+  if (last < 2) return seen;
+  var vals = sheet.getRange(2, col, last - 1, 1).getValues();
+  for (var i = 0; i < vals.length; i++) {
+    var id = String(vals[i][0] || '').trim();
+    if (id) seen[id] = true;
+  }
+  return seen;
 }
 
 function appendReadableViews_(ss, row, extraAnswers, role) {
+  if (!row || !row.application_id) return;
   var catalog = questionCatalog_(ss);
   var extra = extraAnswers || extrasFromApplicationRow_(row);
-  ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
-  ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
-  ss.getSheetByName(CANDIDATES_SHEET).appendRow(candidateValues_(row));
-  var answerSheet = ss.getSheetByName(ANSWERS_SHEET);
-  var qRows = answerRows_(row, extra, catalog);
-  if (qRows.length) {
-    answerSheet.getRange(answerSheet.getLastRow() + 1, 1, qRows.length, ANSWER_HEADERS.length).setValues(qRows);
+  var cand = ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
+  var answerSheet = ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
+  if (!applicationIdSet_(cand, 2)[row.application_id]) {
+    cand.appendRow(candidateValues_(row));
+  }
+  if (!applicationIdSet_(answerSheet, 2)[row.application_id]) {
+    var qRows = answerRows_(row, extra, catalog);
+    if (qRows.length) {
+      answerSheet.getRange(answerSheet.getLastRow() + 1, 1, qRows.length, ANSWER_HEADERS.length).setValues(qRows);
+    }
   }
   if (role) {
     var roleSheet = prepareRoleSheet_(ss, role, catalog, false);
-    roleSheet.appendRow(roleViewValues_(row, extra, role, catalog));
+    if (!applicationIdSet_(roleSheet, 2)[row.application_id]) {
+      roleSheet.appendRow(roleViewValues_(row, extra, role, catalog, sheetHeaderRow_(roleSheet)));
+    }
   }
 }
 
-function rebuildReadableViews() {
+function syncReadableViews() {
   setupWorkbook();
   var ss = getSpreadsheet_();
   var catalog = questionCatalog_(ss);
@@ -1294,42 +1473,63 @@ function rebuildReadableViews() {
   roles.forEach(function (role) {
     if (role.role_id) roleById[String(role.role_id)] = role;
   });
-
-  var cand = resetSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
-  var ans = resetSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
   roles.forEach(function (role) {
-    if (role.role_id) prepareRoleSheet_(ss, role, catalog, true);
+    if (role.role_id) prepareRoleSheet_(ss, role, catalog, false);
+  });
+
+  var cand = ensureSheet_(ss, CANDIDATES_SHEET, CANDIDATE_HEADERS);
+  var ans = ensureSheet_(ss, ANSWERS_SHEET, ANSWER_HEADERS);
+  formatHeaderRow_(cand);
+  formatHeaderRow_(ans);
+  var haveCand = applicationIdSet_(cand, 2);
+  var haveAns = applicationIdSet_(ans, 2);
+  var haveRole = {};
+  roles.forEach(function (role) {
+    if (!role.role_id) return;
+    var tab = roleTabName_(role);
+    haveRole[tab] = applicationIdSet_(ss.getSheetByName(tab), 2);
   });
 
   var applications = sheetObjects_(ss.getSheetByName(APPLICATIONS_SHEET));
-  var candRows = [];
-  var ansRows = [];
-  var roleRows = {};
   applications.forEach(function (row) {
     if (!row.application_id && !row.full_name) return;
     var extra = extrasFromApplicationRow_(row);
     var role = roleById[String(row.role_id)] || { role_id: row.role_id, title: row.role_title };
-    candRows.push(candidateValues_(row));
-    ansRows = ansRows.concat(answerRows_(row, extra, catalog));
+    var id = String(row.application_id || '');
+    if (id && !haveCand[id]) {
+      cand.appendRow(candidateValues_(row));
+      haveCand[id] = true;
+    }
+    if (id && !haveAns[id]) {
+      var qRows = answerRows_(row, extra, catalog);
+      if (qRows.length) {
+        ans.getRange(ans.getLastRow() + 1, 1, qRows.length, ANSWER_HEADERS.length).setValues(qRows);
+      }
+      haveAns[id] = true;
+    }
     var tab = roleTabName_(role);
-    if (!roleRows[tab]) roleRows[tab] = { role: role, rows: [] };
-    roleRows[tab].rows.push(roleViewValues_(row, extra, role, catalog));
-  });
-
-  if (candRows.length) cand.getRange(2, 1, candRows.length, CANDIDATE_HEADERS.length).setValues(candRows);
-  if (ansRows.length) ans.getRange(2, 1, ansRows.length, ANSWER_HEADERS.length).setValues(ansRows);
-  Object.keys(roleRows).forEach(function (tab) {
-    var pack = roleRows[tab];
-    var sheet = prepareRoleSheet_(ss, pack.role, catalog, true);
-    if (pack.rows.length) {
-      var width = Math.max(roleViewHeaders_(pack.role, catalog).length, 1);
-      sheet.getRange(2, 1, pack.rows.length, width).setValues(pack.rows);
+    if (!haveRole[tab]) haveRole[tab] = {};
+    if (id && !haveRole[tab][id]) {
+      var roleSheet = prepareRoleSheet_(ss, role, catalog, false);
+      roleSheet.appendRow(roleViewValues_(row, extra, role, catalog, sheetHeaderRow_(roleSheet)));
+      haveRole[tab][id] = true;
     }
   });
-  formatReadableSheet_(cand);
-  formatReadableSheet_(ans);
-  ans.setColumnWidth(6, 280);
-  ans.setColumnWidth(7, 420);
+}
+
+function rebuildReadableViews() {
+  syncReadableViews();
+}
+
+function installReadableSyncTrigger() {
+  var exists = false;
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'syncReadableViews') exists = true;
+  });
+  if (!exists) {
+    ScriptApp.newTrigger('syncReadableViews').timeBased().everyMinutes(5).create();
+  }
+  SpreadsheetApp.getUi().alert('New applications will show on CANDIDATES and role tabs within about 5 minutes. Colours, hidden rows, and notes already on those sheets are kept.');
 }
 
 function expandExistingApplicationAnswers() {
@@ -1351,6 +1551,9 @@ function appendApplication_(row, extraAnswers, role) {
       return row[h] != null ? row[h] : '';
     });
     sheet.appendRow(values);
+    try {
+      appendReadableViews_(ss, row, extraAnswers, role);
+    } catch (err) {}
   } finally {
     lock.releaseLock();
   }

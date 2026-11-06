@@ -235,7 +235,10 @@ function isCoreField(key) {
     chennai_availability: true,
     languages: true,
     languages_understood: true,
-    best_language: true
+    best_language: true,
+    why_respawn: true,
+    design_tools: true,
+    strongest_design_work: true
   }[k] === true;
 }
 

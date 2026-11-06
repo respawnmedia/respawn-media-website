@@ -73,7 +73,7 @@ Exact Vercel dashboard clicks: **§7**.
    - `CANDIDATES` (one readable row per applicant)
    - `ANSWERS` (one readable row per question)
 5. After seed, you can edit rows in the Sheet. `show_on_site`, `accepting_applications`, `status`, and each requirement/question `enabled` flag control the public page **without a code change**. Re-running seed **skips** existing `role_id` / ids / setting keys.
-6. After updating Apps Script, run **Respawn Careers → 4. Apply required-field policy**, then **5. Rebuild readable response views**. That converts existing messy JSON/QUERY tabs into the readable sheets.
+6. After updating Apps Script, run **Respawn Careers → 4. Apply required-field policy**, then **5. Add missing responses** and **6. Turn on automatic sheet updates**. Item 5 only inserts rows that are not already on `CANDIDATES` / role tabs, so colours and hidden rows stay.
 
 Public rules:
 
@@ -111,7 +111,7 @@ Edit the **ROLES** tab. Changes show on `/careers` after about two minutes (conf
 4. In the editor, open the function dropdown (it currently may say `myFunction`) → pick `setupWorkbook` → **Run** → authorize Sheets/Drive.  
    Then run `seedDefaultCareersData`.  
    Then run `markAllQuestionsRequired`.  
-   Then run `rebuildReadableViews`.  
+   Then run `syncReadableViews`.  
    (Menu **Respawn Careers** appears after reload if `onOpen` ran.)
 5. **Deploy → New deployment → Web app**
    - Execute as: **Me**
