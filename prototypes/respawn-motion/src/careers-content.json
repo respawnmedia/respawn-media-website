@@ -1,0 +1,362 @@
+{
+  "intro": "Full-time roles, paid internships and freelance collaborations for people who care about content, culture and craft.",
+  "freelance": "Respawn Media is building a dependable network of creators and production talent who can collaborate repeatedly across client projects, campaigns, shoots and content requirements. These are project collaborations, not permanent employment.",
+  "roles": [
+    {
+      "slug": "social-media-manager",
+      "title": "Social Media Manager",
+      "category": "FULL-TIME",
+      "department": "CONTENT",
+      "location": "Chennai",
+      "work_mode": "Work from office",
+      "experience": "2+ years",
+      "status": "OPEN",
+      "accepting_applications": true,
+      "short_description": "Own the social strategy. Lead the work.",
+      "full_description": "Own social media strategy, monthly content plans, reel and content IPs, shoots, and coordination with creators, videographers and editors. This role is for people who already think about brands — not only views — and who can take ownership in a work-from-office Chennai team. Freshers are not the target.",
+      "requirements": [
+        {
+          "requirement_id": "social-media-manager-r1",
+          "requirement": "Two years minimum. If you are still collecting your first brand, this seat is not it.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "social-media-manager-r2",
+          "requirement": "You run the month: the strategy, the content plan, the reel IPs, and the shoot, without waiting to be told what the internet is doing.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "social-media-manager-r3",
+          "requirement": "You think about the brand first. Views are a result, not the brief.",
+          "highlight": false,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "social-media-manager-r4",
+          "requirement": "You can spot a format while it is still becoming one, and you use AI like a tool, not a personality.",
+          "highlight": false,
+          "sort_order": 40
+        },
+        {
+          "requirement_id": "social-media-manager-r5",
+          "requirement": "Creators, videographers, editors. You hold the room together and the work still feels like one idea.",
+          "highlight": false,
+          "sort_order": 50
+        }
+      ]
+    },
+    {
+      "slug": "graphic-designer",
+      "title": "Graphic Designer",
+      "category": "FULL-TIME",
+      "department": "DESIGN",
+      "location": "Chennai",
+      "work_mode": "Work from office",
+      "experience": "1+ year · 3-month probation",
+      "status": "OPEN",
+      "accepting_applications": true,
+      "short_description": "Taste first. One aesthetic is not a personality.",
+      "full_description": "We spend an unreasonable amount of time caring about fonts, spacing, references and whether something actually looks right.\n\nWe work across different brands and industries, so the design language changes constantly. Your job is not to force one aesthetic everywhere. It is to understand the brand, understand the audience, and figure out what visual direction actually makes sense.\n\nYou will make social creatives, layouts, campaign assets and other digital visuals. Photoshop, Illustrator, Figma — whichever the project needs. You turn briefs, references and rough ideas into strong concepts, then into clean files for feed, Story, ad, carousel and print. You take feedback, improve fast, and know when a design needs another round — and when it just needs fewer elements.\n\nThe role starts with a 3-month probation. We will use that time to see how you think, how quickly you adapt, how you work with briefs and feedback, and whether your instincts fit the way we work.\n\nOne request: do not make the résumé the most creative thing in your application. We are hiring a designer. Show us the work.",
+      "requirements": [
+        {
+          "requirement_id": "graphic-designer-r1",
+          "requirement": "Minimum 1 year of professional graphic design experience.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "graphic-designer-r2",
+          "requirement": "Photoshop, Illustrator and Figma should be working knowledge, not a course you once sat through.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "graphic-designer-r3",
+          "requirement": "Typography, composition, hierarchy, spacing and colour should actually bother you.",
+          "highlight": false,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "graphic-designer-r4",
+          "requirement": "Keep up with what is happening in design without photocopying this week’s trend onto every brand.",
+          "highlight": false,
+          "sort_order": 40
+        },
+        {
+          "requirement_id": "graphic-designer-r5",
+          "requirement": "A luxury label, a restaurant and a tech company should not leave your desk looking identical.",
+          "highlight": false,
+          "sort_order": 50
+        },
+        {
+          "requirement_id": "graphic-designer-r6",
+          "requirement": "A degree is nice. Good work and real experience are better.",
+          "highlight": false,
+          "sort_order": 60
+        },
+        {
+          "requirement_id": "graphic-designer-r7",
+          "requirement": "You save references because a layout or font pairing actually caught your eye, and you can explain why a design works — not only that it looks cool.",
+          "highlight": false,
+          "sort_order": 70
+        },
+        {
+          "requirement_id": "graphic-designer-r8",
+          "requirement": "You understand social-first: a feed, a Story, an ad and a carousel are not the same job.",
+          "highlight": false,
+          "sort_order": 80
+        },
+        {
+          "requirement_id": "graphic-designer-r9",
+          "requirement": "Do not make the résumé the most creative thing in the application. Show us the work.",
+          "highlight": true,
+          "sort_order": 90
+        }
+      ]
+    },
+    {
+      "slug": "video-editor",
+      "title": "Video Editor",
+      "category": "FULL-TIME",
+      "department": "EDITING",
+      "location": "Chennai",
+      "work_mode": "Work from office",
+      "experience": "2-3 year of experience | ₹30,000–₹50,000",
+      "status": "OPEN",
+      "accepting_applications": true,
+      "short_description": "Editors who track how the internet actually cuts.",
+      "full_description": "Professional editing with a strong music sense, pacing, and storytelling instinct. You notice how hooks, rhythms and styles change week to week, and you evolve your own cut accordingly. Portfolio quality is a major evaluation criterion.",
+      "requirements": [
+        {
+          "requirement_id": "video-editor-ft-r1",
+          "requirement": "Two or three years in, and a cut that lands before the viewer decides to leave.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "video-editor-ft-r2",
+          "requirement": "Hindi and English are the job. Tamil is how you become the person we call first.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "video-editor-ft-r3",
+          "requirement": "If the music is wrong, the edit is wrong. You already hear that.",
+          "highlight": false,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "video-editor-ft-r4",
+          "requirement": "Hooks and rhythms move every week. You move your own cut with them, not after the trend deck arrives.",
+          "highlight": false,
+          "sort_order": 40
+        },
+        {
+          "requirement_id": "video-editor-ft-r5",
+          "requirement": "Bring the work. We hire the portfolio, then we hire the person who made it.",
+          "highlight": true,
+          "sort_order": 50
+        }
+      ]
+    },
+    {
+      "slug": "creative-director",
+      "title": "Social Media Manager — Events + Weddings",
+      "category": "FREELANCE",
+      "department": "PRODUCTION",
+      "location": "Chennai / Bangalore / Mumbai",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "Own the story. Do not only shoot footage.",
+      "full_description": "Freelance / project collaboration. Creatively own wedding and event content: storytelling, emotional moments, visual judgement, Vox Pops, post-event content, and reels people actually want to watch. Strong wedding or event portfolio is a major advantage. This is not a permanent employment role.",
+      "requirements": [
+        {
+          "requirement_id": "creative-director-events-weddings-r1",
+          "requirement": "Do not apply if the plan is to point a camera at the couple and hope the edit saves you.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "creative-director-events-weddings-r2",
+          "requirement": "You own the story: the emotion, the Vox Pop, the thirty seconds people actually send around.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "creative-director-events-weddings-r3",
+          "requirement": "You know what a wedding looks like on a feed, not just in a highlight film nobody finishes.",
+          "highlight": false,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "creative-director-events-weddings-r4",
+          "requirement": "A strong event reel opens the door. Showing up like a collaborator is how you stay on the list.",
+          "highlight": true,
+          "sort_order": 40
+        }
+      ]
+    },
+    {
+      "slug": "iphone-videographer",
+      "title": "iPhone Videographer",
+      "category": "FREELANCE",
+      "department": "PRODUCTION",
+      "location": "Chennai / Bangalore / Mumbai",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "Social-first footage. Recurring collaboration.",
+      "full_description": "Freelance / project basis for wedding content, events, lifestyle coverage and storytelling-led shoots. Understands moments, emotion, framing and social-first capture. Dependable execution. Owning an expensive phone is not enough on its own.",
+      "requirements": [
+        {
+          "requirement_id": "iphone-videographer-r1",
+          "requirement": "A good phone is the starting line, not the portfolio.",
+          "highlight": false,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "iphone-videographer-r2",
+          "requirement": "You catch the moment while it is still happening: emotion, framing, footage an editor can actually cut.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "iphone-videographer-r3",
+          "requirement": "Weddings, events, lifestyle. Social-first, on time, and worth calling again.",
+          "highlight": false,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "iphone-videographer-r4",
+          "requirement": "If the only flex is the device, we will notice. If the work is good, we will book you.",
+          "highlight": true,
+          "sort_order": 40
+        }
+      ]
+    },
+    {
+      "slug": "pro-videographer",
+      "title": "Professional Videographer & Photographer",
+      "category": "FREELANCE",
+      "department": "PRODUCTION",
+      "location": "Chennai",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "DSLR / professional kit. Brand-aware shoots.",
+      "full_description": "Freelance / project basis for brand shoots, campaigns, commercial productions and events. Strong camera knowledge, composition, briefs, and collaborative work with a creative team. Interested in recurring collaboration. Strong portfolio is a major advantage.",
+      "requirements": []
+    },
+    {
+      "slug": "ugc-creator",
+      "title": "UGC Creator",
+      "category": "FREELANCE",
+      "department": "CREATOR",
+      "location": "India",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "Make products feel native on social.",
+      "full_description": "Freelance / project basis across FMCG, tech, lifestyle and food. Demos, reviews, aesthetic product videos and lifestyle-led content with real hooks — not ads wearing a costume. Strong existing product-led content is a major advantage.",
+      "requirements": [
+        {
+          "requirement_id": "ugc-creator-r1",
+          "requirement": "Make the product feel like it wandered onto the feed, not like it paid for the slot.",
+          "highlight": false,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "ugc-creator-r2",
+          "requirement": "Demos, reviews, lifestyle. A real hook. If it looks like an ad wearing a costume, it is not the brief.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "ugc-creator-r3",
+          "requirement": "If your page already sells without looking desperate, lead with that.",
+          "highlight": true,
+          "sort_order": 30
+        }
+      ]
+    },
+    {
+      "slug": "video-editor-freelance",
+      "title": "Freelance Video Editor",
+      "category": "FREELANCE",
+      "department": "EDITING",
+      "location": "Remote",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "Adapt the cut across brands and formats.",
+      "full_description": "Freelance / project basis. Strong portfolio, pacing, music sense and contemporary editing styles. Can adapt across brands and formats. This is not the full-time Chennai desk role and does not inherit that role’s language or tenure requirements.",
+      "requirements": [
+        {
+          "requirement_id": "video-editor-freelance-r1",
+          "requirement": "Send the edits you would bet your rate on. We can tell when the portfolio is the safe three.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "video-editor-freelance-r2",
+          "requirement": "Pacing and music are the whole job, not a garnish.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "video-editor-freelance-r3",
+          "requirement": "You change the cut when the brand changes, instead of making every client look like your last one.",
+          "highlight": false,
+          "sort_order": 30
+        }
+      ]
+    },
+    {
+      "slug": "Script-writer",
+      "title": "Script Writer",
+      "category": "FREELANCE",
+      "department": "CONTENT",
+      "location": "Remote",
+      "work_mode": "Project basis",
+      "experience": "Portfolio-led",
+      "status": "ALWAYS_OPEN",
+      "accepting_applications": true,
+      "short_description": "For writers who understand hooks, language, culture and how the internet moves.",
+      "full_description": "We’re looking for a Script Writer who understands that good writing for the internet starts with knowing what people actually want to watch.\nYou should be great at writing and understanding hooks, consume a lot of content yourself, and have a strong command of language across English, Hindi or Tamil. Knowing at least 2 of these languages is strongly preferred.\nYou should understand internet culture, pop culture, what’s trending, what’s becoming outdated and how scripting styles are constantly evolving.\nWe’re looking for someone who notices these changes naturally — from new hook structures and storytelling formats to shifts in humour, pacing, language and the way people consume content online.",
+      "requirements": [
+        {
+          "requirement_id": "script-writer-r1",
+          "requirement": "A script that needs the viewer to be patient is a script we will not post.",
+          "highlight": true,
+          "sort_order": 10
+        },
+        {
+          "requirement_id": "script-writer-r2",
+          "requirement": "Hooks, humour, language, pacing. You should be able to read the line out loud and still like it.",
+          "highlight": false,
+          "sort_order": 20
+        },
+        {
+          "requirement_id": "script-writer-r3",
+          "requirement": "English, Hindi, Tamil. Two of those, comfortably, is the brief.",
+          "highlight": true,
+          "sort_order": 30
+        },
+        {
+          "requirement_id": "script-writer-r4",
+          "requirement": "You watch enough to know what is already tired, and you write the version that is not.",
+          "highlight": false,
+          "sort_order": 40
+        }
+      ]
+    }
+  ]
+}

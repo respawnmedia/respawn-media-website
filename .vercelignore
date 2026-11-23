@@ -1,0 +1,8 @@
+.git
+node_modules
+prototypes/respawn-motion/node_modules
+prototypes/respawn-motion/dist
+samples
+chats
+google-apps-script
+project
