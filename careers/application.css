@@ -10,3 +10,71 @@ section{padding:80px 6%}h1,h2,h3{font-family:var(--font-display);font-weight:500
 @media(max-width:760px){nav{top:10px;margin-top:10px;padding:12px 14px;gap:12px}nav .brand img{width:45px!important}nav .desk-nav{gap:9px;font-size:12px}.nav-desktop{display:none}.nav-pill{padding:7px 10px}.nav-cta{gap:3px}.nav-cta .arrow{width:15px}.apply-page,.thanks-page{padding:36px 6% 56px}.crumb{margin-bottom:28px;font-size:10px;gap:8px}.role-heading{flex-direction:column;gap:18px}.role-heading h1{max-width:18ch;font-size:clamp(36px,9vw,52px)}.role-facts{margin-block:26px 30px;padding:22px;gap:20px}.role-facts p{font-size:14px}.role-copy{grid-template-columns:1fr;gap:22px}.role-copy h3{font-size:23px}.role-copy .lede,.look-lines p{font-size:15px}.apply-panel{margin-top:30px;padding:24px 20px}.apply-panel.is-filling{padding:24px 18px}.apply-intro h2{font-size:27px}.apply-role-title{font-size:32px}.steps{gap:4px;margin-bottom:26px;padding-bottom:20px}.steps span{font-size:12px;padding:9px 4px}.application-footer{flex-direction:column;align-items:flex-start;gap:8px}.cta-row .btn{flex:1}.apply-panel .cta-row{gap:10px}.thanks-page .cta-row{align-items:stretch}.thanks-page h2{font-size:clamp(40px,11vw,60px)}}
 @media(max-width:360px){nav{padding-inline:10px}nav .desk-nav{gap:6px;font-size:11px}.nav-pill{padding-inline:8px}nav .brand img{width:38px!important}.role-facts{padding:18px;column-gap:16px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* Cream reading surfaces contrast with the site's deep green shell. */
+.role-facts,
+.role-copy,
+.apply-panel {
+  --white: #123a32;
+  --muted: #476e61;
+  --border: #123a3229;
+  --border-strong: #476e6166;
+  --teal: #076e65;
+  --teal-border: #076e6566;
+  background: #e7eee3;
+  color: #123a32;
+  border-color: #e7eee3;
+}
+.role-facts span { color: #476e61; }
+.role-copy {
+  padding: clamp(24px, 3.5vw, 40px);
+  border-radius: 18px;
+}
+.role-copy .lede,
+.look-lines p { color: #34594d; }
+.look-lines p.hi { color: #123a32; }
+.apply-panel .lede,
+.apply-panel .meta,
+.apply-panel .field-help,
+.apply-panel .opt { color: #476e61; }
+.apply-panel .req { color: #076e65; }
+.apply-panel .field input:not([type=checkbox]),
+.apply-panel .field textarea,
+.apply-panel .field select {
+  background: #f9fbf5;
+  color: #123a32;
+  border-color: #476e6155;
+}
+.apply-panel .field input::placeholder,
+.apply-panel .field textarea::placeholder { color: #5a7367; }
+.apply-panel .field select { color-scheme: light; }
+.apply-panel .field input[type=file]::file-selector-button {
+  background: #123a32;
+  color: #f0f4e9;
+}
+.apply-panel .steps span { color: #476e61; }
+.apply-panel .steps .is-on { background: #123a32; color: #f0f4e9; }
+.apply-panel .steps .is-complete { color: #076e65; }
+.apply-panel .btn-primary { background: #123a32; color: #f0f4e9; }
+.apply-panel .btn-primary:hover { background: #1b5548; }
+.apply-panel .btn-ghost { color: #123a32; border-color: #476e6180; }
+.apply-panel .btn-ghost:hover { background: #123a320a; border-color: #123a32; }
+.apply-panel .check-row label:has(input:checked) {
+  border-color: #076e65;
+  background: #076e6512;
+}
+.apply-panel .err {
+  background: #fae8e3;
+  color: #7b3026;
+  border-color: #b76b5b66;
+}
+.apply-panel .submit-status strong { color: #076e65; }
+.apply-panel .submit-status p { color: #34594d; }
+.apply-panel .review-summary .meta,
+.apply-panel .review-summary .meta span { color: #34594d !important; }
+.apply-panel :is(button,input,select,textarea):focus-visible {
+  outline-color: #076e65;
+}
+@media (min-width: 761px) {
+  .role-copy > div + div { border-left: 1px solid #123a3229; padding-left: 28px; }
+}
