@@ -10,7 +10,7 @@ Run `npm install` and `npm run dev` in this directory.
 
 From the repository root, run `npm --prefix prototypes/respawn-motion ci` and `npm run build`.
 The root build creates `dist/` with the homepage, portfolio pages, careers listing, and the existing careers application HTML.
-Vercel uses the root configuration and the existing `api/careers` functions.
+Vercel uses the root configuration. The new project proxies careers API requests to the existing production backend at `respawn-media-website.vercel.app`, preserving its private Apps Script credentials and application storage.
 
 Public content is in `src/content.json` and `public/assets/`.
 The careers listing loads current roles from `/api/careers/config`.
