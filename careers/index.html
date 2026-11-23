@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Careers &amp; Freelance Opportunities | Respawn Media Chennai</title>
 <meta name="description" content="Explore full-time roles, paid internships and freelance collaboration opportunities at Respawn Media in Chennai.">
-<meta name="theme-color" content="#080808">
+<meta name="theme-color" content="#062c29">
 <link rel="icon" type="image/png" href="/assets/logo-white.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-v2.png">
 <meta name="robots" content="index, follow">
@@ -39,163 +39,11 @@ if (!/\/careers\/thanks\/?$/.test((location.pathname || '').replace(/\/+$/, ''))
 <!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Barlow+Condensed:wght@300;400;600;700;900&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;display=swap" rel="stylesheet">
+
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<style>
-:root {
-  --black: #080808;
-  --surface: #111111;
-  --surface-2: #1A1A1A;
-  --teal: #16C4BA;
-  --teal-dim: rgba(22,196,186,0.12);
-  --teal-border: rgba(22,196,186,0.3);
-  --white: #FFFFFF;
-  --gray: #888888;
-  --muted: #777777;
-  --border: rgba(255,255,255,0.07);
-  --border-strong: rgba(255,255,255,0.14);
-  --font-display: 'Bebas Neue','Barlow Condensed',Impact,sans-serif;
-  --font-condensed: 'Barlow Condensed','Bebas Neue',Impact,sans-serif;
-  --font-body: 'DM Sans',system-ui,sans-serif;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:72px}
-body{background:var(--black);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{text-decoration:none;color:inherit}
-button,input,select,textarea{font-family:inherit}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--black)}
-::-webkit-scrollbar-thumb{background:var(--teal)}
-::selection{background:var(--teal);color:var(--black)}
-.texture{pointer-events:none;position:fixed;inset:0;z-index:0;opacity:0.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");background-size:180px 180px}
-.page{position:relative;z-index:1}
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(8,8,8,0.96);border-bottom:1px solid var(--border)}
-.desk-nav{display:flex;align-items:center;gap:2.5rem}
-.nav-a{font-family:var(--font-condensed);font-weight:700;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4)}
-.nav-a:hover,.nav-a.is-on{color:var(--teal)}
-.nav-cta{background:var(--teal);color:var(--black);padding:0.45rem 1.2rem;font-family:var(--font-condensed);font-weight:800;font-size:12px;letter-spacing:0.14em;text-transform:uppercase}
-.ham{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
-.drawer{position:fixed;inset:0;top:56px;background:rgba(5,5,5,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;z-index:190}
-.drawer a{font-family:var(--font-display);font-size:2.5rem;letter-spacing:0.04em}
-section{padding:4.5rem 3rem}
-.eyebrow{font-family:var(--font-condensed);font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal)}
-h1,h2,.display{font-family:var(--font-display);letter-spacing:0.02em;line-height:0.92;font-weight:400}
-h1{font-size:clamp(56px,10vw,112px);max-width:14ch}
-h2{font-size:clamp(40px,7vw,80px)}
-.lede{margin-top:1.5rem;max-width:38rem;color:rgba(255,255,255,0.72);font-size:17px}
-.cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2.5rem;align-items:center}
-#hero{padding:6.75rem 3rem 4.5rem;border-bottom:1px solid var(--border)}
-#hero .eyebrow{margin-bottom:0.85rem}
-#hero h1{max-width:none;font-size:clamp(40px,7.6vw,96px);letter-spacing:0.01em}
-#hero h1 .h1-line{display:block;white-space:nowrap}
-#hero h1 .h1-accent{color:var(--teal)}
-#hero .lede{margin-top:1.35rem;max-width:36rem}
-#hero .cta-row{margin-top:2rem;gap:0.85rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0.7rem 1.4rem;font-family:var(--font-condensed);font-weight:800;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid transparent;cursor:pointer;background:transparent;color:var(--white)}
-.btn-primary{background:var(--teal);color:var(--black)}
-.btn-ghost{border-color:var(--border-strong);color:var(--white)}
-.btn:focus-visible,.nav-a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
-.filters-bar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:1.5rem 0 2rem}
-.filter-field{display:flex;flex-direction:column;gap:0.4rem}
-.filter-field span{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
-.filter-field select{min-height:48px;background:var(--surface-2);border:1px solid var(--border-strong);color:var(--white);padding:0 0.85rem;font-family:var(--font-condensed);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;font-size:13px;border-radius:2px}
-.job-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.job-card{display:flex;flex-direction:column;align-items:stretch;text-align:left;background:var(--surface-2);border:1px solid var(--border);padding:1.25rem 1.2rem 1.15rem;min-height:240px;color:inherit;border-radius:4px}
-.job-card.is-on{border-color:var(--teal-border)}
-.job-card h3{font-family:var(--font-display);font-size:clamp(26px,2.4vw,34px);line-height:0.95;margin-bottom:0.85rem}
-.job-card-loc{display:flex;align-items:center;justify-content:space-between;gap:0.75rem;color:var(--muted);font-size:14px;margin-bottom:0.85rem}
-.type-pill{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:800;border:1px solid var(--border-strong);padding:0.25rem 0.55rem;color:rgba(255,255,255,0.85);white-space:nowrap}
-.tag-row{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
-.tag{font-family:var(--font-condensed);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;padding:0.28rem 0.5rem;border-radius:2px}
-.tag-exp{background:var(--teal-dim);color:var(--teal)}
-.tag-dept{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8)}
-.job-card-actions{margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem}
-.job-card-actions .btn{min-height:44px;padding:0.55rem 0.6rem;font-size:12px;width:100%}
-.job-card-actions .btn:disabled{opacity:0.4;cursor:not-allowed}
-.role-panel{margin:1.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:46rem}
-.meta{margin-top:0.55rem;color:var(--muted);font-size:14px}
-.status{display:inline-block;margin-top:0.5rem;font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;font-weight:700;border:1px solid var(--border-strong);padding:0.2rem 0.5rem;color:rgba(255,255,255,0.7)}
-.status-open,.status-always_open{border-color:var(--teal);color:var(--white)}
-.status-closed{color:var(--muted)}
-.linkish{background:none;border:none;color:var(--white);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
-.details{margin-top:1.25rem;max-width:42rem;color:rgba(255,255,255,0.82)}
-.details ul{margin:1rem 0 0 0;list-style:none}
-.look-lines{margin:0.35rem 0 0}
-.look-lines p{margin:0 0 0.95rem;color:rgba(255,255,255,0.86);font-size:16px;line-height:1.55}
-.look-lines p:last-child{margin-bottom:0}
-.look-lines p.hi{color:var(--white);padding-left:0.8rem;border-left:2px solid var(--teal)}
-.role-brief{margin:1.5rem auto 0;padding:1.5rem 1.35rem 1.4rem;background:var(--surface-2);border:1px solid var(--teal-border);border-radius:4px;max-width:46rem;width:100%}
-.role-brief h2{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);line-height:0.92;letter-spacing:0.02em;margin:0.35rem 0 0.85rem}
-.role-brief h3{font-family:var(--font-condensed);font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--teal);margin:1.35rem 0 0.65rem}
-.role-brief .lede{color:rgba(255,255,255,0.84);max-width:42rem;white-space:pre-wrap}
-.role-facts{display:grid;gap:0.55rem 1.5rem;margin:1rem 0 0;grid-template-columns:repeat(2,minmax(0,1fr))}
-.role-facts div{min-width:0}
-.role-facts span{display:block;font-family:var(--font-condensed);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
-.role-facts p{margin:0;color:rgba(255,255,255,0.88);font-size:15px}
-.submit-status{margin:1rem 0 0;padding:1rem 1.05rem;border:1px solid var(--teal-border);background:var(--teal-dim);border-radius:4px}
-.submit-status strong{display:block;color:var(--teal);font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:13px;margin-bottom:0.35rem}
-.submit-status p{margin:0;color:rgba(255,255,255,0.8);font-size:14px;line-height:1.5}
-.btn.is-busy{opacity:0.85;cursor:wait}
-.apply-panel{margin:1.5rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border-strong);max-width:40rem;width:100%}
-.apply-panel.is-filling{margin-top:0;padding-top:0;border-top:none}
-.apply-role-title{font-family:var(--font-display);font-size:clamp(32px,4.2vw,48px);line-height:0.92;letter-spacing:0.02em;margin:0 0 1.15rem;text-align:center}
-.steps{display:flex;gap:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center}
-.steps span{font-family:var(--font-condensed);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:var(--muted)}
-.steps span.is-on{color:var(--teal)}
-.field{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.1rem}
-.field label,.field > span{font-family:var(--font-condensed);letter-spacing:0.1em;text-transform:uppercase;font-size:12px;color:rgba(255,255,255,0.7)}
-.field.is-required > label,.field.is-required > span{color:var(--teal)}
-.field.is-required input,.field.is-required textarea,.field.is-required select{border-color:var(--teal-border);box-shadow:inset 3px 0 0 var(--teal)}
-.field-help{margin:0;color:rgba(255,255,255,0.5);font-size:13px;line-height:1.45;font-family:var(--font-body);text-transform:none;letter-spacing:0}
-.opt{margin-left:0.4rem;color:rgba(255,255,255,0.35);font-size:10px;letter-spacing:0.08em}
-.req{color:var(--teal);margin-left:0.25rem}
-input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],textarea,select{
-  background:var(--surface-2);border:1px solid var(--border-strong);color:var(--white);padding:0.75rem 0.85rem;font-size:16px;border-radius:0;width:100%;
-}
-textarea{min-height:110px;resize:vertical}
-.hp{position:absolute;left:-9999px;height:0;width:0;overflow:hidden}
-.err{color:#ffb4b4;font-size:14px;margin:0.5rem 0 1rem}
-.empty h2{margin-bottom:1rem}
-.success h2{color:var(--white)}
-.success h2 em{font-style:normal;color:var(--teal)}
-.apply-page,.thanks-page{padding:6.75rem 3rem 4.5rem;max-width:46rem;margin-left:auto;margin-right:auto;width:100%}
-.thanks-page{min-height:72vh;max-width:40rem}
-.crumb{display:flex;flex-wrap:wrap;gap:0.45rem;align-items:center;justify-content:center;margin-bottom:1.5rem;font-family:var(--font-condensed);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)}
-.crumb a{color:rgba(255,255,255,0.55)}
-.crumb a:hover{color:var(--teal)}
-footer{padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-top:1px solid var(--border);background:var(--surface)}
-.check-row{display:flex;flex-wrap:wrap;gap:0.6rem}
-.check-row label{display:flex;align-items:center;gap:0.45rem;min-height:44px;color:rgba(255,255,255,0.8);text-transform:none;letter-spacing:0;font-family:var(--font-body);font-size:15px}
-@media(max-width:1100px){
-  .job-grid{grid-template-columns:repeat(2,1fr)}
-  .filters-bar{grid-template-columns:1fr 1fr}
-}
-@media(max-width:768px){
-  .role-facts{grid-template-columns:1fr}
-  nav{padding:0 1rem;height:56px}
-  .desk-nav{display:none}
-  .ham{display:flex}
-  section{padding:3.5rem 1.25rem}
-  h1{font-size:36px;line-height:0.92}
-  h2{font-size:44px}
-  #hero{padding:5.15rem 1.25rem 3rem}
-  #hero h1{font-size:clamp(36px,10.4vw,52px);letter-spacing:0.005em}
-  #hero .lede{margin-top:1.15rem}
-  #hero .cta-row{flex-direction:column;align-items:flex-start;gap:0.7rem;margin-top:1.6rem}
-  #hero .cta-row .btn{width:auto;max-width:100%;min-height:48px;padding:0.85rem 1.25rem}
-  .apply-page,.thanks-page{padding:5.15rem 1.25rem 3rem}
-  .filters-bar{grid-template-columns:1fr}
-  .job-grid{grid-template-columns:1fr}
-  .job-card{min-height:0}
-  footer{flex-direction:column;text-align:center;padding:1.5rem 1rem}
-}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *{transition:none !important;animation:none !important}
-}
-</style>
+<link rel="stylesheet" href="/careers/application.css">
 </head>
 <body>
 <!-- Meta Pixel noscript -->
@@ -297,32 +145,16 @@ function Logo({ size = 44 }) {
 }
 
 function Nav() {
-  const [open, setOpen] = useState(false);
-  const links = [
-    ['/#clients', 'Clients'],
-    ['/#work', 'Work'],
-    ['/#who', 'Who Are We'],
-    ['/#services', 'Services'],
-    ['/#contact', 'Contact']
-  ];
   return (
-    <nav>
-      <a href="/" aria-label="Respawn Media home"><Logo size={36} /></a>
+    <nav aria-label="Main navigation">
+      <a className="brand" href="/" aria-label="Respawn home"><Logo size={36} /></a>
       <div className="desk-nav">
-        {links.map(([href, label]) => <a key={href} className="nav-a" href={href}>{label}</a>)}
-        <a className="nav-a is-on" href="/careers" aria-current="page">Careers</a>
-        <a className="nav-cta" href="/#contact">Let's Talk</a>
+        <a className="nav-a nav-desktop" href="/#foundation">Studio</a>
+        <a className="nav-a nav-desktop" href="/#clients">Our world</a>
+        <a className="nav-a nav-pill" href="/#work">Work</a>
+        <a className="nav-a nav-pill is-on" href="/careers" aria-current="page">Careers</a>
+        <a className="nav-cta" href="/#contact">Let’s talk <svg className="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" /></svg></a>
       </div>
-      <button className="ham" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
-        {[0,1,2].map((i) => <span key={i} style={{ display:'block', width:22, height:2, background: open && i===1 ? 'transparent' : 'var(--teal)', transform: open ? (i===0 ? 'rotate(45deg) translate(4px,5px)' : i===2 ? 'rotate(-45deg) translate(4px,-5px)' : 'none') : 'none' }} />)}
-      </button>
-      {open && (
-        <div className="drawer">
-          {links.map(([href, label]) => <a key={href} href={href} onClick={() => setOpen(false)}>{label.toUpperCase()}</a>)}
-          <a href="/careers" onClick={() => setOpen(false)}>CAREERS</a>
-          <a className="nav-cta" href="/#contact" onClick={() => setOpen(false)}>LET'S TALK</a>
-        </div>
-      )}
     </nav>
   );
 }
@@ -387,7 +219,7 @@ function fieldHelp(q) {
     whatsapp: 'WhatsApp number with country code, for example +91…',
     email: 'We will use this email to contact you about this role.',
     portfolio_urls: 'Your work links. www.yoursite.com is enough — https is not required.',
-    resume: 'PDF, DOC or DOCX. Maximum 10 MB.',
+    resume: 'PDF, DOC or DOCX. Please keep your file under 5 MB.',
     years_experience: 'Years working in this kind of role. Write 0 if you are starting out.',
     current_city: 'The city you are based in right now.',
     intern_current_city: 'The city you are based in right now.',
@@ -503,7 +335,7 @@ function Field({ q, value, onChange, fileName, required }) {
         <label htmlFor={id}>{q.label}{reqMark}</label>
         {helpEl}
         <input id={id} type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required={required && !fileName} onChange={(e) => onChange(e.target.files && e.target.files[0])} />
-        <span className="meta">{fileName ? fileName : (q.placeholder || 'PDF, DOC or DOCX. Under 5 MB works most reliably.')}</span>
+        <span className="meta">{fileName ? fileName : 'PDF, DOC or DOCX. Under 5 MB.'}</span>
       </div>
     );
   }
@@ -525,6 +357,13 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
   const [honeypot, setHoneypot] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const panelRef = useRef(null);
+  useEffect(() => {
+    if (step < 2) return;
+    const heading = panelRef.current && panelRef.current.querySelector('.step-heading');
+    if (heading) heading.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [step]);
   const uni = (universalQuestions || []).slice().sort((a,b) => a.sort_order - b.sort_order);
   const spec = (role.questions || []).slice().sort((a,b) => a.sort_order - b.sort_order);
 
@@ -535,7 +374,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
       const q = qs[i];
       const need = isRequired(q, role);
       if (q.type === 'file') {
-        if (need && !resume) return 'Add a resume (PDF, DOC or DOCX, max 10 MB).';
+        if (need && !resume) return 'Add a resume (PDF, DOC or DOCX, under 5 MB).';
         continue;
       }
       if (!need) {
@@ -646,25 +485,27 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
   const reviewList = uni.concat(spec).filter((q) => q.type !== 'file');
 
   return (
-    <div className={'apply-panel' + (step > 1 ? ' is-filling' : '')} role="region" aria-label={'Apply for ' + role.title}>
+    <div ref={panelRef} className={'apply-panel' + (step > 1 ? ' is-filling' : '')} role="region" aria-label={'Apply for ' + role.title}>
       {step > 1 && (
         <div className="steps" aria-label="Application steps">
           {['01 You','02 Role','03 Review'].map((s, i) => (
-            <span key={s} className={step === i + 2 ? 'is-on' : ''}>{s}</span>
+            <span key={s} aria-current={step === i + 2 ? 'step' : undefined} className={step === i + 2 ? 'is-on' : step > i + 2 ? 'is-complete' : ''}>{s}</span>
           ))}
         </div>
       )}
       {step === 1 && (
-        <div>
+        <div className="apply-intro">
+          <h2>Sound like your kind of work?</h2>
           <p className="lede" style={{ marginTop: 0, textAlign: 'center' }}>Ready to apply for <strong>{role.title}</strong>?</p>
           <div className="cta-row" style={{ justifyContent: 'center' }}>
-            <button className="btn btn-primary" type="button" onClick={startApply}>Apply</button>
+            <button className="btn btn-primary" type="button" onClick={startApply}>Start application</button>
             <button className="btn btn-ghost" type="button" onClick={onClose}>Cancel</button>
           </div>
         </div>
       )}
       {step === 2 && (
         <form onSubmit={(e) => { e.preventDefault(); go(3); }}>
+          <h2 className="step-heading" tabIndex={-1}>A little about you.</h2>
           <p className="meta" style={{ marginBottom: '1.1rem' }}>Fields marked <span className="req">*</span> are required. Everything else is optional.</p>
           <div className="hp" aria-hidden="true">
             <label>Company fax<input name="hp_confirm" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} /></label>
@@ -684,6 +525,7 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
       )}
       {step === 3 && (
         <form onSubmit={(e) => { e.preventDefault(); go(4); }}>
+          <h2 className="step-heading" tabIndex={-1}>Your craft. Your experience.</h2>
           {spec.length === 0 && <p className="lede" style={{ marginTop: 0 }}>No extra questions for this role.</p>}
           {spec.length > 0 && <p className="meta" style={{ marginBottom: '1.1rem' }}>Only the fields marked <span className="req">*</span> are required for this role.</p>}
           {spec.map((q) => (
@@ -697,7 +539,8 @@ function ApplyForm({ role, universalQuestions, onClose, onSuccess, utm, onBegin,
         </form>
       )}
       {step === 4 && (
-        <div>
+        <div className="review-summary">
+          <h2 className="step-heading" tabIndex={-1}>One last look.</h2>
           <p className="lede" style={{ marginTop: 0 }}>Check this once, then send.</p>
           <p className="meta"><strong>{role.title}</strong></p>
           {reviewList.map((q) => (
@@ -845,8 +688,10 @@ function RoleBrief({ role, freelanceIntro }) {
   return (
     <div className="role-brief">
       <p className="eyebrow">{typeLabel(role.category)}</p>
-      <h2>{role.title}</h2>
-      <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
+      <div className="role-heading">
+        <h1>{role.title}</h1>
+        <span className={'status status-' + String(role.status).toLowerCase()}>{statusLabel(role.status)}</span>
+      </div>
       {facts.length > 0 && (
         <div className="role-facts">
           {facts.map(function (row) {
@@ -859,21 +704,23 @@ function RoleBrief({ role, freelanceIntro }) {
           })}
         </div>
       )}
+      <div className="role-copy">
       {(showFreelanceNote && freelanceIntro) || role.full_description ? (
-        <>
+        <div>
           <h3>The role</h3>
           {showFreelanceNote && freelanceIntro && <p className="lede" style={{ marginTop: 0 }}>{freelanceIntro}</p>}
           {role.full_description && <p className="lede">{role.full_description}</p>}
-        </>
+        </div>
       ) : null}
       {lines.length > 0 && (
-        <>
+        <div>
           <h3>What we look for</h3>
           <div className="look-lines">
             {lines.map((r) => <p key={r.requirement_id} className={r.highlight ? 'hi' : ''}>{r.requirement}</p>)}
           </div>
-        </>
+        </div>
       )}
+      </div>
     </div>
   );
 }
@@ -893,14 +740,10 @@ function RoleDetails({ role, freelanceIntro }) {
 }
 
 function PageFooter() {
-  return (
-    <footer>
-      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-        <Logo size={24} />
-        <span style={{ fontWeight:300, fontSize:11, letterSpacing:'0.08em', color:'rgba(255,255,255,0.25)' }}>©2025 Respawn Media. Created with love, wonder & ghamand.</span>
-      </div>
-    </footer>
-  );
+  return <footer className="application-footer">
+    <p>Respawn Media / Chennai, India</p>
+    <a href="/careers">Explore all opportunities</a>
+  </footer>;
 }
 
 function ListingPage({ config, loadError }) {
@@ -1083,7 +926,7 @@ function ApplyPage({ slug, config, loadError, utm }) {
     <>
       <Nav />
       <section className="apply-page">
-        <p className="crumb"><a href={back}>Careers</a> <span aria-hidden="true">/</span> <span>Apply</span></p>
+        <p className="crumb"><a href={back}>Back to careers</a> <span aria-hidden="true">/</span> <span>Apply</span></p>
         {!config && !loadError && <p className="lede">Loading this role…</p>}
         {loadError && (
           <div className="empty">

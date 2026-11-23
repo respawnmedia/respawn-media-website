@@ -14,6 +14,7 @@ cpSync(path.join(app, 'dist'), output, {recursive: true});
 // Keep the existing application form and its same-origin APIs.
 mkdirSync(path.join(output, 'careers'), {recursive: true});
 cpSync(path.join(root, 'careers/index.html'), path.join(output, 'careers/application.html'));
+cpSync(path.join(root, 'careers/application.css'), path.join(output, 'careers/application.css'));
 cpSync(path.join(root, 'js'), path.join(output, 'js'), {recursive: true});
 cpSync(path.join(root, 'assets/apple-touch-icon-v2.png'), path.join(output, 'assets/apple-touch-icon-v2.png'));
 cpSync(path.join(root, 'robots.txt'), path.join(output, 'robots.txt'));
