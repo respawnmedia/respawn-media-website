@@ -2,14 +2,6 @@
   "framework": null,
   "rewrites": [
     {
-      "source": "/api/careers/config",
-      "destination": "https://respawn-media-website.vercel.app/api/careers/config"
-    },
-    {
-      "source": "/api/careers/apply",
-      "destination": "https://respawn-media-website.vercel.app/api/careers/apply"
-    },
-    {
       "source": "/careers/apply/:slug",
       "destination": "/careers/application.html"
     },

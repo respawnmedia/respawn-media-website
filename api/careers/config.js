@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
   const scriptUrl = process.env.CAREERS_APPS_SCRIPT_URL;
   const secret = process.env.CAREERS_API_SECRET;
   if (!scriptUrl || !secret) {
-    sendJson(res, 503, { ok: false, error: 'config_unavailable' });
+    await require('../../server/legacy-careers.cjs')(res, 'config');
     return;
   }
 

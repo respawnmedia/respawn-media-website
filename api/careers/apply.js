@@ -84,10 +84,6 @@ module.exports = async function handler(req, res) {
 
   const scriptUrl = process.env.CAREERS_APPS_SCRIPT_URL;
   const secret = process.env.CAREERS_API_SECRET;
-  if (!scriptUrl || !secret) {
-    sendJson(res, 503, { ok: false, error: 'submit_failed' });
-    return;
-  }
 
   let buf;
   try {
@@ -102,6 +98,10 @@ module.exports = async function handler(req, res) {
   }
 
   const contentType = String(req.headers['content-type'] || '');
+  if (!scriptUrl || !secret) {
+    await require('../../server/legacy-careers.cjs')(res, 'apply', buf, contentType);
+    return;
+  }
   let fields;
   let file;
   try {
