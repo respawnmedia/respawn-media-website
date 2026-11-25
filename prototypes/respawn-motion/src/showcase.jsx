@@ -3,7 +3,7 @@ import data from './content.json';
 import Arrow from './Arrow';
 
 export const categories = [
-  {slug:'fashion', name:'Fashion', cover:'intoxicated.jpg', clients:['Tissera','Tharun Kiron','Six By Eleven','Vedhara']},
+  {slug:'fashion', name:'Fashion', cover:'tissera.jpg', clients:['Tissera','Tharun Kiron','Six By Eleven','Vedhara']},
   {slug:'restaurants-and-food', name:'Restaurants & Food', cover:'mishti.jpg', clients:['Sree Mishti Bhog']},
   {slug:'other', name:'Other', cover:'avias.jpg', clients:['Avias']},
 ];
